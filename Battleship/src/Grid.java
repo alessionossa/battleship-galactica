@@ -1,16 +1,22 @@
 
 public class Grid {
-    private Tile[][] tiles = new Tile[10][10];
+    private Tile[][] tiles = new Tile[gridSize][gridSize];
+
+    private static int gridSize = 10;
 
     public Grid(){
         for(int i = 0; i < tiles.length; i++){
             for(int j = 0; j < tiles[i].length; j++){
-                tiles[i][j] = new Tile(0);
+                tiles[i][j] = new Tile();
             }
         }
     }
+
     public void printGrid(){
+        System.out.println("    a b c d e f g h i j");
+        System.out.println("--+--------------------");
         for(int i = 0; i < tiles.length; i++){
+            System.out.print(i + " | ");
             for(int j = 0; j < tiles[i].length; j++){
                 System.out.print(tiles[i][j] + " ");
             }
@@ -18,9 +24,47 @@ public class Grid {
         }
     }
 
-    void placeShip(Ship ship, Coordinate coordinate, char direction) {
+    boolean isValidCoordinate(Coordinate coordinate) {
+        return coordinate.getX() >= 'a' && coordinate.getX() <= 'j' && coordinate.getY() >= 1 && coordinate.getY() <= 8;
+    }
+
+    /**
+     * This method checks if the position is a valid position
+     */
+    boolean isValidShipPosition(Ship ship, Coordinate coordinate, char direction) {
 
         if (direction == 'h') {
+            if ((coordinate.getX() + ship.getLength()) > gridSize) {
+                return false;
+            }
+
+            for (int i = 0; i < ship.getLength(); i++) {
+                char newX = (char) (coordinate.getX() + i);
+                Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
+                if (getTile(tileCoordinate).getShip() != null) {
+                    return false;
+                }
+            }
+        } else {
+            if ((coordinate.getY() + ship.getLength()) > gridSize) {
+                return false;
+            }
+
+            for (int i = 0; i < ship.getLength(); i++) {
+                int newY = coordinate.getY() + i;
+                Coordinate tileCoordinate = new Coordinate(coordinate.getX(), newY);
+                if (getTile(tileCoordinate).getShip() != null) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    void placeShip(Ship ship, Coordinate coordinate, char direction) {
+
+        if (direction == 'v') {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (coordinate.getX() + i);
                 Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
@@ -36,10 +80,20 @@ public class Grid {
 
     }
 
+    private int convertToXMatrixIndex(char x) {
+        return x - 'a';
+    }
+
     void setTile(Coordinate coordinate, Ship ship) {
-        int xIndex = coordinate.getX() - 'a';
+        int xIndex = convertToXMatrixIndex(coordinate.getX());
 
         tiles[xIndex][coordinate.getY()].setShip(ship);
+    }
+
+    Tile getTile(Coordinate coordinate) {
+        int xIndex = convertToXMatrixIndex(coordinate.getX());
+
+        return tiles[xIndex][coordinate.getY()];
     }
 
 }

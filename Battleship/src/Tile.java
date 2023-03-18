@@ -5,11 +5,11 @@ public class Tile {
 
     public Tile(Ship ship) { //Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
-        hit = false;
+        this.hit = false;
     }
 
-    public Tile(int i) { 
-        this.i = 0;
+    public Tile() {
+        this.hit = false;
     }
 
     @Override
@@ -23,5 +23,9 @@ public class Tile {
 
     public void setShip(Ship ship) {
         this.ship = ship;
+    }
+
+    public Ship getShip() {
+        return ship;
     }
 }
