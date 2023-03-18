@@ -1,7 +1,10 @@
+import java.util.Scanner;
+
 public class Battleship {
+
+    static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
-        
-        
 
         // TODO: Add scanner to get player name
         Player p1 = new Player("Player 1");

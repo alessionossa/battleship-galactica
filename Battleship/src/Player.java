@@ -1,4 +1,3 @@
-import java.util.Scanner;
 
 public class Player {
     private String name; 
@@ -45,7 +44,6 @@ public class Player {
 
     void placeShip(Ship ship) {
 
-        Scanner s = new Scanner(System.in);
         boolean isValidShipPosition;
         do {
 
@@ -55,9 +53,9 @@ public class Player {
             do {
                 System.out.println("Where do you want to place the ship?");
                 System.out.println("Enter X-coordinate:");
-                char x0 = s.nextLine().charAt(0);
+                char x0 = Battleship.scanner.nextLine().charAt(0);
                 System.out.println("Enter Y-coordinate:");
-                int y0 = Integer.parseInt(s.nextLine());
+                int y0 = Integer.parseInt(Battleship.scanner.nextLine());
 
                 coordinate = new Coordinate(x0, y0);
                 isValidCoordinate = grid.isValidCoordinate(coordinate);
@@ -70,7 +68,7 @@ public class Player {
             char direction;
             do {
                 System.out.println("Which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
-                direction = Character.toLowerCase(s.nextLine().charAt(0));
+                direction = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
             } while (direction != 'h' && direction != 'v');
 
             isValidShipPosition = grid.isValidShipPosition(ship, coordinate, direction);
@@ -82,23 +80,19 @@ public class Player {
 
 
         } while (!isValidShipPosition);
-        s.close();
     }
 
     void removeShip() {
-        Scanner s = new Scanner(System.in);
 
         System.out.println("Which ship do you want to remove?");
         System.out.println("Enter X-coordinate:");
-        char x0 = s.nextLine().charAt(0);
+        char x0 = Battleship.scanner.nextLine().charAt(0);
         System.out.println("Enter Y-coordinate:");
-        int y0 = Integer.parseInt(s.nextLine());
+        int y0 = Integer.parseInt(Battleship.scanner.nextLine());
 
         Coordinate coordinate = new Coordinate(x0, y0);
 
         grid.getTile(coordinate);
-
-        s.close();
     }
 
     public void playTurn() {
