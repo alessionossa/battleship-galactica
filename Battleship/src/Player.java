@@ -1,14 +1,14 @@
 import java.util.Arrays;
 
 public class Player {
-    private String name; 
+    private String name;
     private Ship[] ships;
-    private Grid ownGrid; //Player's grid
+    private Grid ownGrid;
     private Grid opponentGrid;
 
     public Player(String name, Grid ownGrid, Grid opponentGrid) {
         this.name = name;
-        ships = new Ship[3]; //Placeholder 5
+        ships = new Ship[3]; // Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
@@ -28,20 +28,21 @@ public class Player {
             ownGrid.printGrid(true);
 
             /*
-            Scanner s = new Scanner(System.in);
-            char direction;
-            do {
-                System.out.println("Do do you want to change the position of a ship? Enter Y (Yes) or N (No).");
-                direction = Character.toLowerCase(s.next().charAt(0));
-            } while (direction != 'y' && direction != 'n');
-            if (direction == 'y') {
-                System.out.println("You should have thought about that before.");
-            }
-
-            s.close();
-            */
+             * Scanner s = new Scanner(System.in);
+             * char direction;
+             * do {
+             * System.out.
+             * println("Do do you want to change the position of a ship? Enter Y (Yes) or N (No)."
+             * );
+             * direction = Character.toLowerCase(s.next().charAt(0));
+             * } while (direction != 'y' && direction != 'n');
+             * if (direction == 'y') {
+             * System.out.println("You should have thought about that before.");
+             * }
+             * 
+             * s.close();
+             */
         }
-
 
     }
 
@@ -49,7 +50,6 @@ public class Player {
 
         boolean isValidShipPosition;
         do {
-
 
             Coordinate coordinate;
             boolean isValidCoordinate = false;
@@ -70,9 +70,9 @@ public class Player {
 
             Direction direction = null;
             do {
-                System.out.println(name + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
+                System.out.println(name
+                        + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
                 char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
-
 
                 if (directionChar == Direction.Horizontal.getCharIdentifier()
                         || directionChar == Direction.Vertical.getCharIdentifier())
@@ -88,7 +88,6 @@ public class Player {
             } else {
                 System.out.println("You cannot place a ship here.");
             }
-
 
         } while (!isValidShipPosition);
     }
@@ -129,9 +128,10 @@ public class Player {
 
         opponentGrid.setTile(coordinate, true);
 
+        boolean hitAsteroid = opponentGrid.checkIfAsteroidIsPresent(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        if (shipAtCoordinate != null) {
-            System.out.println("You hit a ship");
+        if (shipAtCoordinate != null || hitAsteroid) {
+            System.out.println("You hit something!");
             boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
             if (isShipSunk) {
                 shipAtCoordinate.setSunk(true);
