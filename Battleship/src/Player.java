@@ -2,12 +2,14 @@
 public class Player {
     private String name; 
     private Ship[] ships;
-    private Grid grid; //Player's grid
+    private Grid ownGrid; //Player's grid
+    private Grid opponentGrid;
 
-    public Player(String name) {
+    public Player(String name, Grid ownGrid, Grid opponentGrid) {
         this.name = name;
         ships = new Ship[3]; //Placeholder 5
-        grid = new Grid();
+        this.ownGrid = ownGrid;
+        this.opponentGrid = opponentGrid;
 
         initializeShips();
     }
@@ -19,10 +21,10 @@ public class Player {
     }
 
     void placeShips() {
-        grid.printGrid();
+        ownGrid.printGrid(true);
         for (Ship ship : ships) {
             placeShip(ship);
-            grid.printGrid();
+            ownGrid.printGrid(true);
 
             /*
             Scanner s = new Scanner(System.in);
@@ -49,16 +51,16 @@ public class Player {
 
 
             Coordinate coordinate;
-            boolean isValidCoordinate;
+            boolean isValidCoordinate = false;
             do {
-                System.out.println("Where do you want to place the ship?");
+                System.out.println(name + ", where do you want to place the ship?");
                 System.out.println("Enter X-coordinate:");
                 char x0 = Battleship.scanner.nextLine().charAt(0);
                 System.out.println("Enter Y-coordinate:");
                 int y0 = Integer.parseInt(Battleship.scanner.nextLine());
 
                 coordinate = new Coordinate(x0, y0);
-                isValidCoordinate = grid.isValidCoordinate(coordinate);
+                isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
 
                 if (isValidCoordinate == false) {
                     System.out.println("The coordinates you entered are not valid.");
@@ -67,13 +69,13 @@ public class Player {
 
             char direction;
             do {
-                System.out.println("Which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
+                System.out.println(name + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
                 direction = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
             } while (direction != 'h' && direction != 'v');
 
-            isValidShipPosition = grid.isValidShipPosition(ship, coordinate, direction);
+            isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
             if (isValidShipPosition) {
-                grid.placeShip(ship, coordinate, direction);
+                ownGrid.placeShip(ship, coordinate, direction);
             } else {
                 System.out.println("You cannot place a ship here.");
             }
@@ -84,7 +86,7 @@ public class Player {
 
     void removeShip() {
 
-        System.out.println("Which ship do you want to remove?");
+        System.out.println(name + ", which ship do you want to remove?");
         System.out.println("Enter X-coordinate:");
         char x0 = Battleship.scanner.nextLine().charAt(0);
         System.out.println("Enter Y-coordinate:");
@@ -92,11 +94,39 @@ public class Player {
 
         Coordinate coordinate = new Coordinate(x0, y0);
 
-        grid.getTile(coordinate);
+        ownGrid.getTile(coordinate);
     }
 
-    public void playTurn() {
-        grid.printGrid();
-    }
+    void shoot() {
+        Coordinate coordinate;
+        boolean isValidCoordinate;
+        do {
+            System.out.println("\n-------------\nOpponents grid:");
+            opponentGrid.printGrid(false);
 
+            System.out.println(name + ", where do you want to shoot?");
+            System.out.println("Enter X-coordinate:");
+            char x0 = Battleship.scanner.nextLine().charAt(0);
+            System.out.println("Enter Y-coordinate:");
+            int y0 = Integer.parseInt(Battleship.scanner.nextLine());
+
+            coordinate = new Coordinate(x0, y0);
+            isValidCoordinate = opponentGrid.isValidCoordinate(coordinate);
+
+            if (isValidCoordinate == false) {
+                System.out.println("The coordinates you entered are not valid.");
+            }
+        } while (!isValidCoordinate);
+
+        opponentGrid.setTile(coordinate, true);
+
+        boolean hitShip = opponentGrid.checkIfShipIsPresent(coordinate);
+        if (hitShip)
+            System.out.println("You hit a ship");
+        else
+            System.out.println("You missed");
+
+        System.out.println("\n-------------\nOpponents grid:");
+        opponentGrid.printGrid(false);
+    }
 }

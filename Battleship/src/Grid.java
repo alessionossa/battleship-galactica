@@ -12,13 +12,14 @@ public class Grid {
         }
     }
 
-    public void printGrid(){
+    public void printGrid(boolean showShip){
         System.out.println("    a b c d e f g h i j");
         System.out.println("--+--------------------");
         for(int i = 0; i < tiles.length; i++){
             System.out.print(i + " | ");
             for(int j = 0; j < tiles[i].length; j++){
-                System.out.print(tiles[i][j] + " ");
+                String displayValue = tiles[i][j].displayValue(showShip);
+                System.out.print(displayValue + " ");
             }
             System.out.println();
         }
@@ -90,10 +91,22 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setShip(ship);
     }
 
+    void setTile(Coordinate coordinate, boolean hit) {
+        int xIndex = convertToXMatrixIndex(coordinate.getX());
+
+        tiles[coordinate.getY()][xIndex].setHit(hit);
+    }
+
     Tile getTile(Coordinate coordinate) {
         int xIndex = convertToXMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
     }
 
+    boolean checkIfShipIsPresent(Coordinate coordinate) {
+        if (getTile(coordinate).getShip() == null) {
+            return false;
+        }
+        else return true;
+    }
 }

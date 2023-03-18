@@ -12,17 +12,48 @@ public class Tile {
         this.hit = false;
     }
 
+    /*
     @Override
     public String toString() {
         if (this.ship == null) {
-            return "0";
+            if (this.hit)
+                return "/";
+            else
+                return "0";
         } else {
-            return Integer.toString(ship.getIdentifier());
+            if (this.hit)
+                return "X";
+            else
+                return Integer.toString(ship.getIdentifier());
+        }
+    }
+     */
+
+    public String displayValue(boolean showShip) {
+        if (this.ship == null) {
+            if (this.hit)
+                return "/";
+            else
+                return "0";
+        } else {
+            if (this.hit)
+                return "X";
+            else {
+                if (showShip)
+                    return Integer.toString(ship.getIdentifier());
+                else
+                    return "0";
+            }
+
         }
     }
 
     public void setShip(Ship ship) {
         this.ship = ship;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
     }
 
     public Ship getShip() {
