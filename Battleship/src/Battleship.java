@@ -3,9 +3,11 @@ public class Battleship {
         
         
 
-    // TODO: Add scanner to get player name
-        Player p1 = new Player("Player 1"); 
+        // TODO: Add scanner to get player name
+        Player p1 = new Player("Player 1");
+
+        p1.placeShips();
         
-        Player p2 = new Player("Player 2"); 
+        Player p2 = new Player("Player 2");
     }
 }
