@@ -13,7 +13,7 @@ public class Grid {
     }
 
     public void printGrid(){
-        System.out.println("    a b c d e f g h i j");
+        System.out.println("  | a b c d e f g h i j");
         System.out.println("--+--------------------");
         for(int i = 0; i < tiles.length; i++){
             System.out.print(i + " | ");
