@@ -28,7 +28,7 @@ public class Battleship {
                     return;
                 }
 
-            } else if (playerTurn == 2) {
+            } else {
                 p2.shoot();
                 if (p1.areAllShipsSunk()) {
                     game.endGame(p2);

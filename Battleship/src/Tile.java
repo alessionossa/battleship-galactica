@@ -36,7 +36,7 @@ public class Tile {
                 return "0";
         } else {
             if (this.hit)
-                return "";
+                return "X";
             else {
                 if (showShip)
                     return Integer.toString(ship.getIdentifier());

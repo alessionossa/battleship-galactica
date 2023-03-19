@@ -8,7 +8,7 @@ public class Player {
 
     public Player(String name, Grid ownGrid, Grid opponentGrid) {
         this.name = name;
-        ships = new Ship[2]; //Placeholder 5
+        ships = new Ship[3]; //Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
@@ -16,12 +16,9 @@ public class Player {
     }
 
     private void initializeShips() {
-//        ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
-//        ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
-//        ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
-
-        ships[0] = new Ship(1, Ship.ShipType.Scout, 1);
-        ships[1] = new Ship(1, Ship.ShipType.Scout, 2);
+        ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
+        ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
+        ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
     }
 
     void placeShips() {
@@ -66,7 +63,7 @@ public class Player {
                 coordinate = new Coordinate(x0, y0);
                 isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
 
-                if (isValidCoordinate == false) {
+                if (!isValidCoordinate) {
                     System.out.println("The coordinates you entered are not valid.");
                 }
             } while (!isValidCoordinate);
@@ -74,12 +71,12 @@ public class Player {
             Direction direction = null;
             do {
                 System.out.println(name + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
-                char directionChar = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+                char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
 
-                if (directionChar == 'h')
-                    direction = Direction.Horizontal;
-                else if (directionChar == 'v')
-                    direction = Direction.Vertical;
+
+                if (directionChar == Direction.Horizontal.getCharIdentifier()
+                        || directionChar == Direction.Vertical.getCharIdentifier())
+                    direction = Direction.get(directionChar);
             } while (direction == null);
 
             ship.setCoordinate(coordinate);
@@ -125,7 +122,7 @@ public class Player {
             coordinate = new Coordinate(x0, y0);
             isValidCoordinate = opponentGrid.isValidCoordinate(coordinate);
 
-            if (isValidCoordinate == false) {
+            if (!isValidCoordinate) {
                 System.out.println("The coordinates you entered are not valid.");
             }
         } while (!isValidCoordinate);
