@@ -1,3 +1,4 @@
+import java.util.Arrays;
 
 public class Player {
     private String name; 
@@ -7,7 +8,7 @@ public class Player {
 
     public Player(String name, Grid ownGrid, Grid opponentGrid) {
         this.name = name;
-        ships = new Ship[3]; //Placeholder 5
+        ships = new Ship[2]; //Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
@@ -15,9 +16,12 @@ public class Player {
     }
 
     private void initializeShips() {
-        ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
-        ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
-        ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
+//        ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
+//        ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
+//        ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
+
+        ships[0] = new Ship(1, Ship.ShipType.Scout, 1);
+        ships[1] = new Ship(1, Ship.ShipType.Scout, 2);
     }
 
     void placeShips() {
@@ -67,11 +71,19 @@ public class Player {
                 }
             } while (!isValidCoordinate);
 
-            char direction;
+            Direction direction = null;
             do {
                 System.out.println(name + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
-                direction = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
-            } while (direction != 'h' && direction != 'v');
+                char directionChar = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+
+                if (directionChar == 'h')
+                    direction = Direction.Horizontal;
+                else if (directionChar == 'v')
+                    direction = Direction.Vertical;
+            } while (direction == null);
+
+            ship.setCoordinate(coordinate);
+            ship.setDirection(direction);
 
             isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
             if (isValidShipPosition) {
@@ -120,13 +132,26 @@ public class Player {
 
         opponentGrid.setTile(coordinate, true);
 
-        boolean hitShip = opponentGrid.checkIfShipIsPresent(coordinate);
-        if (hitShip)
+        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
+        if (shipAtCoordinate != null) {
             System.out.println("You hit a ship");
-        else
+            boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+            if (isShipSunk) {
+                shipAtCoordinate.setSunk(true);
+                System.out.println("You sunk a ship! 💥🚢");
+            }
+        } else
             System.out.println("You missed");
 
         System.out.println("\n-------------\nOpponents grid:");
         opponentGrid.printGrid(false);
+    }
+
+    boolean areAllShipsSunk() {
+        return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
+    }
+
+    public String getName() {
+        return name;
     }
 }

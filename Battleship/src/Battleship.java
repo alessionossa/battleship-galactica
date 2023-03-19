@@ -7,6 +7,8 @@ public class Battleship {
 
     public static void main(String[] args) {
 
+        Battleship game = new Battleship();
+
         Grid grid1 = new Grid();
         Grid grid2 = new Grid();
 
@@ -21,12 +23,25 @@ public class Battleship {
         while (true) {
             if (playerTurn == 1) {
                 p1.shoot();
+                if (p2.areAllShipsSunk()) {
+                    game.endGame(p1);
+                    return;
+                }
 
             } else if (playerTurn == 2) {
                 p2.shoot();
+                if (p1.areAllShipsSunk()) {
+                    game.endGame(p2);
+                    return;
+                }
+
             }
             if (playerTurn == 1) playerTurn = 2;
             else playerTurn = 1;
         }
+    }
+
+    void endGame(Player winner) {
+        System.out.println("Congratulations " + winner.getName() + "! 🍾🎉");
     }
 }
