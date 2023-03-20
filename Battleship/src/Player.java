@@ -1,9 +1,9 @@
 
 public class Player {
-    private String name; 
+    protected String name; 
     private Ship[] ships;
-    private Grid ownGrid; //Player's grid
-    private Grid opponentGrid;
+    protected Grid ownGrid; //Player's grid
+    protected Grid opponentGrid;
 
     public Player(String name, Grid ownGrid, Grid opponentGrid) {
         this.name = name;
@@ -126,7 +126,7 @@ public class Player {
         else
             System.out.println("You missed");
 
-        System.out.println("\n-------------\nOpponents grid:");
-        opponentGrid.printGrid(false);
+//       System.out.println("\n-------------\nOpponents grid:");
+//       opponentGrid.printGrid(false);
     }
 }
