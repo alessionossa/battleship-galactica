@@ -32,10 +32,10 @@ public class Grid {
     /**
      * This method checks if the position is a valid position
      */
-    boolean isValidShipPosition(Ship ship, Coordinate coordinate, char direction) {
+    boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
 
-        if (direction == 'h') {
-            if ((convertToXMatrixIndex(coordinate.getX()) + ship.getLength()) > gridSize) {
+        if (direction == Direction.Horizontal) {
+            if ((convertXToMatrixIndex(coordinate.getX()) + ship.getLength()) > gridSize) {
                 return false;
             }
 
@@ -63,9 +63,9 @@ public class Grid {
         return true;
     }
 
-    void placeShip(Ship ship, Coordinate coordinate, char direction) {
+    void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
 
-        if (direction == 'h') {
+        if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (coordinate.getX() + i);
                 Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
@@ -81,32 +81,55 @@ public class Grid {
 
     }
 
-    private int convertToXMatrixIndex(char x) {
+    private int convertXToMatrixIndex(char x) {
         return x - 'a';
     }
 
     void setTile(Coordinate coordinate, Ship ship) {
-        int xIndex = convertToXMatrixIndex(coordinate.getX());
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         tiles[coordinate.getY()][xIndex].setShip(ship);
     }
 
     void setTile(Coordinate coordinate, boolean hit) {
-        int xIndex = convertToXMatrixIndex(coordinate.getX());
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         tiles[coordinate.getY()][xIndex].setHit(hit);
     }
 
     Tile getTile(Coordinate coordinate) {
-        int xIndex = convertToXMatrixIndex(coordinate.getX());
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
     }
 
-    boolean checkIfShipIsPresent(Coordinate coordinate) {
-        if (getTile(coordinate).getShip() == null) {
-            return false;
+    Ship getShipAtCoordinate(Coordinate coordinate) {
+        return getTile(coordinate).getShip();
+    }
+
+    boolean checkIfShipIsSunk(Ship ship) {
+        Coordinate startCoordinate = ship.getCoordinate();
+
+        switch (ship.getDirection()) {
+            case Vertical:
+                for (int i = startCoordinate.getY(); i < startCoordinate.getY() + ship.getLength(); i++) {
+                    Tile currentTile = tiles[i][convertXToMatrixIndex(startCoordinate.getX())];
+                    if (!currentTile.isHit())
+                        return false;
+                }
+
+                break;
+            case Horizontal:
+                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(startCoordinate.getX()) + ship.getLength(); i++) {
+                    Tile currentTile = tiles[startCoordinate.getY()][i];
+                    if (!currentTile.isHit())
+                        return false;
+                }
+
+                break;
         }
-        else return true;
+
+        return true;
+
     }
 }

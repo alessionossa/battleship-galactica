@@ -9,6 +9,9 @@ public class Ship {
     private ShipType shipType;
     private int identifier;
 
+    Coordinate coordinate;
+    Direction direction;
+
     public Ship(int length, ShipType shipType, int identifier){
         this.length = length;
         this.shipType = shipType;
@@ -26,5 +29,29 @@ public class Ship {
 
     public int getIdentifier() {
         return identifier;
+    }
+
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setSunk(boolean sunk) {
+        this.sunk = sunk;
+    }
+
+    public boolean isSunk() {
+        return sunk;
     }
 }
