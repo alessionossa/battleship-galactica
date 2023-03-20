@@ -12,12 +12,13 @@ public class Battleship {
         Grid grid1 = new Grid();
         Grid grid2 = new Grid();
 
+        
         // TODO: Add scanner to get player name
         Player p1 = new Player("Player 1", grid1, grid2);
         p1.placeShips();
 
-        //AI p2 = new AI("CPU", grid2, grid1);
-        Player p2 = new Player("Player 2", grid2, grid1);
+        AI p2 = new AI("CPU", grid2, grid1);
+        //Player p2 = new Player("Player 2", grid2, grid1);
         p2.placeShips();
 
         playerTurn = 1;
@@ -45,4 +46,5 @@ public class Battleship {
     void endGame(Player winner) {
         System.out.println("Congratulations " + winner.getName() + "! 🍾🎉");
     }
+    
 }

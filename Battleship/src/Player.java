@@ -54,7 +54,7 @@ public class Player {
             Coordinate coordinate;
             boolean isValidCoordinate = false;
             do {
-                System.out.println(name + ", where do you want to place the ship?");
+                System.out.println("\n" + name + ", where do you want to place the ship?");
                 System.out.println("Enter X-coordinate:");
                 char x0 = Battleship.scanner.nextLine().charAt(0);
                 System.out.println("Enter Y-coordinate:");
@@ -110,7 +110,7 @@ public class Player {
         Coordinate coordinate;
         boolean isValidCoordinate;
         do {
-            System.out.println("\n-------------\nOpponents grid:");
+            System.out.println("\n-----------------------------\nOpponents grid:");
             opponentGrid.printGrid(false);
 
             System.out.println(name + ", where do you want to shoot?");
