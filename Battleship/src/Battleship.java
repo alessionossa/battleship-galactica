@@ -16,6 +16,8 @@ public class Battleship {
         // TODO: Add scanner to get player name
         Player p1 = new Player("Player 1", grid1, grid2);
         p1.placeShips();
+        p1.removeShip();
+        
 
         AI p2 = new AI("CPU", grid2, grid1);
         //Player p2 = new Player("Player 2", grid2, grid1);

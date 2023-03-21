@@ -81,6 +81,26 @@ public class Grid {
 
     }
 
+    void removeShip(Ship ship) {
+        Coordinate startCoordinate = ship.getCoordinate();
+
+        switch (ship.getDirection()) {
+            case Vertical:
+                for (int i = startCoordinate.getY(); i < startCoordinate.getY() + ship.getLength(); i++) {
+                    Tile currentTile = tiles[i][convertXToMatrixIndex(startCoordinate.getX())];
+                    
+                    currentTile.setShip(null);
+                }
+                break;
+            case Horizontal:
+                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(startCoordinate.getX()) + ship.getLength(); i++) {
+                    Tile currentTile = tiles[startCoordinate.getY()][i];
+                    currentTile.setShip(null);
+                }
+                break;}
+
+    }
+
     private int convertXToMatrixIndex(char x) {
         return x - 'a';
     }
