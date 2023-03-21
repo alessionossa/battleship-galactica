@@ -1,7 +1,6 @@
 public class Tile {
     private Ship ship;
     private boolean hit;
-    private int i;
 
     public Tile(Ship ship) { //Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
@@ -58,5 +57,9 @@ public class Tile {
 
     public Ship getShip() {
         return ship;
+    }
+
+    public boolean isHit() {
+        return hit;
     }
 }
