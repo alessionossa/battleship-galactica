@@ -1,8 +1,9 @@
 public class Tile {
     private Ship ship;
+    private Asteroid asteroid;
     private boolean hit;
 
-    public Tile(Ship ship) { //Needs to be modified so we can have <T> type of ship, obstacles
+    public Tile(Ship ship) { // Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
         this.hit = false;
     }
@@ -11,40 +12,56 @@ public class Tile {
         this.hit = false;
     }
 
-    /*
-    @Override
-    public String toString() {
-        if (this.ship == null) {
-            if (this.hit)
-                return "/";
-            else
-                return "0";
-        } else {
-            if (this.hit)
-                return "X";
-            else
-                return Integer.toString(ship.getIdentifier());
-        }
+    public Tile(Asteroid asteroid) {
+        this.asteroid = asteroid;
     }
+
+    /*
+     * @Override
+     * public String toString() {
+     * if (this.ship == null) {
+     * if (this.hit)
+     * return "/";
+     * else
+     * return "0";
+     * } else {
+     * if (this.hit)
+     * return "X";
+     * else
+     * return Integer.toString(ship.getIdentifier());
+     * }
+     * }
      */
 
-    public String displayValue(boolean showShip) {
-        if (this.ship == null) {
-            if (this.hit)
-                return "/";
-            else
-                return "0";
-        } else {
+    public String displayValue(boolean showGridObjects) {
+        if (this.ship != null) {
             if (this.hit)
                 return "X";
             else {
-                if (showShip)
+                if (showGridObjects)
                     return Integer.toString(ship.getIdentifier());
                 else
                     return "0";
             }
 
+        } else {
+            if (this.hit) {
+                if (this.asteroid != null) {
+                    return "X";
+                } else
+                    return "/";
+            }
+
+            else if (showGridObjects && this.asteroid != null) {
+                return "A";
+            } else
+                return "0";
+
         }
+    }
+
+    public Ship getShip() {
+        return ship;
     }
 
     public void setShip(Ship ship) {
@@ -55,8 +72,12 @@ public class Tile {
         this.hit = hit;
     }
 
-    public Ship getShip() {
-        return ship;
+    public Asteroid getAsteroid() {
+        return this.asteroid;
+    }
+
+    public void setAsteroid(Asteroid asteroid) {
+        this.asteroid = asteroid;
     }
 
     public boolean isHit() {
