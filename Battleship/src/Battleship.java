@@ -36,7 +36,7 @@ public class Battleship {
                 System.out.println("Please only type 'y' or 'n' ");
             }
         } while (asteroidModeSet == false);
-
+        
         if (asteroidMode) {
             grid1.placeAsteroids();
             grid2.placeAsteroids();
@@ -60,14 +60,17 @@ public class Battleship {
         if (singlePlayerMode) {
         	p1 = new Player("Player 1", grid1, grid2);
         	p1.placeShips();
+          p1.removeShip();
         	p2 = new AI("CPU", grid2, grid1);
         	p2.placeShips();
         	
         } else {
         	 p1 = new Player("Player 1", grid1, grid2);
              p1.placeShips();
+             p1.removeShip();
              p2 = new Player("Player 2", grid2, grid1);
              p2.placeShips();
+             p1.removeShip();
         }
         
      // TODO: Add scanner to get player name
