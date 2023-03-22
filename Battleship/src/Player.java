@@ -128,9 +128,9 @@ public class Player {
 
         opponentGrid.setTile(coordinate, true);
 
-        boolean hitAsteroid = opponentGrid.checkIfAsteroidIsPresent(coordinate);
+        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        if (shipAtCoordinate != null || hitAsteroid) {
+        if (shipAtCoordinate != null || asteroidAtCoordinate != null) {
             System.out.println("You hit something!");
             boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
             if (isShipSunk) {

@@ -114,6 +114,10 @@ public class Grid {
         return getTile(coordinate).getShip();
     }
 
+    Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
+        return getTile(coordinate).getAsteroid();
+    }
+
     boolean checkIfShipIsSunk(Ship ship) {
         Coordinate startCoordinate = ship.getCoordinate();
 
@@ -138,20 +142,6 @@ public class Grid {
         }
 
         return true;
-    }
-
-    boolean checkIfShipIsPresent(Coordinate coordinate) {
-        if (getTile(coordinate).getShip() == null) {
-            return false;
-        } else
-            return true;
-    }
-
-    boolean checkIfAsteroidIsPresent(Coordinate coordinate) {
-        if (getTile(coordinate).getAsteroid() == null) {
-            return false;
-        } else
-            return true;
     }
 
     void placeAsteroids() {
