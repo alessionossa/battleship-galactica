@@ -1,23 +1,24 @@
+import java.util.Random;
 
 public class Grid {
     private Tile[][] tiles = new Tile[gridSize][gridSize];
 
     private static int gridSize = 10;
 
-    public Grid(){
-        for(int i = 0; i < tiles.length; i++){
-            for(int j = 0; j < tiles[i].length; j++){
+    public Grid() {
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
                 tiles[i][j] = new Tile();
             }
         }
     }
 
-    public void printGrid(boolean showShip){
+    public void printGrid(boolean showShip) {
         System.out.println("  | a b c d e f g h i j");
         System.out.println("--+--------------------");
-        for(int i = 0; i < tiles.length; i++){
+        for (int i = 0; i < tiles.length; i++) {
             System.out.print(i + " | ");
-            for(int j = 0; j < tiles[i].length; j++){
+            for (int j = 0; j < tiles[i].length; j++) {
                 String displayValue = tiles[i][j].displayValue(showShip);
                 System.out.print(displayValue + " ");
             }
@@ -26,7 +27,8 @@ public class Grid {
     }
 
     boolean isValidCoordinate(Coordinate coordinate) {
-        return coordinate.getX() >= 'a' && coordinate.getX() < 'a'+gridSize && coordinate.getY() >= 0 && coordinate.getY() < gridSize;
+        return coordinate.getX() >= 'a' && coordinate.getX() < 'a' + gridSize && coordinate.getY() >= 0
+                && coordinate.getY() < gridSize;
     }
 
     /**
@@ -42,7 +44,7 @@ public class Grid {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (coordinate.getX() + i);
                 Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
-                if (getTile(tileCoordinate).getShip() != null) {
+                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
                     return false;
                 }
             }
@@ -54,7 +56,7 @@ public class Grid {
             for (int i = 0; i < ship.getLength(); i++) {
                 int newY = coordinate.getY() + i;
                 Coordinate tileCoordinate = new Coordinate(coordinate.getX(), newY);
-                if (getTile(tileCoordinate).getShip() != null) {
+                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
                     return false;
                 }
             }
@@ -117,6 +119,11 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setHit(hit);
     }
 
+    void setTile(Coordinate coordinate, Asteroid asteroid) {
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
+        tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
+    }
+
     Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
@@ -125,6 +132,10 @@ public class Grid {
 
     Ship getShipAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getShip();
+    }
+
+    Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
+        return getTile(coordinate).getAsteroid();
     }
 
     boolean checkIfShipIsSunk(Ship ship) {
@@ -140,7 +151,8 @@ public class Grid {
 
                 break;
             case Horizontal:
-                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(startCoordinate.getX()) + ship.getLength(); i++) {
+                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(
+                        startCoordinate.getX()) + ship.getLength(); i++) {
                     Tile currentTile = tiles[startCoordinate.getY()][i];
                     if (!currentTile.isHit())
                         return false;
@@ -150,6 +162,13 @@ public class Grid {
         }
 
         return true;
+    }
 
+    void placeAsteroids() {
+        Random random = new Random();
+        int[] asteroidCoordinates = random.ints(10, 0, 10).toArray();
+        for (int i = 0; i < 10; i += 2) {
+            setTile(new Coordinate((char) (97 + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
+        }
     }
 }
