@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 import java.util.Scanner;
 
 public class Battleship {
@@ -58,17 +60,17 @@ public class Battleship {
         } while (singlePlayerModeSet = false);
 
         if (singlePlayerMode) {
-        	p1 = new Player("Player 1", grid1, grid2);
+        	p1 = new Player("com.battleshipgalactica.model.Player 1", grid1, grid2);
         	p1.placeShips();
           p1.removeShip();
         	p2 = new AI("CPU", grid2, grid1);
         	p2.placeShips();
         	
         } else {
-        	 p1 = new Player("Player 1", grid1, grid2);
+        	 p1 = new Player("com.battleshipgalactica.model.Player 1", grid1, grid2);
              p1.placeShips();
              p1.removeShip();
-             p2 = new Player("Player 2", grid2, grid1);
+             p2 = new Player("com.battleshipgalactica.model.Player 2", grid2, grid1);
              p2.placeShips();
              p1.removeShip();
         }

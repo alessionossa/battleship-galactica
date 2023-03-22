@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 public class Coordinate { //Send new coordinates to player
     private char x;
     private int y; 

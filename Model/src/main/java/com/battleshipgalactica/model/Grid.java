@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 import java.util.Random;
 
 public class Grid {

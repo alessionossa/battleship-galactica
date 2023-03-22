@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 import java.util.Arrays;
 
 public class Player {
@@ -129,7 +131,7 @@ public class Player {
             } while (direction == null);
 
             Ship shipAtCoordinate = ownGrid.getShipAtCoordinate(coordinate);
-            //Tile tileAtCoordinate = ownGrid.getTile(coordinate);
+            //com.battleshipgalactica.model.Tile tileAtCoordinate = ownGrid.getTile(coordinate);
 
             if (shipAtCoordinate != null) {
                 System.out.println("Removing the ship.");

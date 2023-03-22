@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 public class Ship {
 
     enum ShipType {

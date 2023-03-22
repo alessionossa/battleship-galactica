@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 import java.util.Arrays;
 
 public enum Direction {

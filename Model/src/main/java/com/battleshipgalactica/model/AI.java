@@ -1,3 +1,5 @@
+package com.battleshipgalactica.model;
+
 import java.util.Random;
 
 public class AI extends Player {
@@ -47,7 +49,7 @@ public class AI extends Player {
 	
 	
 	
-	// Should not call the "remove" method on AI
+	// Should not call the "remove" method on com.battleshipgalactica.model.AI
 	
 	
 	@Override
@@ -55,7 +57,7 @@ public class AI extends Player {
         Coordinate coordinate;
         boolean isValidCoordinate;
         do {
-            System.out.println("\n-------------\nAI's turn to shoot:");
+            System.out.println("\n-------------\ncom.battleshipgalactica.model.AI's turn to shoot:");
             //opponentGrid.printGrid(false);
 
             System.out.println(name + ", is shooting...");
@@ -70,13 +72,13 @@ public class AI extends Player {
 
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
         if (shipAtCoordinate != null) {
-            System.out.println("The AI has hit a ship!");
+            System.out.println("The com.battleshipgalactica.model.AI has hit a ship!");
             boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
             if (isShipSunk) {
                 shipAtCoordinate.setSunk(true);
-                System.out.println("The AI has sunk a ship! 💥🚢");
+                System.out.println("The com.battleshipgalactica.model.AI has sunk a ship! 💥🚢");
             }
         } else
-            System.out.println("The AI has missed...");   
+            System.out.println("The com.battleshipgalactica.model.AI has missed...");
 	}
 }
