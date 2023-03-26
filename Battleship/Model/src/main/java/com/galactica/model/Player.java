@@ -20,11 +20,11 @@ public abstract class Player {
 
 	private void initializeShips() {
 		ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
-		ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
-		ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
+		ships[1] = new Ship(5, Ship.ShipType.DeathStar, 1);
+		ships[2] = new Ship(5, Ship.ShipType.DeathStar, 1);
 	}
 
-	void placeShips() {
+	public void placeShips() {
 		ownGrid.printGrid(true);
 		for (Ship ship : ships) {
 			placeShip(ship);
@@ -47,7 +47,7 @@ public abstract class Player {
 
 	abstract void shoot();
 
-	boolean areAllShipsSunk() {
+	public boolean areAllShipsSunk() {
 		return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
 	}
 

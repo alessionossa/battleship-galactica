@@ -70,12 +70,11 @@ public class Battleship {
 			p1 = new Human(grid1, grid2);
 			p1.placeShips();
 			((Human) p1).removeShip();
-			Human p2 = new Human(grid2, grid1);
+			p2 = new Human(grid2, grid1);
 			p2.placeShips();
 			((Human) p2).removeShip();
 		}
 
-		// TODO: Add scanner to get player name
 
 		playerTurn = 1;
 		while (true) {

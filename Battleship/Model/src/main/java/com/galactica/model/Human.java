@@ -9,7 +9,7 @@ public class Human extends Player {
         this.name = Player.sc.nextLine();
 	}
 
-	void placeShip(Ship ship) {
+	public void placeShip(Ship ship) {
 
 		boolean isValidShipPosition;
 		do {
@@ -55,7 +55,7 @@ public class Human extends Player {
 		} while (!isValidShipPosition);
 	}
 
-	void removeShip() {
+	public void removeShip() {
 		boolean isValidCoordinate = false;
 		Coordinate coordinate;
 
@@ -150,7 +150,7 @@ public class Human extends Player {
 		}
 	}
 
-	void shoot() {
+	public void shoot() {
 		Coordinate coordinate;
 		boolean isValidCoordinate;
 		do {
