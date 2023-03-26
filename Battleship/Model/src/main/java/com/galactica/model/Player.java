@@ -23,27 +23,59 @@ public class Player {
         ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
     }
 
-    void placeShips() {
-        ownGrid.printGrid(true);
-        for (Ship ship : ships) {
-            placeShip(ship);
-            ownGrid.printGrid(true);
+    boolean getPlaceOrRemoveResponse() { // true = place, false = remove
+        if (ownGrid.anyShipsPlaced()) {
+            System.out
+                    .println(name + ", would you like to place or remove a ship?: type 'p' for place, 'r' for remove");
+            while (true) {
+                char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+                if (resp == 'p')
+                    return true;
+                else if (resp == 'r')
+                    return false;
+                else
+                    System.out.println("Please only type 'p' or 'r'");
+            }
+        } else
+            return true;
+    }
 
-            /*
-             * Scanner s = new Scanner(System.in);
-             * char direction;
-             * do {
-             * System.out.
-             * println("Do do you want to change the position of a ship? Enter Y (Yes) or N (No)."
-             * );
-             * direction = Character.toLowerCase(s.next().charAt(0));
-             * } while (direction != 'y' && direction != 'n');
-             * if (direction == 'y') {
-             * System.out.println("You should have thought about that before.");
-             * }
-             * 
-             * s.close();
-             */
+    Ship selectShip() {
+        System.out.println(name + ", select a ship: 'd' for death, 'c' for cruiser, 's' for scout");
+        // to use more than one ship of each type could use d1, d2, d3 but won't matter
+        // with gui
+        while (true) {
+            char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+            if (resp == 'd')
+                return ships[0];
+            else if (resp == 'c')
+                return ships[1];
+            else if (resp == 's')
+                return ships[2];
+            else
+                System.out.println("Please only type 'd', 'c' or 's'");
+        }
+    }
+
+    void placeShips() {
+        boolean allShipsPlaced = false;
+        while (!allShipsPlaced) {
+            ownGrid.printGrid(true);
+            boolean placeOrRemove = getPlaceOrRemoveResponse();
+
+            Ship ship = selectShip();
+            if (!placeOrRemove && !ship.isPlaced()) {
+                System.out.println("Cannot remove a ship that hasn't been placed");
+            } else if (placeOrRemove && ship.isPlaced()) {
+                System.out.println("Cannot place a ship that is already on the grid");
+            } else if (!placeOrRemove && ship.isPlaced()) {
+                removeShip(ship);
+            } else if (placeOrRemove && !ship.isPlaced()) {
+                placeShip(ship);
+            }
+
+            allShipsPlaced = hasAllShipsPlaced();
+
         }
 
     }
@@ -80,7 +112,7 @@ public class Player {
                         || directionChar == Direction.Vertical.getCharIdentifier())
                     direction = Direction.get(directionChar);
             } while (direction == null);
- 
+
             ship.setCoordinate(coordinate);
             ship.setDirection(direction);
 
@@ -95,101 +127,9 @@ public class Player {
 
     }
 
-    void removeShip() {
-        boolean isValidCoordinate = false;
-        Coordinate coordinate;
-
-        System.out.println(name + ", would you like to remove any ships, before starting the game? (yes/no)");
-        String shouldIremoveShip = Battleship.scanner.nextLine().toLowerCase();
-
-        while (shouldIremoveShip.equals("yes")) {
-
-            do {
-                System.out.println("\n" + name + ", which ship would you like to remove? ");
-                System.out.println("Enter X-coordinate:");
-                char x0 = Battleship.scanner.nextLine().charAt(0);
-                System.out.println("Enter Y-coordinate:");
-                int y0 = Integer.parseInt(Battleship.scanner.nextLine());
-
-                coordinate = new Coordinate(x0, y0);
-                isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
-
-                if (!isValidCoordinate) {
-                    System.out.println("The coordinates you entered are not valid.");
-                }
-            } while (!isValidCoordinate);
-
-            Direction direction = null;
-            do {
-                System.out.println(name + ", which direction do you want to remove the ship? Enter H for horizontal, V for vertical.");
-                char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
-
-
-                if (directionChar == Direction.Horizontal.getCharIdentifier()
-                        || directionChar == Direction.Vertical.getCharIdentifier())
-                    direction = Direction.get(directionChar);
-            } while (direction == null);
-
-            Ship shipAtCoordinate = ownGrid.getShipAtCoordinate(coordinate);
-            //com.battleshipgalactica.model.Tile tileAtCoordinate = ownGrid.getTile(coordinate);
-
-            if (shipAtCoordinate != null) {
-                System.out.println("Removing the ship.");
-                //tileAtCoordinate.setShip(null);
-                
-                ownGrid.removeShip(shipAtCoordinate);
-                boolean isValidShipPosition;
-                do {
-
-                    do {
-                        System.out.println("Where would you like to place this removed ship?");
-                        System.out.println("Enter X-coordinate:");
-                        char x0 = Battleship.scanner.nextLine().charAt(0);
-                        System.out.println("Enter Y-coordinate:");
-                        int y0 = Integer.parseInt(Battleship.scanner.nextLine());
-        
-                        coordinate = new Coordinate(x0, y0);
-                        isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
-        
-                        if (!isValidCoordinate) {
-                            System.out.println("The coordinates you entered are not valid.");
-                        }
-                    } while (!isValidCoordinate);
-        
-                    Direction directionNew = null;
-                    do {
-                        System.out.println(name + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
-                        char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
-        
-        
-                        if (directionChar == Direction.Horizontal.getCharIdentifier()
-                                || directionChar == Direction.Vertical.getCharIdentifier())
-                            directionNew = Direction.get(directionChar);
-                    } while (directionNew == null);
-
-                    shipAtCoordinate.setCoordinate(coordinate);
-                    shipAtCoordinate.setDirection(directionNew);
-
-                    isValidShipPosition = ownGrid.isValidShipPosition(shipAtCoordinate, coordinate, directionNew);
-                    if (isValidShipPosition) {
-                        ownGrid.placeShip(shipAtCoordinate, coordinate, directionNew);
-                    } else {
-                        System.out.println("You cannot place a ship here.");
-                    }
-            } while (!isValidShipPosition);
-            }
-
-            else {
-                System.out.println("There is no ship at this coordinate.");
-            }
-
-            ownGrid.printGrid(isValidCoordinate);
-
-            System.out.println(name + ", would you like to remove any ships, before starting the game? (yes/no)");
-            shouldIremoveShip = Battleship.scanner.nextLine().toLowerCase();}
-
+    void removeShip(Ship ship) {
+        ownGrid.removeShip(ship);
     }
-    
 
     void shoot() {
         Coordinate coordinate;
@@ -226,12 +166,14 @@ public class Player {
         } else
             System.out.println("You missed");
 
-//       System.out.println("\n-------------\nOpponents grid:");
-//       opponentGrid.printGrid(false);
     }
 
     boolean areAllShipsSunk() {
         return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
+    }
+
+    boolean hasAllShipsPlaced() {
+        return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
     public String getName() {
