@@ -56,20 +56,17 @@ public class Battleship {
             grid2.placeAsteroids();
         }
 
-        // Missing logic for AI placing ships on this branch
-        // singlePlayerMode = getPlayerModeResponse();
-        // if (singlePlayerMode) {
-        // p2 = new AI("CPU", grid2, grid1);
-        // } else {
-        // p2 = new Player("Player 2", grid2, grid1);
-        // }
-
-        p1 = new Player("Player 1", grid1, grid2);
-        p2 = new Player("Player 2", grid2, grid1);
+        singlePlayerMode = getPlayerModeResponse();
+        p1 = new Human(grid1, grid2);
         p1.placeShips();
-        p2.placeShips();
 
-        // TODO: Add scanner to get player name
+        if (singlePlayerMode) {
+            p2 = new AI("CPU", grid2, grid1);
+
+        } else {
+            p2 = new Human(grid2, grid1);
+        }
+        p2.placeShips();
 
         playerTurn = 1;
         while (true) {
