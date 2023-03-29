@@ -15,16 +15,12 @@ public abstract class Player {
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
-        initializeShips(
-
-        );
+        initializeShips();
     }
 
     public abstract void placeShip(Ship ship, Coordinate coordinate, Direction direction);
 
-    public abstract void placeShips();
-
-    public abstract void shoot();
+    public abstract void shoot(Coordinate coordinate);
 
     private void initializeShips() {
         ships[0] = new DeathStar(1);
@@ -40,7 +36,21 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
+    public void removeShip(Ship ship) {
+        ownGrid.removeShip(ship);
+        ship.setCoordinate(null);
+        ship.setDirection(null);
+    }
+
     public String getName() {
         return name;
+    }
+
+    public Grid getOwnGrid() {
+        return ownGrid;
+    }
+
+    public Grid getOpponentGrid() {
+        return opponentGrid;
     }
 }
