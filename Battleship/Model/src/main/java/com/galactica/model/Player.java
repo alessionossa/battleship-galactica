@@ -20,8 +20,8 @@ public abstract class Player {
 
 	private void initializeShips() {
 		ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
-		ships[1] = new Ship(5, Ship.ShipType.DeathStar, 1);
-		ships[2] = new Ship(5, Ship.ShipType.DeathStar, 1);
+		ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
+		ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
 	}
 
 	public void placeShips() {
