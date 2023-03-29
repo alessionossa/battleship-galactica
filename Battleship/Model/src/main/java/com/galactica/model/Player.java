@@ -129,6 +129,8 @@ public class Player {
 
     void removeShip(Ship ship) {
         ownGrid.removeShip(ship);
+        ship.setCoordinate(null);
+        ship.setDirection(null);
     }
 
     void shoot() {
@@ -157,12 +159,14 @@ public class Player {
         Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
         if (shipAtCoordinate != null || asteroidAtCoordinate != null) {
-            System.out.println("You hit something!");
-            boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-            if (isShipSunk) {
-                shipAtCoordinate.setSunk(true);
-                System.out.println("You sunk a ship! 💥🚢");
-            }
+            if (shipAtCoordinate != null) {
+                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+                if (isShipSunk) {
+                    shipAtCoordinate.setSunk(true);
+                    System.out.println("You sunk a ship! 💥🚢");
+                }
+            } else
+                System.out.println("You hit something!");
         } else
             System.out.println("You missed");
 
