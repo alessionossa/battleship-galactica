@@ -13,8 +13,34 @@ public class Battleship {
 	private static Player p1;
 	private static Player p2;
 
-	public static boolean getAsteroidMode() {
-		return asteroidMode;
+	public static boolean getAsteroidModeResponse() {
+		System.out.println("Would you like to play in obstacle mode? (y/n)");
+		while (true) {
+			char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+			if (resp == 'y') {
+				return true;
+			} else if (resp == 'n') {
+				return false;
+			} else {
+				System.out.println("Please only type 'y' or 'n' ");
+			}
+		}
+
+	}
+
+	public static boolean getPlayerModeResponse() {
+		System.out.println("Would you like to play against the computer? (y/n)");
+		while (true) {
+			char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
+			if (resp == 'y') {
+				return true;
+			} else if (resp == 'n') {
+				return false;
+			} else {
+				System.out.println("Please only type 'y' or 'n' ");
+			}
+		}
+
 	}
 
 	public static void main(String[] args) {
@@ -24,57 +50,23 @@ public class Battleship {
 		Grid grid1 = new Grid();
 		Grid grid2 = new Grid();
 
-		System.out.println("Would you like to play in obstacle mode? (y/n)");
-		boolean asteroidModeSet = false;
-		do {
-			char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
-			if (resp == 'y') {
-				asteroidMode = true;
-				asteroidModeSet = true;
-			} else if (resp == 'n') {
-				asteroidMode = false;
-				asteroidModeSet = true;
-			} else {
-				System.out.println("Please only type 'y' or 'n' ");
-			}
-		} while (asteroidModeSet == false);
-
+		asteroidMode = getAsteroidModeResponse();
 		if (asteroidMode) {
 			grid1.placeAsteroids();
 			grid2.placeAsteroids();
 		}
 
-		System.out.println("Would you like to play agianst the computer? (y/n)");
-		boolean singlePlayerModeSet = false;
-		do {
-			char resp = Character.toLowerCase(Battleship.scanner.nextLine().charAt(0));
-			if (resp == 'y') {
-				singlePlayerMode = true;
-				singlePlayerModeSet = true;
-			} else if (resp == 'n') {
-				singlePlayerMode = false;
-				singlePlayerModeSet = true;
-			} else {
-				System.out.println("Please only type 'y' or 'n' ");
-			}
-		} while (singlePlayerModeSet = false);
+		singlePlayerMode = getPlayerModeResponse();
+		p1 = new Human(grid1, grid2);
+		p1.placeShips();
 
 		if (singlePlayerMode) {
-			p1 = new Human(grid1, grid2);
-			p1.placeShips();
-			((Human) p1).removeShip();
 			p2 = new AI("CPU", grid2, grid1);
-			p2.placeShips();
 
 		} else {
-			p1 = new Human(grid1, grid2);
-			p1.placeShips();
-			((Human) p1).removeShip();
 			p2 = new Human(grid2, grid1);
-			p2.placeShips();
-			((Human) p2).removeShip();
 		}
-
+		p2.placeShips();
 
 		playerTurn = 1;
 		while (true) {
