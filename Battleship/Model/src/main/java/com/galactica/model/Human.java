@@ -42,7 +42,44 @@ public class Human extends Player {
         }
     }
 
-    void placeShips() {
+    Coordinate getCoordinate() {
+        Coordinate coordinate;
+        boolean isValidCoordinate = false;
+        do {
+            System.out.println("\n" + name + ", where do you want to place the ship?");
+            System.out.println("Enter X-coordinate:");
+            char x0 = Battleship.scanner.nextLine().charAt(0);
+            System.out.println("Enter Y-coordinate:");
+            int y0 = Integer.parseInt(Battleship.scanner.nextLine());
+
+            coordinate = new Coordinate(x0, y0);
+            isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
+
+            if (!isValidCoordinate) {
+                System.out.println("The coordinates you entered are not valid.");
+            }
+        } while (!isValidCoordinate);
+
+        return coordinate;
+    }
+
+    Direction getDirection() {
+        Direction direction = null;
+        do {
+            System.out.println(name
+                    + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
+            char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
+
+            if (directionChar == Direction.Horizontal.getCharIdentifier()
+                    || directionChar == Direction.Vertical.getCharIdentifier())
+                direction = Direction.get(directionChar);
+        } while (direction == null);
+
+        return direction;
+
+    }
+
+    public void placeShips() {
         boolean allShipsPlaced = false;
         while (!allShipsPlaced) {
             ownGrid.printGrid(true);
@@ -56,7 +93,23 @@ public class Human extends Player {
             } else if (!placeOrRemove && ship.isPlaced()) {
                 removeShip(ship);
             } else if (placeOrRemove && !ship.isPlaced()) {
-                placeShip(ship);
+                boolean isValidShipPosition;
+                Coordinate coordinate;
+                Direction direction;
+                do {
+                    coordinate = getCoordinate();
+                    direction = getDirection();
+
+                    isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
+                    if (isValidShipPosition) {
+                        ownGrid.placeShip(ship, coordinate, direction);
+                    } else {
+                        System.out.println("You cannot place a ship here.");
+                    }
+
+                } while (!isValidShipPosition);
+
+                placeShip(ship, coordinate, direction);
             }
 
             allShipsPlaced = hasAllShipsPlaced();
@@ -65,50 +118,9 @@ public class Human extends Player {
 
     }
 
-    void placeShip(Ship ship) {
-
-        boolean isValidShipPosition;
-        do {
-
-            Coordinate coordinate;
-            boolean isValidCoordinate = false;
-            do {
-                System.out.println("\n" + name + ", where do you want to place the ship?");
-                System.out.println("Enter X-coordinate:");
-                char x0 = Battleship.scanner.nextLine().charAt(0);
-                System.out.println("Enter Y-coordinate:");
-                int y0 = Integer.parseInt(Battleship.scanner.nextLine());
-
-                coordinate = new Coordinate(x0, y0);
-                isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
-
-                if (!isValidCoordinate) {
-                    System.out.println("The coordinates you entered are not valid.");
-                }
-            } while (!isValidCoordinate);
-
-            Direction direction = null;
-            do {
-                System.out.println(name
-                        + ", which direction do you want to place the ship? Enter H for horizontal, V for vertical.");
-                char directionChar = Battleship.scanner.nextLine().toLowerCase().trim().charAt(0);
-
-                if (directionChar == Direction.Horizontal.getCharIdentifier()
-                        || directionChar == Direction.Vertical.getCharIdentifier())
-                    direction = Direction.get(directionChar);
-            } while (direction == null);
-
-            ship.setCoordinate(coordinate);
-            ship.setDirection(direction);
-
-            isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
-            if (isValidShipPosition) {
-                ownGrid.placeShip(ship, coordinate, direction);
-            } else {
-                System.out.println("You cannot place a ship here.");
-            }
-
-        } while (!isValidShipPosition);
+    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+        ship.setCoordinate(coordinate);
+        ship.setDirection(direction);
 
     }
 
@@ -118,7 +130,7 @@ public class Human extends Player {
         ship.setDirection(null);
     }
 
-    void shoot() {
+    public void shoot() {
         Coordinate coordinate;
         boolean isValidCoordinate;
         do {

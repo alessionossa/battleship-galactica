@@ -15,24 +15,28 @@ public abstract class Player {
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
-        initializeShips();
+        initializeShips(
+
+        );
     }
 
-    abstract void placeShips();
+    public abstract void placeShip(Ship ship, Coordinate coordinate, Direction direction);
 
-    abstract void shoot();
+    public abstract void placeShips();
+
+    public abstract void shoot();
 
     private void initializeShips() {
-        ships[0] = new Ship(5, Ship.ShipType.DeathStar, 1);
-        ships[1] = new Ship(3, Ship.ShipType.Cruiser, 2);
-        ships[2] = new Ship(1, Ship.ShipType.Scout, 3);
+        ships[0] = new DeathStar(1);
+        ships[1] = new Cruiser(2);
+        ships[2] = new Scout(3);
     }
 
-    boolean areAllShipsSunk() {
+    public boolean areAllShipsSunk() {
         return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
     }
 
-    boolean hasAllShipsPlaced() {
+    public boolean hasAllShipsPlaced() {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
