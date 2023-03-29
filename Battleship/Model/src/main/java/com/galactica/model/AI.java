@@ -2,7 +2,7 @@ package com.galactica.model;
 
 import java.util.HashSet;
 import java.util.Random;
-
+/*
 public class AI extends Player {
     private Random random = new Random();
     private final char[] sequence = { 'v', 'h' };
@@ -211,3 +211,4 @@ public class AI extends Player {
     }
 
 }
+ */

@@ -15,20 +15,7 @@ public class Grid {
         }
     }
 
-    public void printGrid(boolean showShip) {
-        System.out.println("  | a b c d e f g h i j");
-        System.out.println("--+--------------------");
-        for (int i = 0; i < tiles.length; i++) {
-            System.out.print(i + " | ");
-            for (int j = 0; j < tiles[i].length; j++) {
-                String displayValue = tiles[i][j].displayValue(showShip);
-                System.out.print(displayValue + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    boolean isValidCoordinate(Coordinate coordinate) {
+    public boolean isValidCoordinate(Coordinate coordinate) {
         return coordinate.getX() >= 'a' && coordinate.getX() < 'a' + gridSize && coordinate.getY() >= 0
                 && coordinate.getY() < gridSize;
     }
@@ -36,7 +23,7 @@ public class Grid {
     /**
      * This method checks if the position is a valid position
      */
-    boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
+    public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
 
         if (direction == Direction.Horizontal) {
             if ((convertXToMatrixIndex(coordinate.getX()) + ship.getLength()) > gridSize) {
@@ -67,7 +54,7 @@ public class Grid {
         return true;
     }
 
-    void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
 
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
@@ -168,7 +155,7 @@ public class Grid {
         return true;
     }
 
-    void placeAsteroids() {
+    public void placeAsteroids() {
         Random random = new Random();
         int[] asteroidCoordinates = random.ints(10, 0, 10).toArray();
         for (int i = 0; i < 10; i += 2) {
@@ -176,7 +163,7 @@ public class Grid {
         }
     }
 
-    boolean anyShipsPlaced() {
+    public boolean anyShipsPlaced() {
         for (Tile[] row : tiles) {
             for (Tile tile : row) {
                 if (tile.getShip() != null)
@@ -184,5 +171,9 @@ public class Grid {
             }
         }
         return false;
+    }
+
+    public Tile[][] getTiles() {
+        return tiles;
     }
 }
