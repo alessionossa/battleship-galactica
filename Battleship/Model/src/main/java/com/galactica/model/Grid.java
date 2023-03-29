@@ -134,7 +134,7 @@ public class Grid {
         return tiles[coordinate.getY()][xIndex];
     }
 
-    Ship getShipAtCoordinate(Coordinate coordinate) {
+    public Ship getShipAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getShip();
     }
 
