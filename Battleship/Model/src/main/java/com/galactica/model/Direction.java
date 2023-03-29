@@ -1,3 +1,5 @@
+package com.galactica.model;
+
 import java.util.Arrays;
 
 public enum Direction {

@@ -1,3 +1,5 @@
+package com.galactica.model;
+
 public class Tile {
     private Ship ship;
     private Asteroid asteroid;

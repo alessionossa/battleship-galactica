@@ -1,3 +1,5 @@
+package com.galactica.model;
+
 import java.util.Random;
 
 public class Grid {
@@ -90,16 +92,18 @@ public class Grid {
             case Vertical:
                 for (int i = startCoordinate.getY(); i < startCoordinate.getY() + ship.getLength(); i++) {
                     Tile currentTile = tiles[i][convertXToMatrixIndex(startCoordinate.getX())];
-                    
+
                     currentTile.setShip(null);
                 }
                 break;
             case Horizontal:
-                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(startCoordinate.getX()) + ship.getLength(); i++) {
+                for (int i = convertXToMatrixIndex(startCoordinate.getX()); i < convertXToMatrixIndex(
+                        startCoordinate.getX()) + ship.getLength(); i++) {
                     Tile currentTile = tiles[startCoordinate.getY()][i];
                     currentTile.setShip(null);
                 }
-                break;}
+                break;
+        }
 
     }
 
@@ -170,5 +174,15 @@ public class Grid {
         for (int i = 0; i < 10; i += 2) {
             setTile(new Coordinate((char) (97 + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
         }
+    }
+
+    boolean anyShipsPlaced() {
+        for (Tile[] row : tiles) {
+            for (Tile tile : row) {
+                if (tile.getShip() != null)
+                    return true;
+            }
+        }
+        return false;
     }
 }
