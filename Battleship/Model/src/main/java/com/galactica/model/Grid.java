@@ -56,6 +56,9 @@ public class Grid {
 
     public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
 
+        ship.setCoordinate(coordinate);
+        ship.setDirection(direction);
+
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (coordinate.getX() + i);

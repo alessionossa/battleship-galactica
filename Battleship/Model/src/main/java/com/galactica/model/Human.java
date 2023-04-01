@@ -8,11 +8,6 @@ public class Human extends Player {
         this.name = Player.sc.nextLine();
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
-        ship.setCoordinate(coordinate);
-        ship.setDirection(direction);
-    }
-
     public void shoot(Coordinate coordinate) {
         opponentGrid.setTile(coordinate, true);
 
