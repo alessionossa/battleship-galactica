@@ -6,7 +6,7 @@ import com.galactica.model.Player;
 import com.galactica.model.Coordinate;
 
 public class CoordinateCLI {
-    public static Coordinate askCoordinate(CLI cli, Player player, Grid grid) {
+    public static Coordinate askCoordinateToShoot(CLI cli, Player player, Grid grid) {
         Coordinate coordinate;
         boolean isValidCoordinate;
         do {
@@ -14,6 +14,30 @@ public class CoordinateCLI {
             GridCLI.printGrid(grid, false);
 
             System.out.println(player.getName() + ", where do you want to shoot?");
+            System.out.println("Enter X-coordinate:");
+            char x0 = cli.scanner.nextLine().charAt(0);
+            System.out.println("Enter Y-coordinate:");
+            int y0 = Integer.parseInt(cli.scanner.nextLine());
+
+            coordinate = new Coordinate(x0, y0);
+            isValidCoordinate = grid.isValidCoordinate(coordinate);
+
+            if (!isValidCoordinate) {
+                System.out.println("The coordinates you entered are not valid.");
+            }
+        } while (!isValidCoordinate);
+
+        return coordinate;
+    }
+
+    public static Coordinate askCoordinateToPlaceShip(CLI cli, Player player, Grid grid) {
+        Coordinate coordinate;
+        boolean isValidCoordinate;
+        do {
+            System.out.println("\n-----------------------------\n" + player.getName() + "'s grid:");
+            GridCLI.printGrid(grid, true);
+
+            System.out.println(player.getName() + ", where do you want to place the ship?");
             System.out.println("Enter X-coordinate:");
             char x0 = cli.scanner.nextLine().charAt(0);
             System.out.println("Enter Y-coordinate:");

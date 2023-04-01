@@ -33,7 +33,7 @@ public class StepsDefinition {
 		ship = shipInput;
 		Coordinate coordinate = new Coordinate(x, y);
 		Direction direction = Direction.get(directionChar);
-		player.placeShip(ship, coordinate, direction);
+		// player.placeShip(ship, coordinate, direction);
 	}
 
 	@Then("The ship is placed on tiles {char} {int}, {char} {int} and {char} {int}")

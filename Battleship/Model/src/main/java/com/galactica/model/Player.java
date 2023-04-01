@@ -18,8 +18,6 @@ public abstract class Player {
         initializeShips();
     }
 
-    public abstract void placeShip(Ship ship, Coordinate coordinate, Direction direction);
-
     public abstract void shoot(Coordinate coordinate);
 
     private void initializeShips() {
@@ -52,5 +50,9 @@ public abstract class Player {
 
     public Grid getOpponentGrid() {
         return opponentGrid;
+    }
+
+    public Ship[] getShips() {
+        return ships;
     }
 }

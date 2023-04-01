@@ -43,7 +43,7 @@ public class BattleshipCLI {
         while (true) {
 
             if (playerTurn == 1) {
-                Coordinate coordinateToShoot = CoordinateCLI.askCoordinate(this.cli, p2, grid1);
+                Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
                 p1.shoot(coordinateToShoot);
                 if (p2.areAllShipsSunk()) {
                     endGame(p1);
@@ -51,7 +51,7 @@ public class BattleshipCLI {
                 }
 
             } else {
-                Coordinate coordinateToShoot = CoordinateCLI.askCoordinate(this.cli, p2, grid1);
+                Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
                 p2.shoot(coordinateToShoot);
                 if (p1.areAllShipsSunk()) {
                     endGame(p2);
@@ -93,7 +93,7 @@ public class BattleshipCLI {
                 Coordinate coordinate;
                 Direction direction;
                 do {
-                    coordinate = CoordinateCLI.askCoordinate(cli, player, player.getOpponentGrid());
+                    coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player, player.getOpponentGrid());
                     direction = DirectionCLI.askDirection(cli, player);
 
                     isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
@@ -113,7 +113,6 @@ public class BattleshipCLI {
         }
 
     }
-
 
     void endGame(Player winner) {
         System.out.println("Congratulations " + winner.getName() + "! 🍾🎉");

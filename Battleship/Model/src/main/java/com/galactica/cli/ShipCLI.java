@@ -12,11 +12,14 @@ public class ShipCLI {
         while (true) {
             char resp = Character.toLowerCase(cli.scanner.nextLine().charAt(0));
             if (resp == 'd')
-                return new DeathStar(IdGenerator.get());
+                // return new DeathStar(IdGenerator.get());
+                return player.getShips()[0];
             else if (resp == 'c')
-                return new Cruiser(IdGenerator.get());
+                // return new Cruiser(IdGenerator.get());
+                return player.getShips()[1];
             else if (resp == 's')
-                return new Scout(IdGenerator.get());
+                // return new Scout(IdGenerator.get());
+                return player.getShips()[2];
             else
                 System.out.println("Please only type 'd', 'c' or 's'");
         }
