@@ -30,9 +30,10 @@ public class CoordinateCLI {
         return coordinate;
     }
 
-    public static Coordinate askCoordinateToPlaceShip(CLI cli, Player player, Grid grid) {
+    public static Coordinate askCoordinateToPlaceShip(CLI cli, Player player) {
         Coordinate coordinate;
         boolean isValidCoordinate;
+        Grid grid = player.getOwnGrid();
         do {
             System.out.println("\n-----------------------------\n" + player.getName() + "'s grid:");
             GridCLI.printGrid(grid, true);

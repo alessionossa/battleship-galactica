@@ -93,7 +93,7 @@ public class BattleshipCLI {
                 Coordinate coordinate;
                 Direction direction;
                 do {
-                    coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player, player.getOpponentGrid());
+                    coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player);
                     direction = DirectionCLI.askDirection(cli, player);
 
                     isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
