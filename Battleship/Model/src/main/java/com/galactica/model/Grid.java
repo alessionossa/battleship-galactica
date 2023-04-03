@@ -55,6 +55,8 @@ public class Grid {
     }
 
     public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+        ship.setCoordinate(coordinate);
+        ship.setDirection(direction);
 
         ship.setCoordinate(coordinate);
         ship.setDirection(direction);
