@@ -98,14 +98,12 @@ public class BattleshipCLI {
 
                     isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
                     if (isValidShipPosition) {
-                        player.getOwnGrid().placeShip(ship, coordinate, direction);
+                        player.placeShip(ship, coordinate, direction);
                     } else {
                         System.out.println("You cannot place a ship here.");
                     }
 
                 } while (!isValidShipPosition);
-
-                player.getOwnGrid().placeShip(ship, coordinate, direction);
             }
 
             allShipsPlaced = player.hasAllShipsPlaced();

@@ -4,10 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import com.galactica.model.Coordinate;
 import com.galactica.model.Cruiser;
+import com.galactica.model.DeathStar;
 import com.galactica.model.Direction;
 import com.galactica.model.Grid;
 import com.galactica.model.Human;
-import com.galactica.model.Player;
+import com.galactica.model.Scout;
 import com.galactica.model.Ship;
 
 import io.cucumber.java.en.Given;
@@ -21,21 +22,25 @@ public class StepsDefinition {
 	Human player;
 	Ship ship;
 
-	@Given("Not all my ships have been placed")
-	public void not_all_my_ships_have_been_placed() {
+	@Given("I have started a new game")
+	public void i_have_started_a_new_game() {
 		ownGrid = new Grid();
 		opponentGrid = new Grid();
 		player = new Human(ownGrid, opponentGrid);
 
 	}
 
-	@When("I place a {string} in direction {string} on coordinate {string} {int}")
-	public void i_place_a_ship_in_direction_on_coordinate(String shipInput, String dir, String x, int y) {
-
-		ship = new Cruiser(1);
+	@When("I place a {string} in direction {string} on coordinate {string} {int} on my grid")
+	public void i_place_a_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
+		if (shipString.equals("Cruiser"))
+			ship = new Cruiser(1);
+		else if (shipString.equals("Deathstar"))
+			ship = new DeathStar(2);
+		else if (shipString.equals("Scout"))
+			ship = new Scout(3);
 		Coordinate coordinate = new Coordinate(x.charAt(0), y);
 		Direction direction = Direction.get(dir.charAt(0));
-		ownGrid.placeShip(ship, coordinate, direction);
+		player.placeShip(ship, coordinate, direction);
 	}
 
 	@Then("The ship is placed on tiles {string} {int}, {string} {int} and {string} {int}")
@@ -46,6 +51,18 @@ public class StepsDefinition {
 		assertEquals(s0, ship);
 		assertEquals(s1, ship);
 		assertEquals(s2, ship);
+	}
+
+	@When("I remove the ship")
+	public void i_remove_the_ship() {
+		player.removeShip(ship);
+	}
+
+	@Then("The ship disappears from my grid")
+	public void the_ship_disappears_from_my_grid() {
+		assertEquals(ship.getCoordinate(), null);
+		assertEquals(ship.getDirection(), null);
+		assertEquals(ownGrid.anyShipsPlaced(), false);
 	}
 
 }

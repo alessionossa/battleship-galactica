@@ -34,6 +34,12 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
+    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+        ship.setCoordinate(coordinate);
+        ship.setDirection(direction);
+        ownGrid.placeShip(ship, coordinate, direction);
+    }
+
     public void removeShip(Ship ship) {
         ownGrid.removeShip(ship);
         ship.setCoordinate(null);
