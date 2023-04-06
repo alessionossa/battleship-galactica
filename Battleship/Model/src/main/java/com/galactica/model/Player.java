@@ -34,7 +34,7 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) throws OutOfBoundsException {
         ship.setCoordinate(coordinate);
         ship.setDirection(direction);
         ownGrid.placeShip(ship, coordinate, direction);

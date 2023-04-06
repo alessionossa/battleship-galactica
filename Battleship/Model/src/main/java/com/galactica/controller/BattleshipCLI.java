@@ -27,7 +27,8 @@ public class BattleshipCLI {
             grid2.placeAsteroids();
         }
 
-        singlePlayerMode = cli.getPlayerModeResponse();
+        singlePlayerMode = cli.getPlayerModeResponse(); //TODO refactor singlplayerMode from cli to model
+        //TODO Needed for StartGame cucumber feature
         p1 = new Human(grid1, grid2);
         placeShips(p1);
 
@@ -98,7 +99,11 @@ public class BattleshipCLI {
 
                     isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
                     if (isValidShipPosition) {
-                        player.placeShip(ship, coordinate, direction);
+                        try {
+                            player.placeShip(ship, coordinate, direction);
+                        } catch (OutOfBoundsException e) {
+                            
+                        }
                     } else {
                         System.out.println("You cannot place a ship here.");
                     }
