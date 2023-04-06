@@ -10,8 +10,6 @@ public class BattleshipCLI {
     private boolean asteroidMode;
     private boolean singlePlayerMode;
 
-
-
     private Human p1;
     private Player p2;
 
@@ -43,7 +41,6 @@ public class BattleshipCLI {
             p2 = new Human(grid2, grid1);
             placeShips((Human) p2);
         }
-        
 
         playerTurn = 1;
         while (true) {
@@ -142,9 +139,9 @@ public class BattleshipCLI {
                 try {
                     player.removeShip(ship);
                 } catch (UnplacedShipException e) {
-                    
+
                 }
-                
+
             } else if (placeOrRemove && !ship.isPlaced()) {
                 boolean isValidShipPosition;
                 Coordinate coordinate;

@@ -8,7 +8,7 @@ Feature: Deleting ships on a grid
     When I remove the ship
     Then The ship disappears from my grid
 
-   @tag2
+  @tag2
   Scenario: Remove unplaced ship from the grid
     Given I have started a new game
     When I remove the ship
