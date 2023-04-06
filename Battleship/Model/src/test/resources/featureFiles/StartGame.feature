@@ -6,5 +6,3 @@ Feature: Starting a new game
     Given I have not started a new game
     When I choose to start a new game with a person
     Then A multiplayer game has been started
-
-
