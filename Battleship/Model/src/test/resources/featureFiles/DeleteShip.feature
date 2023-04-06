@@ -7,3 +7,5 @@ Feature: Deleting ships on a grid
     And I place a "Deathstar" in direction "v" on coordinate "b" 2 on my grid
     When I remove the ship
     Then The ship disappears from my grid
+
+ 

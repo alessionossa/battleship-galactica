@@ -30,8 +30,6 @@ public class StepsDefinition {
 
 	// PLACE SHIP TEST
 
-	// Successfully place a ship
-
 	@Given("I have started a new game")
 	public void i_have_started_a_new_game() {
 		ownGrid = new Grid();
@@ -68,8 +66,29 @@ public class StepsDefinition {
 		assertEquals(s2, ship);
 	}
 	
-	// Placing ships out of bounds 
-	// Maybe we should add more cases of the out of bounds error
+
+	// DELETE SHIP TEST
+
+	@When("I remove the ship")
+	public void i_remove_the_ship() {
+		player.removeShip(ship);
+	}
+
+	@Then("The ship disappears from my grid")
+	public void the_ship_disappears_from_my_grid() {
+		assertEquals(ship.getCoordinate(), null);
+		assertEquals(ship.getDirection(), null);
+		assertEquals(ownGrid.anyShipsPlaced(), false);
+	}
+
+	@Then("I get a error message {string}")
+	public void i_get_a_error_message(String errorMessage) {
+		if (error != null)
+			assertEquals(error.getMessage(), errorMessage);
+	}
+
+
+	// START GAME TEST
 
 	@Given("I have not started a new game")
 	public void i_have_not_started_a_new_game() {
@@ -90,32 +109,4 @@ public class StepsDefinition {
 		player2 = new Human(opponentGrid, ownGrid);
 
 	}
-
-
-	// DELETE SHIP TEST
-
-	// Successfully deleting a ship
-
-	@When("I remove the ship")
-	public void i_remove_the_ship() {
-		player.removeShip(ship);
-	}
-
-	@Then("The ship disappears from my grid")
-	public void the_ship_disappears_from_my_grid() {
-		assertEquals(ship.getCoordinate(), null);
-		assertEquals(ship.getDirection(), null);
-		assertEquals(ownGrid.anyShipsPlaced(), false);
-	}
-
-	@Then("I get a error message {string}")
-	public void i_get_a_error_message(String errorMessage) {
-		if (error != null)
-			assertEquals(error.getMessage(), errorMessage);
-	}
-
-	// Removing an unplaced ship
-
-
-	// START GAME TEST
 }
