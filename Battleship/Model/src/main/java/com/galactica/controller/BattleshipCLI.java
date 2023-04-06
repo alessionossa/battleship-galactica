@@ -27,7 +27,8 @@ public class BattleshipCLI {
             grid2.placeAsteroids();
         }
 
-        singlePlayerMode = cli.getPlayerModeResponse();
+        singlePlayerMode = cli.getPlayerModeResponse(); //TODO refactor singlplayerMode from cli to model
+        //TODO Needed for StartGame cucumber feature
         p1 = new Human(grid1, grid2);
         placeShips(p1);
 

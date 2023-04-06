@@ -22,6 +22,8 @@ public class StepsDefinition {
 	Grid ownGrid;
 	Grid opponentGrid;
 	Human player;
+	Human player1;
+	Human player2;
 	Ship ship;
 	Exception error;
 
@@ -79,5 +81,24 @@ public class StepsDefinition {
 			assertEquals(error.getMessage(), errorMessage);
 	}
 
+	//ALL CODE STARTING FROM HERE WORK IN PROGRESS
+	@Given("I have not started a new game")
+	public void i_have_not_started_a_new_game() {
+		ownGrid = null;
+		opponentGrid = null;
+		player = null;
+	}
+	@When("I choose to start a new game with a person")
+	public void i_choose_to_start_a_new_game_with_a_person() {
 
+		throw new io.cucumber.java.PendingException();
+	}
+	@Then("A multiplayer game has been started")
+	public void a_multiplayer_game_has_been_started() {
+		ownGrid = new Grid();
+		opponentGrid = new Grid();
+		player1 = new Human(ownGrid, opponentGrid);
+		player2 = new Human(opponentGrid, ownGrid);
+
+	}
 }
