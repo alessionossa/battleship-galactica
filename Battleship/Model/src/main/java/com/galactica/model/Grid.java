@@ -16,8 +16,8 @@ public class Grid {
     }
 
     public boolean isValidCoordinate(Coordinate coordinate) {
-        return coordinate.getX() >= 'a' && coordinate.getX() < 'a' + gridSize && coordinate.getY() >= 0
-                && coordinate.getY() < gridSize;
+        return coordinate.getX() >= 'a' && coordinate.getX() < 'a' + gridSize
+                && coordinate.getY() >= 0 && coordinate.getY() < gridSize;
     }
 
     /**
@@ -54,19 +54,29 @@ public class Grid {
         return true;
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) throws OutOfBoundsException{
 
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
-                char newX = (char) (coordinate.getX() + i);
-                Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
-                setTile(tileCoordinate, ship);
+                char newX = (char) (originCoordinate.getX() + i);
+                Coordinate tileCoordinate = new Coordinate(newX, originCoordinate.getY());
+                if (!isValidCoordinate(tileCoordinate)){
+                    throw new OutOfBoundsException("Ship out of bounds");
+                }
+                else {
+                    setTile(tileCoordinate, ship);
+                }
             }
         } else {
             for (int i = 0; i < ship.getLength(); i++) {
-                int newY = coordinate.getY() + i;
-                Coordinate tileCoordinate = new Coordinate(coordinate.getX(), newY);
-                setTile(tileCoordinate, ship);
+                int newY = originCoordinate.getY() + i;
+                Coordinate tileCoordinate = new Coordinate(originCoordinate.getX(), newY);
+                if (!isValidCoordinate(tileCoordinate)){
+                    throw new OutOfBoundsException("Ship out of bounds");
+                }
+                else {
+                    setTile(tileCoordinate, ship);
+                }
             }
         }
 

@@ -8,9 +8,11 @@ import com.galactica.model.DeathStar;
 import com.galactica.model.Direction;
 import com.galactica.model.Grid;
 import com.galactica.model.Human;
+import com.galactica.model.OutOfBoundsException;
 import com.galactica.model.Scout;
 import com.galactica.model.Ship;
 
+import io.cucumber.java.an.Y;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -21,6 +23,7 @@ public class StepsDefinition {
 	Grid opponentGrid;
 	Human player;
 	Ship ship;
+	Exception error;
 
 	@Given("I have started a new game")
 	public void i_have_started_a_new_game() {
@@ -40,7 +43,12 @@ public class StepsDefinition {
 			ship = new Scout(3);
 		Coordinate coordinate = new Coordinate(x.charAt(0), y);
 		Direction direction = Direction.get(dir.charAt(0));
-		player.placeShip(ship, coordinate, direction);
+
+		try {
+			player.placeShip(ship, coordinate, direction);
+		} catch (OutOfBoundsException e) {
+			error = e;
+		}
 	}
 
 	@Then("The ship is placed on tiles {string} {int}, {string} {int} and {string} {int}")
@@ -64,5 +72,12 @@ public class StepsDefinition {
 		assertEquals(ship.getDirection(), null);
 		assertEquals(ownGrid.anyShipsPlaced(), false);
 	}
+
+	@Then("I get a error message {string}")
+	public void i_get_a_error_message(String errorMessage) {
+		if (error != null)
+			assertEquals(error.getMessage(), errorMessage);
+	}
+
 
 }
