@@ -40,7 +40,7 @@ public abstract class Player {
         ownGrid.placeShip(ship, coordinate, direction);
     }
 
-    public void removeShip(Ship ship) {
+    public void removeShip(Ship ship) throws UnplacedShipException{
         ownGrid.removeShip(ship);
         ship.setCoordinate(null);
         ship.setDirection(null);

@@ -139,7 +139,12 @@ public class BattleshipCLI {
             } else if (placeOrRemove && ship.isPlaced()) {
                 System.out.println("Cannot place a ship that is already on the grid");
             } else if (!placeOrRemove && ship.isPlaced()) {
-                player.removeShip(ship);
+                try {
+                    player.removeShip(ship);
+                } catch (UnplacedShipException e) {
+                    
+                }
+                
             } else if (placeOrRemove && !ship.isPlaced()) {
                 boolean isValidShipPosition;
                 Coordinate coordinate;

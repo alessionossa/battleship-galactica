@@ -81,9 +81,9 @@ public class Grid {
 
     }
 
-    void removeShip(Ship ship) {
+    void removeShip(Ship ship) throws UnplacedShipException{
+        if (ship == null) throw new UnplacedShipException("Ship has not been placed in the grid before");
         Coordinate startCoordinate = ship.getCoordinate();
-
         switch (ship.getDirection()) {
             case Vertical:
                 for (int i = startCoordinate.getY(); i < startCoordinate.getY() + ship.getLength(); i++) {

@@ -9,6 +9,7 @@ import com.galactica.model.Direction;
 import com.galactica.model.Grid;
 import com.galactica.model.Human;
 import com.galactica.model.OutOfBoundsException;
+import com.galactica.model.UnplacedShipException;
 import com.galactica.model.Scout;
 import com.galactica.model.Ship;
 
@@ -65,13 +66,18 @@ public class StepsDefinition {
 		assertEquals(s1, ship);
 		assertEquals(s2, ship);
 	}
+
 	
 
 	// DELETE SHIP TEST
 
 	@When("I remove the ship")
 	public void i_remove_the_ship() {
-		player.removeShip(ship);
+		try {
+			player.removeShip(ship);
+		} catch (UnplacedShipException e) {
+			error = e;
+		}
 	}
 
 	@Then("The ship disappears from my grid")
@@ -86,7 +92,7 @@ public class StepsDefinition {
 		if (error != null)
 			assertEquals(error.getMessage(), errorMessage);
 	}
-
+	
 
 	// START GAME TEST
 
