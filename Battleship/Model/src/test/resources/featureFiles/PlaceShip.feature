@@ -13,4 +13,9 @@ Feature: Placing ships on a grid
     Given I have started a new game
     When I place a "Cruiser" in direction "v" on coordinate "a" 9 on my grid
     Then I get a error message "Ship out of bounds"
-    
+
+  @tag3
+  Scenario: Successfully place all of ships so I can start a fair game
+    Given I have started a new game
+    When  I have placed all of my ships
+    Then Start game

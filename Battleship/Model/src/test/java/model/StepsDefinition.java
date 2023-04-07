@@ -25,7 +25,7 @@ public class StepsDefinition {
 	Exception error;
 	BattleshipCLI game;
 	Asteroid asteroid;
-
+	BattleshipCLI startShooting;
 
 	// PLACE SHIP TEST
 
@@ -65,7 +65,6 @@ public class StepsDefinition {
 		assertEquals(s2, ship);
 	}
 
-
 	// DELETE SHIP TEST
 
 	@When("I remove the ship")
@@ -89,49 +88,61 @@ public class StepsDefinition {
 		if (error != null)
 			assertEquals(error.getMessage(), errorMessage);
 	}
-	
+
+	@When("I have placed all of my ships")
+	public void i_have_placed_all_of_my_ships() {
+		if (player.hasAllShipsPlaced()) {
+			boolean startShooting = true;
+		}
+
+	}
+
+	@Then("Start game")
+	public void start_game() {
+		boolean startShooting = true;
+	}
 
 	// START GAME TEST: In progress
 
-	/*@Given("I have not started a new game")
-	public void i_have_not_started_a_new_game() {
-		ownGrid = null;
-		opponentGrid = null;
-		player = null;
-		player1 = null;
-		game = null;
-	}
-
-	@When("I choose to start a new game with a person")
-	public void i_choose_to_start_a_new_game_with_a_person() {
-		game = new BattleshipCLI(new CLI());
-		boolean singlePlayerMode = false;
-		game.startGame(ownGrid, opponentGrid, singlePlayerMode);
-	}
-
-	@When("I choose to start a new game with the computer")
-	public void i_choose_to_start_a_new_game_with_the_computer() {
-		game = new BattleshipCLI(new CLI());
-		boolean singlePlayerMode = true;
-		game.startGame(ownGrid, opponentGrid, singlePlayerMode);
-	}
-
-	@Then("A multiplayer game has been started")
-	public void a_multiplayer_game_has_been_started() {
-		assertnotEquals(player1, error);
-	}
-
-	@Then("A game against the computer has been started")
-	public void a_game_against_the_computer_has_been_started() {
-		assertEquals(opponentGrid, error);
-	}*/
+	/*
+	 * @Given("I have not started a new game")
+	 * public void i_have_not_started_a_new_game() {
+	 * ownGrid = null;
+	 * opponentGrid = null;
+	 * player = null;
+	 * player1 = null;
+	 * game = null;
+	 * }
+	 * 
+	 * @When("I choose to start a new game with a person")
+	 * public void i_choose_to_start_a_new_game_with_a_person() {
+	 * game = new BattleshipCLI(new CLI());
+	 * boolean singlePlayerMode = false;
+	 * game.startGame(ownGrid, opponentGrid, singlePlayerMode);
+	 * }
+	 * 
+	 * @When("I choose to start a new game with the computer")
+	 * public void i_choose_to_start_a_new_game_with_the_computer() {
+	 * game = new BattleshipCLI(new CLI());
+	 * boolean singlePlayerMode = true;
+	 * game.startGame(ownGrid, opponentGrid, singlePlayerMode);
+	 * }
+	 * 
+	 * @Then("A multiplayer game has been started")
+	 * public void a_multiplayer_game_has_been_started() {
+	 * assertnotEquals(player1, error);
+	 * }
+	 * 
+	 * @Then("A game against the computer has been started")
+	 * public void a_game_against_the_computer_has_been_started() {
+	 * assertEquals(opponentGrid, error);
+	 * }
+	 */
 
 	// SEE GRID TEST
 
+	// SHOOT TEST
 
-
-	// SHOOT TEST	
-	
 	// Method to place a ship on opponent's grid
 	public void he_she_places_a_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
 		if (shipString.equals("Cruiser"))
@@ -157,19 +168,22 @@ public class StepsDefinition {
 		i_place_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
 		i_place_a_ship_in_direction_on_coordinate("Deathstar", "v", "c", 5);
 	}
+
 	@And("My opponents has placed a ship of type {string} at coordinate {string} {int} on his\\/her grid, with the direction {string}")
-	public void my_opponents_has_placed_a_ship_of_type_at_coordinate_on_his_her_grid_with_the_direction(String string, String string2, Integer int1, String string3) {
+	public void my_opponents_has_placed_a_ship_of_type_at_coordinate_on_his_her_grid_with_the_direction(String string,
+			String string2, Integer int1, String string3) {
 		player1 = new Human(opponentGrid, ownGrid);
 		he_she_places_a_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
 		he_she_places_a_ship_in_direction_on_coordinate(string, string3, string2, int1);
-		he_she_places_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);	
+		he_she_places_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
 	}
+
 	@When("I shoot at coordinate {string} {int} on his\\/her grid")
 	public String i_shoot_at_coordinate_on_his_her_grid(String string, Integer int1) {
 		player.shoot(new Coordinate(string.charAt(0), int1));
 		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
 		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
-		
+
 		if (tileType == "X" && ship.isSunk()) {
 			return "You sunk a ship! 💥🚢";
 		} else if (tileType == "/") {
@@ -180,6 +194,7 @@ public class StepsDefinition {
 			return "Something went wrong";
 		}
 	}
+
 	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int} on his\\/her grid")
 	public void i_get_a_message(String string, String string2, Integer int1) {
 		try {

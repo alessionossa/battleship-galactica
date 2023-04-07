@@ -12,3 +12,4 @@ Feature: See player's grid
     Given I have started a new game
     When It is my turn
     Then I am able to visualize my opponent's grid
+

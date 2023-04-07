@@ -12,3 +12,4 @@ Feature: Starting a new game
     Given I have not started a new game
     When  I choose to start a new game with the computer
     Then A game against the computer has been started
+

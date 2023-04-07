@@ -42,8 +42,15 @@ public class BattleshipCLI {
             placeShips((Human) p2);
         }
 
+        boolean startShooting;
+        if (p1.hasAllShipsPlaced() || p2.hasAllShipsPlaced()) {
+            startShooting = true;
+        } else {
+            startShooting = false;
+        }
+
         playerTurn = 1;
-        while (true) {
+        while (startShooting) {
 
             if (playerTurn == 1) {
                 Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
@@ -175,4 +182,9 @@ public class BattleshipCLI {
 
         this.cli.scanner.close();
     }
+
 }
+
+    
+
+    
