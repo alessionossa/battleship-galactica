@@ -6,12 +6,12 @@ import com.galactica.model.Player;
 import com.galactica.model.Coordinate;
 
 public class CoordinateCLI {
-    public static Coordinate askCoordinateToShoot(CLI cli, Player player, Grid grid) {
+    public static Coordinate askCoordinateToShoot(CLI cli, Player player, Grid opponentsGrid) {
         Coordinate coordinate;
         boolean isValidCoordinate;
         do {
             System.out.println("\n-----------------------------\nOpponents grid:");
-            GridCLI.printGrid(grid, false);
+            GridCLI.printGrid(opponentsGrid, false);
 
             System.out.println(player.getName() + ", where do you want to shoot?");
             System.out.println("Enter X-coordinate:");
@@ -20,7 +20,7 @@ public class CoordinateCLI {
             int y0 = Integer.parseInt(cli.scanner.nextLine());
 
             coordinate = new Coordinate(x0, y0);
-            isValidCoordinate = grid.isValidCoordinate(coordinate);
+            isValidCoordinate = opponentsGrid.isValidCoordinate(coordinate);
 
             if (!isValidCoordinate) {
                 System.out.println("The coordinates you entered are not valid.");

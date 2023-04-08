@@ -54,27 +54,26 @@ public class Grid {
         return true;
     }
 
-    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) throws OutOfBoundsException{
+    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) throws OutOfBoundsException {
+        Coordinate tileCoordinate;
 
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (originCoordinate.getX() + i);
-                Coordinate tileCoordinate = new Coordinate(newX, originCoordinate.getY());
-                if (!isValidCoordinate(tileCoordinate)){
+                tileCoordinate = new Coordinate(newX, originCoordinate.getY());
+                if (!isValidCoordinate(tileCoordinate)) {
                     throw new OutOfBoundsException("Ship out of bounds");
-                }
-                else {
+                } else {
                     setTile(tileCoordinate, ship);
                 }
             }
         } else {
             for (int i = 0; i < ship.getLength(); i++) {
                 int newY = originCoordinate.getY() + i;
-                Coordinate tileCoordinate = new Coordinate(originCoordinate.getX(), newY);
-                if (!isValidCoordinate(tileCoordinate)){
+                tileCoordinate = new Coordinate(originCoordinate.getX(), newY);
+                if (!isValidCoordinate(tileCoordinate)) {
                     throw new OutOfBoundsException("Ship out of bounds");
-                }
-                else {
+                } else {
                     setTile(tileCoordinate, ship);
                 }
             }
