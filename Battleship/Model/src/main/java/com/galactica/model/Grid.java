@@ -124,7 +124,7 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
     }
 
-    Tile getTile(Coordinate coordinate) {
+    public Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
