@@ -20,11 +20,11 @@ public class Human extends Player {
                 if (isShipSunk) {
                     shipAtCoordinate.setSunk(true);
                     System.out.println("You sunk a ship! 💥🚢");
-                }
-            } else
-                System.out.println("You hit something!");
+                } else
+                    System.out.println("You hit something!");
+            }
         } else
-            System.out.println("You missed");
+            System.out.println("You missed :(");
 
     }
 }

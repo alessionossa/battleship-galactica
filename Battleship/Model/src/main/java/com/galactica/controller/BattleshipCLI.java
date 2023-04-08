@@ -44,7 +44,8 @@ public class BattleshipCLI {
         while (true) {
 
             if (playerTurn == 1) {
-                Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
+                Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
+                        
                 p1.shoot(coordinateToShoot);
                 if (p2.areAllShipsSunk()) {
                     endGame(p1);
