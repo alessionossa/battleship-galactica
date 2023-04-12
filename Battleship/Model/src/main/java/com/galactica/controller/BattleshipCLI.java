@@ -44,23 +44,23 @@ public class BattleshipCLI {
         while (true) {
 
             if (playerTurn == 1) {
-                //Weapon weaponsToShoot = WeaponCLI.askWeaponsToShoot(this.cli, p1);
+                Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p1);
                 Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
                         
-                p1.shoot(coordinateToShoot);
+                p1.shoot(coordinateToShoot,weaponsToShoot);
                 if (p2.areAllShipsSunk()) {
                     endGame(p1);
                     return;
                 }
 
             } else {
+                Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
                 Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                p2.shoot(coordinateToShoot);
+                p2.shoot(coordinateToShoot,weaponsToShoot);
                 if (p1.areAllShipsSunk()) {
                     endGame(p2);
                     return;
                 }
-
             }
             if (playerTurn == 1)
                 playerTurn = 2;

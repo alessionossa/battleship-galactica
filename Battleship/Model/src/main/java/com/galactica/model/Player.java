@@ -22,7 +22,7 @@ public abstract class Player {
         initializeShips();
     }
 
-    public abstract void shoot(Coordinate coordinate);
+    public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
 
     private void initializeShips() {
         ships[0] = new DeathStar(1);
@@ -32,7 +32,7 @@ public abstract class Player {
     private void initializeWeapons() {
         weapons[0] = new Cannon();
         weapons[1] = new Grenade();
-        weapons[2] = new Lazer();
+        weapons[2] = new Laser();
     }
     public boolean areAllShipsSunk() {
         return Arrays.stream(ships).allMatch(ship -> ship.isSunk());

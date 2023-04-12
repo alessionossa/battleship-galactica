@@ -7,7 +7,7 @@ import com.galactica.model.Weapon;
 
 public class WeaponCLI {
     public static Weapon askWeaponToShoot(CLI cli, Player player) {
-        System.out.println(player.getName() + ", select a ship: 'c' for cannon, 'g' for grenade, 'l' for lazer");
+        System.out.println(player.getName() + ", select a weapon: 'c' for cannon, 'g' for grenade, 'l' for lazer");
 
         while (true) {
             char resp = Character.toLowerCase(cli.scanner.nextLine().charAt(0));
@@ -19,6 +19,7 @@ public class WeaponCLI {
                 return player.getWeapons()[1];
             else if (resp == 'l')
                 // return new Scout(IdGenerator.get());
+
                 return player.getWeapons()[2];
             else
                 System.out.println("Please only type 'c', 'g' or 'l'");
