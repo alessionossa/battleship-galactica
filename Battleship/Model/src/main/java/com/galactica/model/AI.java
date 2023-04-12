@@ -2,7 +2,7 @@ package com.galactica.model;
 
 import java.util.HashSet;
 import java.util.Random;
-/*
+
 public class AI extends Player {
     private Random random = new Random();
     private final char[] sequence = { 'v', 'h' };
@@ -21,7 +21,7 @@ public class AI extends Player {
         this.name = name;
     }
 
-    public void placeShips() {
+    public void placeShips() throws OutOfBoundsException {
         System.out.println("--------------------------------------------- ");
         System.out.println(name + " is placing the ships... \n");
         for (Ship ship : ships) {
@@ -54,7 +54,7 @@ public class AI extends Player {
         }
     }
 
-    public void shoot() {
+    public void shoot(Coordinate c) {
         Coordinate coordinate;
         boolean isValidCoordinate;
 
@@ -172,13 +172,10 @@ public class AI extends Player {
             Down = false;
             Moves[0] = 0;
             Moves[1] = 0;
-        } else {
-            // lastHitWasSuccesful = true;
-        }
+        } 
     }
 
     public void automaticShooting(Coordinate newCoordinate, char direction, char nextDirection) {
-        System.out.println(newCoordinate.getX() + " " + newCoordinate.getY());
         if (opponentGrid.isValidCoordinate(newCoordinate) && !CoordinatesHit.contains(newCoordinate)) {
 
             printShootingTurn(newCoordinate);
@@ -198,11 +195,7 @@ public class AI extends Player {
                 System.out.println("The AI has missed...");
                 Moves[0] = 0;
                 Moves[1] = 0;
-                System.out.println("Interne " + direction + " " + nextDirection);
-                System.out.println("Valori prima " + Right + " " + Left + " " + Up + " " + Down);
                 nextDirection(direction, nextDirection);
-                System.out.println("Valori dopo " + Right + " " + Left + " " + Up + " " + Down);
-
             }
 
         } else {
@@ -211,4 +204,3 @@ public class AI extends Player {
     }
 
 }
- */

@@ -33,12 +33,18 @@ public class BattleshipCLI {
         placeShips(p1);
 
         if (singlePlayerMode) {
-            // p2 = new AI("CPU", grid2, grid1);
-
+            p2 = new AI("CPU", grid2, grid1);
+            try {
+                ((AI) p2).placeShips();
+            } catch (OutOfBoundsException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         } else {
             p2 = new Human(grid2, grid1);
+            placeShips(p2);
         }
-        placeShips(p2);
+        
 
         playerTurn = 1;
         while (true) {
@@ -53,13 +59,17 @@ public class BattleshipCLI {
                 }
 
             } else {
-                Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                p2.shoot(coordinateToShoot);
+                if (singlePlayerMode) {
+                    p2.shoot(null);
+                } else {
+                    Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
+                    p2.shoot(coordinateToShoot);  
+                }
+
                 if (p1.areAllShipsSunk()) {
                     endGame(p2);
                     return;
                 }
-
             }
             if (playerTurn == 1)
                 playerTurn = 2;
