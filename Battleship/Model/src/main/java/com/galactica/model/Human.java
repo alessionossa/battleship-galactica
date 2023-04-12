@@ -10,6 +10,8 @@ public class Human extends Player {
     }
 
     public void shoot(Coordinate coordinate) {
+        //weapons.chooseWeaponToShoot;
+
         opponentGrid.setTile(coordinate, true);
 
         Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);

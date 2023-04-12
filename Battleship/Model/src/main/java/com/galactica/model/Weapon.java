@@ -1,6 +1,7 @@
 package com.galactica.model;
 
-public interface Weapon {
-    
+public abstract class Weapon {
+    public int areaOfEffect;
+
 
 }
