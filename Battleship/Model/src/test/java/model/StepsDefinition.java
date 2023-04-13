@@ -89,57 +89,6 @@ public class StepsDefinition {
 			assertEquals(error.getMessage(), errorMessage);
 	}
 
-	@When("I have placed all of my ships")
-	public void i_have_placed_all_of_my_ships() {
-		if (player.hasAllShipsPlaced()) {
-			boolean startShooting = true;
-		}
-
-	}
-
-	@Then("Start game")
-	public void start_game() {
-		boolean startShooting = true;
-	}
-
-	// START GAME TEST: In progress
-
-	/*
-	 * @Given("I have not started a new game")
-	 * public void i_have_not_started_a_new_game() {
-	 * ownGrid = null;
-	 * opponentGrid = null;
-	 * player = null;
-	 * player1 = null;
-	 * game = null;
-	 * }
-	 * 
-	 * @When("I choose to start a new game with a person")
-	 * public void i_choose_to_start_a_new_game_with_a_person() {
-	 * game = new BattleshipCLI(new CLI());
-	 * boolean singlePlayerMode = false;
-	 * game.startGame(ownGrid, opponentGrid, singlePlayerMode);
-	 * }
-	 * 
-	 * @When("I choose to start a new game with the computer")
-	 * public void i_choose_to_start_a_new_game_with_the_computer() {
-	 * game = new BattleshipCLI(new CLI());
-	 * boolean singlePlayerMode = true;
-	 * game.startGame(ownGrid, opponentGrid, singlePlayerMode);
-	 * }
-	 * 
-	 * @Then("A multiplayer game has been started")
-	 * public void a_multiplayer_game_has_been_started() {
-	 * assertnotEquals(player1, error);
-	 * }
-	 * 
-	 * @Then("A game against the computer has been started")
-	 * public void a_game_against_the_computer_has_been_started() {
-	 * assertEquals(opponentGrid, error);
-	 * }
-	 */
-
-	// SEE GRID TEST
 
 	// SHOOT TEST
 
