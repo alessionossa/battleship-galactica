@@ -197,10 +197,6 @@ public class StepsDefinition {
 
 	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int} on his\\/her grid")
 	public void i_get_a_message(String string, String string2, Integer int1) {
-		try {
-			assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
-		} catch (ComparisonFailure e) {
-			System.out.println("Test failed");
-		}
+		assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
 	}
 }

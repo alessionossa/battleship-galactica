@@ -184,7 +184,3 @@ public class BattleshipCLI {
     }
 
 }
-
-    
-
-    
