@@ -14,16 +14,18 @@ public class Human extends Player {
 
         Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        if (shipAtCoordinate != null || asteroidAtCoordinate != null) {
-            if (shipAtCoordinate != null) {
-                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                if (isShipSunk) {
-                    shipAtCoordinate.setSunk(true);
-                    System.out.println("You sunk a ship! 💥🚢");
-                } else
-                    System.out.println("You hit something!");
-            }
-        } else
+
+        if (shipAtCoordinate != null) {
+            boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+            if (isShipSunk) {
+                shipAtCoordinate.setSunk(true);
+                System.out.println("You sunk a ship! 💥🚢");
+            } else
+                System.out.println("You hit something!");
+        } else if (asteroidAtCoordinate != null) {
+            System.out.println("You hit something!");
+        }
+        else
             System.out.println("You missed :(");
 
     }
