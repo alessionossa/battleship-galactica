@@ -3,7 +3,7 @@ package com.galactica.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Human extends Player{
+public class Human extends Player {
     public static char intToChar(int num) {
         return (char) num;
     }
@@ -46,10 +46,7 @@ public class Human extends Player{
 
                     char newX = (char) (coordinate.getX() + j);
                     int newY = coordinate.getY() + i;
-                    System.out.println(newX);
-                    System.out.println(newY);
 
-                    System.out.println("Problem is here");
                     Coordinate newCoordinate = new Coordinate(newX, newY);
                     if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
 
@@ -57,14 +54,11 @@ public class Human extends Player{
                     }
                 }
             }
-
             for (int i = 0; i < coordinateList.size(); i++) {
                 opponentGrid.setTile(coordinateList.get(i), true);
 
                 Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
                 Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
-                System.out.println(coordinateList.get(i).getX());
-                System.out.println(coordinateList.get(i).getY());
 
                 if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) { //grenade
                     hitAtLeastOneShip = true;
@@ -82,8 +76,56 @@ public class Human extends Player{
             } else {
                 System.out.println("You missed all shots:(");
             }
-
         }
     }
-}
+    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
+            List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+            boolean hitAtLeastOneShip = false;
 
+            if (rowOrColumn == 'r'){ //row
+                for (int i = 0; i < opponentGrid.getGridSize(); i++){
+                    char newX = (char) (coordinate.getX()+i);
+                    int newY = coordinate.getY();
+                    Coordinate newCoordinate = new Coordinate(newX, newY);
+
+                    if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
+
+                        coordinateList.add(newCoordinate);}
+                }
+            }
+            else { //column
+            for (int i = 0; i < opponentGrid.getGridSize(); i++){
+                char newX = (char) (coordinate.getX());
+                int newY = coordinate.getY()+i;
+                Coordinate newCoordinate = new Coordinate(newX, newY);
+
+                if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
+
+                    coordinateList.add(newCoordinate);}
+            }
+            }
+
+            for (int i = 0; i < coordinateList.size(); i++) {
+                opponentGrid.setTile(coordinateList.get(i), true);
+
+                Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
+                Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
+
+                if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) { //grenade
+                    hitAtLeastOneShip = true;
+                    if (shipAtCoordinate != null) {
+                        boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+                        if (isShipSunk) {
+                            shipAtCoordinate.setSunk(true);
+                            System.out.println("You sunk a ship! 💥🚢");
+                        }
+                    }
+                }
+            }
+            if (hitAtLeastOneShip) {
+                System.out.println("You hit something!");
+            } else {
+                System.out.println("You missed all shots:(");
+            }
+    }
+}

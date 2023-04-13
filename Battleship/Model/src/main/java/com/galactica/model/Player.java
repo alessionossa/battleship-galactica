@@ -24,6 +24,8 @@ public abstract class Player {
 
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
 
+    public abstract void shootLaser(Coordinate coordinate, char rowOrColumn);
+
     private void initializeShips() {
         ships[0] = new DeathStar(1);
         ships[1] = new Cruiser(2);
