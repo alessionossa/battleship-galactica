@@ -5,7 +5,6 @@ import java.util.Random;
 
 public class AI extends Player {
     private Random random = new Random();
-    private final char[] sequence = { 'v', 'h' };
     private HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
     private boolean followTargetMode = false;
     private int[] Moves = { 0, 0 };
@@ -21,38 +20,6 @@ public class AI extends Player {
         this.name = name;
     }
 
-    public void placeShips() throws OutOfBoundsException {
-        System.out.println("--------------------------------------------- ");
-        System.out.println(name + " is placing the ships... \n");
-        for (Ship ship : ships) {
-            boolean isValidShipPosition;
-
-            do {
-                Coordinate coordinate;
-                boolean isValidCoordinate = false;
-                do {
-                    char x0 = (char) (random.nextInt(10) + 'a');
-                    int y0 = random.nextInt(11);
-
-                    coordinate = new Coordinate(x0, y0);
-                    isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
-                } while (!isValidCoordinate);
-
-                Direction direction = null;
-                do {
-                    char directionChar = sequence[random.nextInt(sequence.length)];
-                    direction = Direction.get(directionChar);
-                } while (direction == null);
-
-                ship.setCoordinate(coordinate);
-                ship.setDirection(direction);
-
-                isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
-                if (isValidShipPosition)
-                    ownGrid.placeShip(ship, coordinate, direction);
-            } while (!isValidShipPosition);
-        }
-    }
 
     public void shoot(Coordinate c) {
         Coordinate coordinate;
