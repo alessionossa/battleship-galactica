@@ -2,6 +2,7 @@ package com.galactica.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Human extends Player {
     public static char intToChar(int num) {
@@ -18,6 +19,7 @@ public class Human extends Player {
     public void shoot(Coordinate coordinate, Weapon weaponToShoot) {
 
         int damageArea = weaponToShoot.getAreaOfEffect();
+        Random random = new Random();
 
         if (damageArea == 1) {
             opponentGrid.setTile(coordinate, true);
@@ -41,19 +43,23 @@ public class Human extends Player {
             List<Coordinate> coordinateList = new ArrayList<Coordinate>();
             boolean hitAtLeastOneShip = false;
 
-            for (int i = -1; i < 2; i = i + 1) { //x coordinate
-                for (int j = -1; j < 2; j = j + 1) { //y coordinate
+            //for (int i = -1; i < 2; i = i + 1) { //x coordinate
+               // for (int j = -1; j < 2; j = j + 1) { //y coordinate
 
-                    char newX = (char) (coordinate.getX() + j);
-                    int newY = coordinate.getY() + i;
+            for (int i = 0; i < 9; i++) {
+                int randomInt = random.nextInt(3) - 1;
 
-                    Coordinate newCoordinate = new Coordinate(newX, newY);
-                    if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
+                char newX = (char) (coordinate.getX() + randomInt);
+                int newY = coordinate.getY() + randomInt;
 
-                        coordinateList.add(newCoordinate);
-                    }
+                Coordinate newCoordinate = new Coordinate(newX, newY);
+                if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
+
+                    coordinateList.add(newCoordinate);
                 }
             }
+                //}
+            //}
             for (int i = 0; i < coordinateList.size(); i++) {
                 opponentGrid.setTile(coordinateList.get(i), true);
 
