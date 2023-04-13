@@ -22,6 +22,7 @@ public abstract class Player {
         initializeShips();
     }
 
+
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
 
     public abstract void shootLaser(Coordinate coordinate, char rowOrColumn);
@@ -73,4 +74,5 @@ public abstract class Player {
     }
 
     public Weapon[] getWeapons(){ return weapons;}
+
 }

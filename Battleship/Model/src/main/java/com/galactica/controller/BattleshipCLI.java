@@ -21,9 +21,7 @@ public class BattleshipCLI {
         Grid grid1 = new Grid();
         Grid grid2 = new Grid();
         Coordinate coordinateToShoot;
-        int lineDirectionToShoot;
         char rowOrColumn;
-
 
         asteroidMode = cli.getAsteroidModeResponse();
         if (asteroidMode) {
@@ -48,6 +46,7 @@ public class BattleshipCLI {
         while (true) {
 
             if (playerTurn == 1) {
+
                 Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p1);
 
                 if (weaponsToShoot.getAreaOfEffect() != 3) {
@@ -69,12 +68,12 @@ public class BattleshipCLI {
                 Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
 
                 if (weaponsToShoot.getAreaOfEffect() != 3) {
-                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid1);
+                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
                     p2.shoot(coordinateToShoot,weaponsToShoot);
 
                 }else{
-                    rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p1, grid1);
-                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p1, grid1,rowOrColumn);
+                    rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
+                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1,rowOrColumn);
                     p2.shootLaser(coordinateToShoot, rowOrColumn);}
 
                 if (p1.areAllShipsSunk()) {
