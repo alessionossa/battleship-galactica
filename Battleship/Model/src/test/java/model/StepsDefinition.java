@@ -4,16 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.galactica.model.*;
-import com.galactica.controller.*;
-import com.galactica.cli.*;
 
-import io.cucumber.java.an.Y;
+import com.galactica.model.ships.Cruiser;
+import com.galactica.model.ships.DeathStar;
+import com.galactica.model.ships.Scout;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.fasterxml.jackson.databind.cfg.ConstructorDetector.SingleArgConstructor;
-import junit.framework.ComparisonFailure;
 
 public class StepsDefinition {
 
@@ -23,9 +21,6 @@ public class StepsDefinition {
 	Human player1;
 	Ship ship;
 	Exception error;
-	BattleshipCLI game;
-	Asteroid asteroid;
-	BattleshipCLI startShooting;
 
 	// PLACE SHIP TEST
 

@@ -1,5 +1,9 @@
 package com.galactica.model;
 
+import com.galactica.model.ships.Cruiser;
+import com.galactica.model.ships.DeathStar;
+import com.galactica.model.ships.Scout;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
