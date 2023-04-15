@@ -1,4 +1,4 @@
-package com.galactica.model;
+package model;
 
 import static org.junit.Assert.assertEquals;
 
