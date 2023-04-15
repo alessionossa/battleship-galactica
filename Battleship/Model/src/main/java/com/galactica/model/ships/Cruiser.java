@@ -1,4 +1,6 @@
-package com.galactica.model;
+package com.galactica.model.ships;
+
+import com.galactica.model.Ship;
 
 public class Cruiser extends Ship {
 

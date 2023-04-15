@@ -1,5 +1,9 @@
 package com.galactica.model;
 
+import com.galactica.model.ships.Cruiser;
+import com.galactica.model.ships.DeathStar;
+import com.galactica.model.ships.Scout;
+
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -51,7 +55,7 @@ public abstract class Player {
         ownGrid.placeShip(ship, coordinate, direction);
     }
 
-    public void removeShip(Ship ship) {
+    public void removeShip(Ship ship) throws UnplacedShipException{
         ownGrid.removeShip(ship);
         ship.setCoordinate(null);
         ship.setDirection(null);

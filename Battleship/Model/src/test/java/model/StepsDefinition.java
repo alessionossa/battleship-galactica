@@ -2,20 +2,17 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 
-import com.galactica.model.Coordinate;
-import com.galactica.model.Cruiser;
-import com.galactica.model.DeathStar;
-import com.galactica.model.Direction;
-import com.galactica.model.Grid;
-import com.galactica.model.Human;
-import com.galactica.model.OutOfBoundsException;
-import com.galactica.model.Scout;
-import com.galactica.model.Ship;
+import com.galactica.model.*;
 
-import io.cucumber.java.an.Y;
+import com.galactica.model.ships.Cruiser;
+import com.galactica.model.ships.DeathStar;
+import com.galactica.model.ships.Scout;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.Objects;
 
 public class StepsDefinition {
 
@@ -23,9 +20,10 @@ public class StepsDefinition {
 	Grid opponentGrid;
 	Human player;
 	Human player1;
-	Human player2;
 	Ship ship;
 	Exception error;
+
+	// PLACE SHIP TEST
 
 	@Given("I have started a new game")
 	public void i_have_started_a_new_game() {
@@ -63,9 +61,15 @@ public class StepsDefinition {
 		assertEquals(s2, ship);
 	}
 
+	// DELETE SHIP TEST
+
 	@When("I remove the ship")
 	public void i_remove_the_ship() {
-		player.removeShip(ship);
+		try {
+			player.removeShip(ship);
+		} catch (UnplacedShipException e) {
+			error = e;
+		}
 	}
 
 	@Then("The ship disappears from my grid")
@@ -81,24 +85,63 @@ public class StepsDefinition {
 			assertEquals(error.getMessage(), errorMessage);
 	}
 
-	//ALL CODE STARTING FROM HERE WORK IN PROGRESS
-	@Given("I have not started a new game")
-	public void i_have_not_started_a_new_game() {
-		ownGrid = null;
-		opponentGrid = null;
-		player = null;
-	}
-	@When("I choose to start a new game with a person")
-	public void i_choose_to_start_a_new_game_with_a_person() {
 
-		throw new io.cucumber.java.PendingException();
-	}
-	@Then("A multiplayer game has been started")
-	public void a_multiplayer_game_has_been_started() {
-		ownGrid = new Grid();
-		opponentGrid = new Grid();
-		player1 = new Human(ownGrid, opponentGrid);
-		player2 = new Human(opponentGrid, ownGrid);
+	// SHOOT TEST
 
+	// Method to place a ship on opponent's grid
+	public void place_opponent_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
+		if (shipString.equals("Cruiser"))
+			ship = new Cruiser(1);
+		else if (shipString.equals("Deathstar"))
+			ship = new DeathStar(2);
+		else if (shipString.equals("Scout"))
+			ship = new Scout(3);
+		Coordinate coordinate = new Coordinate(x.charAt(0), y);
+		Direction direction = Direction.get(dir.charAt(0));
+
+		try {
+			player1.placeShip(ship, coordinate, direction);
+		} catch (OutOfBoundsException e) {
+			error = e;
+		}
+	}
+
+	@Given("I have started a new game and I have placed all my ships on my grid")
+	public void i_have_placed_all_my_ships_on_my_grid() {
+		i_have_started_a_new_game();
+		i_place_a_ship_in_direction_on_coordinate("Cruiser", "h", "a", 1);
+		i_place_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
+		i_place_a_ship_in_direction_on_coordinate("Deathstar", "v", "c", 5);
+	}
+
+	@And("My opponents has placed a ship of type {string} at coordinate {string} {int} on his\\/her grid, with the direction {string}")
+	public void my_opponents_has_placed_a_ship_of_type_at_coordinate_on_his_her_grid_with_the_direction(String string,
+			String string2, Integer int1, String string3) {
+		player1 = new Human(opponentGrid, ownGrid);
+		place_opponent_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
+		place_opponent_ship_in_direction_on_coordinate(string, string3, string2, int1);
+		place_opponent_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
+	}
+
+	@When("I shoot at coordinate {string} {int} on his\\/her grid")
+	public String i_shoot_at_coordinate_on_his_her_grid(String string, Integer int1) {
+		player.shoot(new Coordinate(string.charAt(0), int1));
+		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
+		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
+
+		if (Objects.equals(tileType, "X") && ship.isSunk()) {
+			return "You sunk a ship! 💥🚢";
+		} else if (Objects.equals(tileType, "/")) {
+			return "You missed";
+		} else if (Objects.equals(tileType, "X")) {
+			return "You hit something!";
+		} else {
+			return "Something went wrong";
+		}
+	}
+
+	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int} on his\\/her grid")
+	public void i_get_a_message(String string, String string2, Integer int1) {
+		assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
 	}
 }
