@@ -1,4 +1,4 @@
-package model;
+package com.galactica.model;
 
 import org.junit.runner.RunWith;
 
