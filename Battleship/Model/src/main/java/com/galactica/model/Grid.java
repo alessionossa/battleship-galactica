@@ -1,9 +1,12 @@
 package com.galactica.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Grid {
     private Tile[][] tiles = new Tile[gridSize][gridSize];
+    private List<Planet> planets = new ArrayList<Planet>();
 
     private static int gridSize = 10;
 
@@ -13,6 +16,10 @@ public class Grid {
                 tiles[i][j] = new Tile();
             }
         }
+    }
+
+    public List<Planet> getPlanets() {
+        return planets;
     }
 
     public boolean isValidCoordinate(Coordinate coordinate) {
@@ -81,8 +88,9 @@ public class Grid {
 
     }
 
-    void removeShip(Ship ship) throws UnplacedShipException{
-        if (ship == null) throw new UnplacedShipException("Ship has not been placed in the grid before");
+    void removeShip(Ship ship) throws UnplacedShipException {
+        if (ship == null)
+            throw new UnplacedShipException("Ship has not been placed in the grid before");
         Coordinate startCoordinate = ship.getCoordinate();
         switch (ship.getDirection()) {
             case Vertical:
@@ -124,7 +132,12 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
     }
 
-    public Tile getTile(Coordinate coordinate) {
+    void setTile(Coordinate coordinate, Planet planet) {
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
+        tiles[coordinate.getY()][xIndex].setPlanet(planet);
+    }
+
+    Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
@@ -134,8 +147,12 @@ public class Grid {
         return getTile(coordinate).getShip();
     }
 
-    Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
+    public Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getAsteroid();
+    }
+
+    public Planet getPlanetAtCoordinate(Coordinate coordinate) {
+        return getTile(coordinate).getPlanet();
     }
 
     boolean checkIfShipIsSunk(Ship ship) {
@@ -181,11 +198,30 @@ public class Grid {
         }
         return false;
     }
-    public int getGridSize(){
+
+    public int getGridSize() {
         return this.gridSize;
     }
 
     public Tile[][] getTiles() {
         return tiles;
     }
+
+    public void placePlanets(List<Planet> planets) {
+        for (Planet planet : planets) {
+            this.planets.add(planet);
+            Coordinate planetCoordinate = planet.getCoordinates();
+
+            try {
+                setTile(planetCoordinate, planet);
+                setTile(planetCoordinate.down(), planet);
+                setTile(planetCoordinate.right(), planet);
+                setTile(planetCoordinate.down().right(), planet);
+            } catch (OutOfBoundsException e) {
+                System.out.println("Planet out of bounds");
+
+            }
+        }
+    }
+
 }

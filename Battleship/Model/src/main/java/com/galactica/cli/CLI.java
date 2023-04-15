@@ -33,7 +33,8 @@ public class CLI {
     public boolean getPlaceOrRemoveResponse(Player player) { // true = place, false = remove
         if (player.getOwnGrid().anyShipsPlaced()) {
             System.out
-                    .println(player.getName() + ", would you like to place or remove a ship?: type 'p' for place, 'r' for remove");
+                    .println(player.getName()
+                            + ", would you like to place or remove a ship?: type 'p' for place, 'r' for remove");
             while (true) {
                 char resp = Character.toLowerCase(this.scanner.nextLine().charAt(0));
                 if (resp == 'p')
@@ -45,5 +46,9 @@ public class CLI {
             }
         } else
             return true;
+    }
+
+    public boolean getGravityModeResponse() {
+        return askBooleanResponse("Would you like to play in gravity mode? (y/n)");
     }
 }

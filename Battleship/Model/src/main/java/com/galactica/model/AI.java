@@ -20,7 +20,6 @@ public class AI extends Player {
     private boolean Down = false;
     private Coordinate lastCoordinate;
     private Grid referenceGrid;
-    
 
     public AI(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
@@ -28,7 +27,7 @@ public class AI extends Player {
         this.referenceGrid = ownGrid;
     }
 
-    public void shoot(Coordinate c, Weapon w) {
+    public void shoot(Coordinate c, Weapon w, boolean gravityMode, boolean gravityUsed) {
         Coordinate coordinate;
         boolean isValidCoordinate;
         Weapon weapon;
@@ -61,25 +60,24 @@ public class AI extends Player {
             } while (!hasShot);
 
         } else {
-                weapon = getWeaponToShoot();
+            weapon = getWeaponToShoot();
 
-                do {
-                    coordinate = getNewRandomCoordinate();
-                    isValidCoordinate = opponentGrid.isValidCoordinate(coordinate);
-                } while (!isValidCoordinate || CoordinatesHit.contains(coordinate));         
+            do {
+                coordinate = getNewRandomCoordinate();
+                isValidCoordinate = opponentGrid.isValidCoordinate(coordinate);
+            } while (!isValidCoordinate || CoordinatesHit.contains(coordinate));
 
-
-                if (weapon instanceof Laser) {
-                    char rowOrColumn = decideRowOrColumn();
-                    printShootingTurn(coordinate, weapon, rowOrColumn);
-                    shootLaser(coordinate, rowOrColumn);
-                } else if (weapon instanceof Cannon) {
-                    printShootingTurn(coordinate, weapon, ' ');
-                    shootCannon(coordinate);
-                } else {
-                    printShootingTurn(coordinate, weapon, ' ');
-                    shootGrenade(coordinate);
-                }
+            if (weapon instanceof Laser) {
+                char rowOrColumn = decideRowOrColumn();
+                printShootingTurn(coordinate, weapon, rowOrColumn);
+                shootLaser(coordinate, rowOrColumn);
+            } else if (weapon instanceof Cannon) {
+                printShootingTurn(coordinate, weapon, ' ');
+                shootCannon(coordinate);
+            } else {
+                printShootingTurn(coordinate, weapon, ' ');
+                shootGrenade(coordinate);
+            }
         }
     }
 
@@ -98,7 +96,7 @@ public class AI extends Player {
 
                 followTargetMode = true;
                 Right = true;
-   
+
                 boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
                 sunkCheck(coordinate, shipAtCoordinate, isShipSunk);
             } else
@@ -109,7 +107,8 @@ public class AI extends Player {
 
     private void shootGrenade(Coordinate coordinate) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-        // TODO: Make the Human shoot method like this one and maybe randomize the number of tiles that are hit
+        // TODO: Make the Human shoot method like this one and maybe randomize the
+        // number of tiles that are hit
         int y = coordinate.getY();
         int xInt = coordinate.getX() - 'a';
 
@@ -117,8 +116,8 @@ public class AI extends Player {
             for (int j = y - 1; j <= y + 1; j++) {
                 if (i == xInt && j == y)
                     continue;
-                
-                char adjacentX = (char)(i + 'a');
+
+                char adjacentX = (char) (i + 'a');
                 Coordinate adjacentCoordinate = new Coordinate(adjacentX, j);
                 addToCoordinateList(coordinateList, adjacentCoordinate);
             }
@@ -132,11 +131,11 @@ public class AI extends Player {
         coordinateList.add(coordinate);
         coordinateList.add(firstCoordinatetoHit);
         coordinateList.add(secondCoordinatetoHit);
-    
+
         updateCoordinatesHit(coordinateList, CoordinatesHit);
         checkOutcomeOfShot(coordinateList);
     }
- 
+
     public void shootLaser(Coordinate coordinate, char rowOrColumn) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
 
@@ -180,16 +179,16 @@ public class AI extends Player {
                     sunkCheck(coordinateList.get(i), shipAtCoordinate, isShipSunk);
                 } else if (asteroidAtCoordinate != null)
                     hitAnAsteroid = true;
-                    System.out.println("The AI has hit something!");
+                System.out.println("The AI has hit something!");
             }
         }
-        if (!(hitAShip || hitAnAsteroid)) 
+        if (!(hitAShip || hitAnAsteroid))
             System.out.println("The AI has missed all the shots:(");
     }
 
     private void updateCoordinatesHit(List<Coordinate> coordinateList, HashSet<Coordinate> coordinatesHit) {
         for (Coordinate coordinate : coordinateList) {
-           coordinatesHit.add(coordinate);
+            coordinatesHit.add(coordinate);
         }
     }
 
@@ -197,20 +196,19 @@ public class AI extends Player {
         System.out.println("\n-------------\nAI's turn to shoot:");
         if (weapon instanceof Laser)
             System.out.println(name + ", is shooting a laser...");
-            if (c == 'r') {
-                String message = "The " + name + " has shot in row: " + coordinate.getY();
-                System.out.println(message);
-            }   
-            else if (c == 'c') {
-                String message = "The " + name + " has shot in column: " + coordinate.getX();
-                System.out.println(message);
-            }
+        if (c == 'r') {
+            String message = "The " + name + " has shot in row: " + coordinate.getY();
+            System.out.println(message);
+        } else if (c == 'c') {
+            String message = "The " + name + " has shot in column: " + coordinate.getX();
+            System.out.println(message);
+        }
 
         else if (weapon instanceof Cannon) {
             System.out.println(name + ", is shooting with the cannon...");
             String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
             System.out.println(message);
-        } else { 
+        } else {
             System.out.println(name + ", is shooting a grenade...");
             String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
             System.out.println(message);
@@ -305,13 +303,13 @@ public class AI extends Player {
         } else {
             nextDirection(direction, nextDirection);
             Moves[0] = 0;
-            Moves[1] = 0; 
+            Moves[1] = 0;
         }
     }
 
     public String getRandomWeapon() {
         int probability = random.nextInt(100);
-        if (probability < 5) { // 5% chance to choose laser 
+        if (probability < 5) { // 5% chance to choose laser
             return "laser";
         } else if (probability < 65) { // 80% chance to choose cannon
             return "cannon";

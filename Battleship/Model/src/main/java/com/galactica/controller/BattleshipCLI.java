@@ -1,5 +1,6 @@
 package com.galactica.controller;
 
+import java.util.List;
 import java.util.Random;
 
 import com.galactica.cli.*;
@@ -9,6 +10,7 @@ public class BattleshipCLI {
     private int playerTurn;
     private boolean asteroidMode;
     private boolean singlePlayerMode;
+    private boolean gravityMode;
 
     private Human p1;
     private Player p2;
@@ -20,6 +22,11 @@ public class BattleshipCLI {
     }
 
     void playGame() {
+
+        gravityMode = cli.getGravityModeResponse();
+        asteroidMode = cli.getAsteroidModeResponse();
+        singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
+
         Grid grid1 = new Grid();
         Grid grid2 = new Grid();
         Coordinate coordinateToShoot;
@@ -31,8 +38,6 @@ public class BattleshipCLI {
             grid2.placeAsteroids();
         }
 
-        singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
-        // TODO Needed for StartGame cucumber feature
         p1 = new Human(grid1, grid2);
         placeShips(p1);
 
@@ -151,6 +156,7 @@ public class BattleshipCLI {
                     }
             } while (!isValidShipPosition);
         }
+        GridCLI.printGrid(ownGrid, true);
     }
 
     public void placeShips(Human player) {

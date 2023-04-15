@@ -74,6 +74,7 @@ public class Human extends Player {
 
         Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
+        Planet planetAtCoordinate = opponentGrid.getPlanetAtCoordinate(coordinate);
 
         if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
             if (shipAtCoordinate != null) {

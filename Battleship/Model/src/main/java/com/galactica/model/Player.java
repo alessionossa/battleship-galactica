@@ -26,7 +26,6 @@ public abstract class Player {
         initializeShips();
     }
 
-
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
 
     public abstract void shootLaser(Coordinate coordinate, char rowOrColumn);
@@ -36,11 +35,13 @@ public abstract class Player {
         ships[1] = new Cruiser(2);
         ships[2] = new Scout(3);
     }
+
     private void initializeWeapons() {
         weapons[0] = new Cannon();
         weapons[1] = new Grenade();
         weapons[2] = new Laser();
     }
+
     public boolean areAllShipsSunk() {
         return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
     }
@@ -55,7 +56,7 @@ public abstract class Player {
         ownGrid.placeShip(ship, coordinate, direction);
     }
 
-    public void removeShip(Ship ship) throws UnplacedShipException{
+    public void removeShip(Ship ship) throws UnplacedShipException {
         ownGrid.removeShip(ship);
         ship.setCoordinate(null);
         ship.setDirection(null);
@@ -77,6 +78,8 @@ public abstract class Player {
         return ships;
     }
 
-    public Weapon[] getWeapons(){ return weapons;}
+    public Weapon[] getWeapons() {
+        return weapons;
+    }
 
 }

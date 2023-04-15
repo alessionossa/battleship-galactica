@@ -4,6 +4,7 @@ public class Tile {
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit;
+    private Planet planet;
 
     public Tile(Ship ship) { // Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
@@ -46,6 +47,12 @@ public class Tile {
                     return "0";
             }
 
+        } else if (this.planet != null) {
+            if (this.hit || showGridObjects) {
+                return "P";
+            } else
+                return "0";
+
         } else {
             if (this.hit) {
                 if (this.asteroid != null) {
@@ -84,5 +91,13 @@ public class Tile {
 
     public boolean isHit() {
         return hit;
+    }
+
+    public void setPlanet(Planet planet) {
+        this.planet = planet;
+    }
+
+    public Planet getPlanet() {
+        return this.planet;
     }
 }
