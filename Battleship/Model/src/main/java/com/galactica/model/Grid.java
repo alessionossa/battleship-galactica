@@ -81,9 +81,9 @@ public class Grid {
 
     }
 
-    void removeShip(Ship ship) {
+    void removeShip(Ship ship) throws UnplacedShipException{
+        if (ship == null) throw new UnplacedShipException("Ship has not been placed in the grid before");
         Coordinate startCoordinate = ship.getCoordinate();
-
         switch (ship.getDirection()) {
             case Vertical:
                 for (int i = startCoordinate.getY(); i < startCoordinate.getY() + ship.getLength(); i++) {
@@ -124,7 +124,7 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
     }
 
-    Tile getTile(Coordinate coordinate) {
+    public Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
