@@ -10,8 +10,6 @@ public class BattleshipCLI {
     private boolean asteroidMode;
     private boolean singlePlayerMode;
 
-
-
     private Human p1;
     private Player p2;
 
@@ -43,10 +41,16 @@ public class BattleshipCLI {
             p2 = new Human(grid2, grid1);
             placeShips((Human) p2);
         }
-        
+
+        boolean startShooting;
+        if (p1.hasAllShipsPlaced() || p2.hasAllShipsPlaced()) {
+            startShooting = true;
+        } else {
+            startShooting = false;
+        }
 
         playerTurn = 1;
-        while (true) {
+        while (startShooting) {
 
             if (playerTurn == 1) {
                 Coordinate coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
@@ -139,7 +143,12 @@ public class BattleshipCLI {
             } else if (placeOrRemove && ship.isPlaced()) {
                 System.out.println("Cannot place a ship that is already on the grid");
             } else if (!placeOrRemove && ship.isPlaced()) {
-                player.removeShip(ship);
+                try {
+                    player.removeShip(ship);
+                } catch (UnplacedShipException e) {
+
+                }
+
             } else if (placeOrRemove && !ship.isPlaced()) {
                 boolean isValidShipPosition;
                 Coordinate coordinate;
@@ -173,4 +182,5 @@ public class BattleshipCLI {
 
         this.cli.scanner.close();
     }
+
 }
