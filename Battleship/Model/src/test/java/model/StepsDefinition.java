@@ -1,7 +1,6 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import com.galactica.model.*;
 
@@ -12,6 +11,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.Objects;
 
 public class StepsDefinition {
 
@@ -88,7 +89,7 @@ public class StepsDefinition {
 	// SHOOT TEST
 
 	// Method to place a ship on opponent's grid
-	public void he_she_places_a_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
+	public void place_opponent_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
 		if (shipString.equals("Cruiser"))
 			ship = new Cruiser(1);
 		else if (shipString.equals("Deathstar"))
@@ -117,9 +118,9 @@ public class StepsDefinition {
 	public void my_opponents_has_placed_a_ship_of_type_at_coordinate_on_his_her_grid_with_the_direction(String string,
 			String string2, Integer int1, String string3) {
 		player1 = new Human(opponentGrid, ownGrid);
-		he_she_places_a_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
-		he_she_places_a_ship_in_direction_on_coordinate(string, string3, string2, int1);
-		he_she_places_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
+		place_opponent_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
+		place_opponent_ship_in_direction_on_coordinate(string, string3, string2, int1);
+		place_opponent_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
 	}
 
 	@When("I shoot at coordinate {string} {int} on his\\/her grid")
@@ -128,11 +129,11 @@ public class StepsDefinition {
 		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
 		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
-		if (tileType == "X" && ship.isSunk()) {
+		if (Objects.equals(tileType, "X") && ship.isSunk()) {
 			return "You sunk a ship! 💥🚢";
-		} else if (tileType == "/") {
+		} else if (Objects.equals(tileType, "/")) {
 			return "You missed";
-		} else if (tileType == "X") {
+		} else if (Objects.equals(tileType, "X")) {
 			return "You hit something!";
 		} else {
 			return "Something went wrong";
