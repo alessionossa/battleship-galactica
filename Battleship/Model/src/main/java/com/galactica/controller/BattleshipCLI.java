@@ -60,11 +60,11 @@ public class BattleshipCLI {
 
                 if (weaponsToShoot.getAreaOfEffect() != 3) {
                     coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
-                    p1.shoot(coordinateToShoot,weaponsToShoot);
+                    p1.shoot(coordinateToShoot, weaponsToShoot);
 
-                }else{
+                } else {
                     rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p1, grid2);
-                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p1, grid2,rowOrColumn);
+                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p1, grid2, rowOrColumn);
                     p1.shootLaser(coordinateToShoot, rowOrColumn);
                 }
 
@@ -74,22 +74,23 @@ public class BattleshipCLI {
                 }
 
             } else {
-                
+
                 if (singlePlayerMode) {
-                    p2.shoot(null);
+                    p2.shoot(null, null);
                 } else {
-Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
+                    Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
 
-                if (weaponsToShoot.getAreaOfEffect() != 3) {
-                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                    p2.shoot(coordinateToShoot,weaponsToShoot);
+                    if (weaponsToShoot.getAreaOfEffect() != 3) {
+                        coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
+                        p2.shoot(coordinateToShoot, weaponsToShoot);
 
-                }else{
-                    rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
-                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1,rowOrColumn);
-                    p2.shootLaser(coordinateToShoot, rowOrColumn);}
+                    } else {
+                        rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
+                        coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1, rowOrColumn);
+                        p2.shootLaser(coordinateToShoot, rowOrColumn);
+                    }
                 }
-                
+
                 if (p1.areAllShipsSunk()) {
                     endGame(p2);
                     return;

@@ -21,7 +21,7 @@ public class AI extends Player {
     }
 
 
-    public void shoot(Coordinate c) {
+    public void shoot(Coordinate c, Weapon w) {
         Coordinate coordinate;
         boolean isValidCoordinate;
 
@@ -168,6 +168,13 @@ public class AI extends Player {
         } else {
             nextDirection(direction, nextDirection);
         }
+    }
+
+
+    @Override
+    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'shootLaser'");
     }
 
 }
