@@ -12,24 +12,35 @@ public abstract class Player {
     protected Ship[] ships;
     protected Grid ownGrid;
     protected Grid opponentGrid;
+
+    protected Weapon[] weapons;
     static Scanner sc = new Scanner(System.in);
 
     public Player(Grid ownGrid, Grid opponentGrid) {
         ships = new Ship[3]; // Placeholder 5
+        weapons = new Weapon[3];
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
+        initializeWeapons();
         initializeShips();
     }
 
-    public abstract void shoot(Coordinate coordinate);
+
+    public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
+
+    public abstract void shootLaser(Coordinate coordinate, char rowOrColumn);
 
     private void initializeShips() {
         ships[0] = new DeathStar(1);
         ships[1] = new Cruiser(2);
         ships[2] = new Scout(3);
     }
-
+    private void initializeWeapons() {
+        weapons[0] = new Cannon();
+        weapons[1] = new Grenade();
+        weapons[2] = new Laser();
+    }
     public boolean areAllShipsSunk() {
         return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
     }
@@ -65,4 +76,7 @@ public abstract class Player {
     public Ship[] getShips() {
         return ships;
     }
+
+    public Weapon[] getWeapons(){ return weapons;}
+
 }
