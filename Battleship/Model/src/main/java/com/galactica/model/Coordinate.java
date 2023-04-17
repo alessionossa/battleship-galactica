@@ -5,6 +5,11 @@ import java.util.Objects;
 public class Coordinate { // Send new coordinates to player
     private char x;
     private int y;
+    private static int maxValue;
+
+    public static final void setMaxValue(int maxValue) {
+        Coordinate.maxValue = maxValue;
+    }
 
     public Coordinate(char x, int y) {
         this.x = x;
@@ -27,30 +32,30 @@ public class Coordinate { // Send new coordinates to player
         this.y = newY;
     }
 
-    public Coordinate up() throws OutOfBoundsException {
+    public Coordinate up(int disatnce) throws OutOfBoundsException {
         if (y > 0)
-            return new Coordinate(x, y - 1);
+            return new Coordinate(x, y - distance);
         else
             throw new OutOfBoundsException("Cannot go up");
     }
 
-    public Coordinate down() throws OutOfBoundsException {
-        if (y < 9)
-            return new Coordinate(x, y + 1);
+    public Coordinate down(int distance) throws OutOfBoundsException {
+        if (y < (maxValue - 1))
+            return new Coordinate(x, y + distance);
         else
             throw new OutOfBoundsException("Cannot go down");
     }
 
-    public Coordinate left() throws OutOfBoundsException {
+    public Coordinate left(int distance) throws OutOfBoundsException {
         if (x > 'a')
-            return new Coordinate((char) (x - 1), y);
+            return new Coordinate((char) (x - distance), y);
         else
             throw new OutOfBoundsException("Cannot go left");
     }
 
-    public Coordinate right() throws OutOfBoundsException {
-        if (x < 'j')
-            return new Coordinate((char) (x + 1), y);
+    public Coordinate right(int distance) throws OutOfBoundsException {
+        if (x < (char) ('a' + (maxValue - 1)))
+            return new Coordinate((char) (x + distance), y);
         else
             throw new OutOfBoundsException("Cannot go right");
     }

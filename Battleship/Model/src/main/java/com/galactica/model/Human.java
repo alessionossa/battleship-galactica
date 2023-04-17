@@ -87,6 +87,13 @@ public class Human extends Player {
             }
         } else
             System.out.println("You missed :(");
+
+            if (gravityMode && !gravityUsed) {
+                List<Planet> opponentPlanets = opponentGrid.getPlanets();
+                for (Planet planet : opponentPlanets) {
+                    Coordinate rebound = planet.getPlanetRebound(coordinate);
+                    if (rebound != null) {
+                        shoot(rebound, true, true);
     }
 
     private void checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitAtLeastOneShip) {

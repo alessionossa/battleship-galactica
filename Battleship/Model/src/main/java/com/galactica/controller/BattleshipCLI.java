@@ -10,7 +10,8 @@ public class BattleshipCLI {
     private int playerTurn;
     private boolean asteroidMode;
     private boolean singlePlayerMode;
-    private boolean gravityMode;
+    private boolean gravityMode = false;
+    private int gridSize;
 
     private Human p1;
     private Player p2;
@@ -23,16 +24,28 @@ public class BattleshipCLI {
 
     void playGame() {
 
-        gravityMode = cli.getGravityModeResponse();
+        gridSize = cli.getGridSizeResponse();
+        if (gridSize >= 10) {
+            gravityMode = cli.getGravityModeResponse();
+        }
         asteroidMode = cli.getAsteroidModeResponse();
         singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
 
-        Grid grid1 = new Grid();
-        Grid grid2 = new Grid();
+        Coordinate.setMaxValue(gridSize);
+        Planet.setMaxPlanetLength((int) (Math.floor(Math.abs(Math.min(gridSize, 20) / 5))));
+        Grid grid1 = new Grid(gridSize);
+        Grid grid2 = new Grid(gridSize);
         Coordinate coordinateToShoot;
         char rowOrColumn;
 
-        asteroidMode = cli.getAsteroidModeResponse();
+        if (gravityMode) {
+            List<Planet> planets1 = Planet.generatePlanets(gridSize);
+            List<Planet> planets2 = Planet.generatePlanets(gridSize);
+
+            grid1.placePlanets(planets1);
+            grid2.placePlanets(planets2);
+        }
+
         if (asteroidMode) {
             grid1.placeAsteroids();
             grid2.placeAsteroids();
@@ -212,3 +225,9 @@ public class BattleshipCLI {
     }
 
 }
+
+    
+
+    
+
+    

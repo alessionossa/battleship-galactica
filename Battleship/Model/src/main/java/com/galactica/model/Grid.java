@@ -5,17 +5,23 @@ import java.util.List;
 import java.util.Random;
 
 public class Grid {
-    private Tile[][] tiles = new Tile[gridSize][gridSize];
+    private Tile[][] tiles;
     private List<Planet> planets = new ArrayList<Planet>();
 
-    private static int gridSize = 10;
+    private static int gridSize;
 
-    public Grid() {
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
+    public Grid(int gridSize) {
+        Grid.gridSize = gridSize;
+        tiles = new Tile[Grid.gridSize][Grid.gridSize];
+        for (int i = 0; i < Grid.gridSize; i++) {
+            for (int j = 0; j < Grid.gridSize; j++) {
                 tiles[i][j] = new Tile();
             }
         }
+    }
+
+    public int getGridSize() {
+        return gridSize;
     }
 
     public List<Planet> getPlanets() {
@@ -183,9 +189,10 @@ public class Grid {
 
     public void placeAsteroids() {
         Random random = new Random();
-        int[] asteroidCoordinates = random.ints(10, 0, 10).toArray();
-        for (int i = 0; i < 10; i += 2) {
-            setTile(new Coordinate((char) (97 + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
+        int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
+                .toArray();
+        for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
+            setTile(new Coordinate((char) ('a' + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
         }
     }
 
@@ -210,16 +217,13 @@ public class Grid {
     public void placePlanets(List<Planet> planets) {
         for (Planet planet : planets) {
             this.planets.add(planet);
-            Coordinate planetCoordinate = planet.getCoordinates();
+            Coordinate planetCoordinate = planet.getCoordinate();
 
-            try {
-                setTile(planetCoordinate, planet);
-                setTile(planetCoordinate.down(), planet);
-                setTile(planetCoordinate.right(), planet);
-                setTile(planetCoordinate.down().right(), planet);
-            } catch (OutOfBoundsException e) {
-                System.out.println("Planet out of bounds");
-
+            for (int i = 0; i < planet.getSize(); i++) {
+                for (int j = 0; j < planet.getSize(); j++) {
+                    setTile(new Coordinate((char) (planetCoordinate.getX() + i), planetCoordinate.getY() + j),
+                            planet);
+                }
             }
         }
     }

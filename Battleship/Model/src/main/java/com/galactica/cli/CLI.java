@@ -51,4 +51,20 @@ public class CLI {
     public boolean getGravityModeResponse() {
         return askBooleanResponse("Would you like to play in gravity mode? (y/n)");
     }
+
+    public int getGridSizeResponse() {
+        System.out.println("Choose a grid size: 's' for 10x10, 'm' for 15x15, 'l' for 20x20");
+        while (true) {
+            char resp = Character.toLowerCase(this.scanner.nextLine().charAt(0));
+            if (resp == 's')
+                return 10;
+            else if (resp == 'm')
+                return 15;
+            else if (resp == 'l')
+                return 20;
+            else {
+                System.out.println("Please only type 's', 'm' or 'l'");
+            }
+        }
+    }
 }
