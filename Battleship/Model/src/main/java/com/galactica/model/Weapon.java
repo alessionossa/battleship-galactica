@@ -1,8 +1,7 @@
 package com.galactica.model;
 
 public abstract class Weapon {
-    public Weapon(){
-    }
+
     public int areaOfEffect;
     protected int amountOfUses;
 

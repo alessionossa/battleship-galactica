@@ -11,127 +11,106 @@ public class Human extends Player {
 
     public Human(Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
-        //System.out.println("Enter player name: ");
-        //this.name = Player.sc.nextLine();
+        // System.out.println("Enter player name: ");
+        // this.name = Player.sc.nextLine();
         this.name = "Joe"; // TODO make compatible with cucumber tests
     }
 
     public void shoot(Coordinate coordinate, Weapon weaponToShoot) {
-
         int damageArea = weaponToShoot.getAreaOfEffect();
-        Random random = new Random();
 
         if (damageArea == 1) {
-            opponentGrid.setTile(coordinate, true);
+            Cannon(coordinate);
+        } else if (damageArea == 2) {
+            Grenade(coordinate);
+        }
+    }
 
-            Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
-            Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
+    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
+        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+        boolean hitAtLeastOneShip = false;
 
-            if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) { //cannon
+        if (rowOrColumn == 'r') {
+            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
+                char newX = (char) (coordinate.getX() + i);
+                int newY = coordinate.getY();
+                Coordinate newCoordinate = new Coordinate(newX, newY);
+                addToCoordinateList(coordinateList, newCoordinate);
+            }
+        } else { // column
+            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
+                char newX = (char) (coordinate.getX());
+                int newY = coordinate.getY() + i;
+                Coordinate newCoordinate = new Coordinate(newX, newY);
+                addToCoordinateList(coordinateList, newCoordinate);
+            }
+        }
+        checkOutcomeOfShot(coordinateList, hitAtLeastOneShip);
+    }
+
+    private void Grenade(Coordinate coordinate) {
+        Random random = new Random();
+        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+        boolean hitAtLeastOneShip = false;
+
+        for (int i = 0; i < 9; i++) {
+            int randomInt = random.nextInt(3) - 1;
+            char newX = (char) (coordinate.getX() + randomInt);
+            int newY = coordinate.getY() + randomInt;
+            Coordinate newCoordinate = new Coordinate(newX, newY);
+            addToCoordinateList(coordinateList, newCoordinate);
+        }
+        checkOutcomeOfShot(coordinateList, hitAtLeastOneShip);
+    }
+
+    private void Cannon(Coordinate coordinate) {
+        opponentGrid.setTile(coordinate, true);
+
+        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
+        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
+
+        if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
+            if (shipAtCoordinate != null) {
+                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+                if (isShipSunk) {
+                    shipAtCoordinate.setSunk(true);
+                    System.out.println("You sunk a ship! 💥🚢");
+                } else
+                    System.out.println("You hit something!");
+            }
+        } else
+            System.out.println("You missed :(");
+    }
+
+    private void checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitAtLeastOneShip) {
+        for (int i = 0; i < coordinateList.size(); i++) {
+            opponentGrid.setTile(coordinateList.get(i), true);
+
+            Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
+            Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
+
+            if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
+                hitAtLeastOneShip = true;
                 if (shipAtCoordinate != null) {
                     boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
                     if (isShipSunk) {
                         shipAtCoordinate.setSunk(true);
                         System.out.println("You sunk a ship! 💥🚢");
-                    } else
-                        System.out.println("You hit something!");
-                }
-            } else
-                System.out.println("You missed :(");
-        } else if (damageArea == 2) {
-
-            List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-            boolean hitAtLeastOneShip = false;
-
-            //for (int i = -1; i < 2; i = i + 1) { //x coordinate
-               // for (int j = -1; j < 2; j = j + 1) { //y coordinate
-
-            for (int i = 0; i < 9; i++) {
-                int randomInt = random.nextInt(3) - 1;
-
-                char newX = (char) (coordinate.getX() + randomInt);
-                int newY = coordinate.getY() + randomInt;
-
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
-
-                    coordinateList.add(newCoordinate);
-                }
-            }
-                //}
-            //}
-            for (int i = 0; i < coordinateList.size(); i++) {
-                opponentGrid.setTile(coordinateList.get(i), true);
-
-                Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
-                Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
-
-                if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) { //grenade
-                    hitAtLeastOneShip = true;
-                    if (shipAtCoordinate != null) {
-                        boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                        if (isShipSunk) {
-                            shipAtCoordinate.setSunk(true);
-                            System.out.println("You sunk a ship! 💥🚢");
-                        }
                     }
                 }
-            }
-            if (hitAtLeastOneShip) {
-                System.out.println("You hit something!");
-            } else {
-                System.out.println("You missed all shots:(");
             }
         }
+        if (hitAtLeastOneShip) {
+            System.out.println("You hit something!");
+        } else {
+            System.out.println("You missed all shots:(");
+        }
     }
-    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
-            List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-            boolean hitAtLeastOneShip = false;
 
-            if (rowOrColumn == 'r'){ //row
-                for (int i = 0; i < opponentGrid.getGridSize(); i++){
-                    char newX = (char) (coordinate.getX()+i);
-                    int newY = coordinate.getY();
-                    Coordinate newCoordinate = new Coordinate(newX, newY);
-
-                    if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
-
-                        coordinateList.add(newCoordinate);}
-                }
-            }
-            else { //column
-            for (int i = 0; i < opponentGrid.getGridSize(); i++){
-                char newX = (char) (coordinate.getX());
-                int newY = coordinate.getY()+i;
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-
-                if (opponentGrid.isValidCoordinate(newCoordinate)) {// make into a seperate method
-
-                    coordinateList.add(newCoordinate);}
-            }
-            }
-
-            for (int i = 0; i < coordinateList.size(); i++) {
-                opponentGrid.setTile(coordinateList.get(i), true);
-
-                Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
-                Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
-
-                if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) { //grenade
-                    hitAtLeastOneShip = true;
-                    if (shipAtCoordinate != null) {
-                        boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                        if (isShipSunk) {
-                            shipAtCoordinate.setSunk(true);
-                            System.out.println("You sunk a ship! 💥🚢");
-                        }
-                    }
-                }
-            }
-            if (hitAtLeastOneShip) {
-                System.out.println("You hit something!");
-            } else {
-                System.out.println("You missed all shots:(");
-            }
+    private void addToCoordinateList(List<Coordinate> coordinateList, Coordinate newCoordinate) {
+        if (opponentGrid.isValidCoordinate(newCoordinate)) {
+            coordinateList.add(newCoordinate);
+        }
     }
+
 }

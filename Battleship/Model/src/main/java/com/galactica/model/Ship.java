@@ -6,8 +6,8 @@ public abstract class Ship {
     protected boolean sunk; // Status of the ship, true if ship is sunk, false if not
     protected int identifier;
 
-    Coordinate coordinate;
-    Direction direction;
+    protected Coordinate coordinate;
+    protected Direction direction;
 
     public int getLength() {
         return length;
