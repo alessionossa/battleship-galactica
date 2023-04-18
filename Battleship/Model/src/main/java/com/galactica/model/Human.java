@@ -54,9 +54,11 @@ public class Human extends Player {
         boolean hitAtLeastOneShip = false;
 
         for (int i = 0; i < 9; i++) {
-            int randomInt = random.nextInt(3) - 1;
-            char newX = (char) (coordinate.getX() + randomInt);
-            int newY = coordinate.getY() + randomInt;
+            int randomInt1 = random.nextInt(3) - 1;
+            int randomInt2 = random.nextInt(3) - 1;
+            char newX = (char) (coordinate.getX() + randomInt1);
+            int newY = coordinate.getY() + randomInt2;
+
             Coordinate newCoordinate = new Coordinate(newX, newY);
             addToCoordinateList(coordinateList, newCoordinate);
         }
