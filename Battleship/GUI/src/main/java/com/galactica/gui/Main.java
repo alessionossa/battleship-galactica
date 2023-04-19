@@ -9,14 +9,13 @@ import java.io.IOException;
 
 import com.galactica.model.*;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Grid grid1 = new Grid();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("main-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+        stage.setTitle("Battleship");
         stage.setScene(scene);
         stage.show();
     }
