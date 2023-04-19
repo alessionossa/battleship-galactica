@@ -52,14 +52,18 @@ public class Human extends Player {
         Random random = new Random();
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         boolean hitAtLeastOneShip = false;
+        char newX = (char) (coordinate.getX());
+        int newY = coordinate.getY();
+        Coordinate newCoordinate = new Coordinate(newX, newY);
+        addToCoordinateList(coordinateList, newCoordinate);
 
         for (int i = 0; i < 9; i++) {
             int randomInt1 = random.nextInt(3) - 1;
             int randomInt2 = random.nextInt(3) - 1;
-            char newX = (char) (coordinate.getX() + randomInt1);
-            int newY = coordinate.getY() + randomInt2;
+            newX = (char) (coordinate.getX() + randomInt1);
+            newY = coordinate.getY() + randomInt2;
 
-            Coordinate newCoordinate = new Coordinate(newX, newY);
+            newCoordinate = new Coordinate(newX, newY);
             addToCoordinateList(coordinateList, newCoordinate);
         }
         checkOutcomeOfShot(coordinateList, hitAtLeastOneShip);
