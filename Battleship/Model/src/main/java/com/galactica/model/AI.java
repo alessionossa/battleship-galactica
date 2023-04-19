@@ -27,7 +27,7 @@ public class AI extends Player {
         this.referenceGrid = ownGrid;
     }
 
-    public void shoot(Coordinate c, Weapon w, boolean gravityMode, boolean gravityUsed) {
+    public void shoot(Coordinate c, Weapon weaponToShoot) {
         Coordinate coordinate;
         boolean isValidCoordinate;
         Weapon weapon;

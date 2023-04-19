@@ -32,7 +32,7 @@ public class Coordinate { // Send new coordinates to player
         this.y = newY;
     }
 
-    public Coordinate up(int disatnce) throws OutOfBoundsException {
+    public Coordinate up(int distance) throws OutOfBoundsException {
         if (y > 0)
             return new Coordinate(x, y - distance);
         else

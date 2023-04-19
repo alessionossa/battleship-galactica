@@ -24,12 +24,12 @@ public class BattleshipCLI {
 
     void playGame() {
 
+        singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
         gridSize = cli.getGridSizeResponse();
         if (gridSize >= 10) {
             gravityMode = cli.getGravityModeResponse();
         }
         asteroidMode = cli.getAsteroidModeResponse();
-        singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
 
         Coordinate.setMaxValue(gridSize);
         Planet.setMaxPlanetLength((int) (Math.floor(Math.abs(Math.min(gridSize, 20) / 5))));
@@ -62,12 +62,12 @@ public class BattleshipCLI {
             placeShips((Human) p2);
         }
 
-        boolean startShooting;
-        if (p1.hasAllShipsPlaced() || p2.hasAllShipsPlaced()) {
-            startShooting = true;
-        } else {
-            startShooting = false;
-        }
+        boolean startShooting = true;
+        // if (p1.hasAllShipsPlaced() || p2.hasAllShipsPlaced()) {
+        // startShooting = true;
+        // } else {
+        // startShooting = false;
+        // }
 
         playerTurn = 1;
         while (startShooting) {
@@ -225,9 +225,3 @@ public class BattleshipCLI {
     }
 
 }
-
-    
-
-    
-
-    
