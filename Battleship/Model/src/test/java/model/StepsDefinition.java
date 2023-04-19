@@ -1,18 +1,22 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import com.galactica.model.*;
-
 import com.galactica.model.ships.Cruiser;
 import com.galactica.model.ships.DeathStar;
 import com.galactica.model.ships.Scout;
+import com.galactica.controller.*;
+import com.galactica.cli.*;
+
+import io.cucumber.java.an.Y;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
-import java.util.Objects;
+import io.cucumber.messages.internal.com.fasterxml.jackson.databind.cfg.ConstructorDetector.SingleArgConstructor;
+import junit.framework.ComparisonFailure;
 
 public class StepsDefinition {
 
@@ -22,6 +26,9 @@ public class StepsDefinition {
 	Human player1;
 	Ship ship;
 	Exception error;
+	BattleshipCLI game;
+	Asteroid asteroid;
+	BattleshipCLI startShooting;
 
 	// PLACE SHIP TEST
 
@@ -85,11 +92,18 @@ public class StepsDefinition {
 			assertEquals(error.getMessage(), errorMessage);
 	}
 
+	@When("I have placed all of my ships")
+	public void i_have_placed_all_of_my_ships() {
+		if (player.hasAllShipsPlaced()) {
+			boolean startShooting = true;
+		}
+
+	}
 
 	// SHOOT TEST
 
 	// Method to place a ship on opponent's grid
-	public void place_opponent_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
+	public void he_she_places_a_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
 		if (shipString.equals("Cruiser"))
 			ship = new Cruiser(1);
 		else if (shipString.equals("Deathstar"))
@@ -114,35 +128,44 @@ public class StepsDefinition {
 		i_place_a_ship_in_direction_on_coordinate("Deathstar", "v", "c", 5);
 	}
 
-	@And("My opponents has placed a ship of type {string} at coordinate {string} {int} on his\\/her grid, with the direction {string}")
-	public void my_opponents_has_placed_a_ship_of_type_at_coordinate_on_his_her_grid_with_the_direction(String string,
+	@Given("My opponent has placed a ship of type {string} at coordinate {string} {int} in direction {string} on their grid")
+	public void my_opponent_has_placed_a_ship_of_type_at_coordinate_in_direction_on_their_grid(String string,
 			String string2, Integer int1, String string3) {
 		player1 = new Human(opponentGrid, ownGrid);
-		place_opponent_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
-		place_opponent_ship_in_direction_on_coordinate(string, string3, string2, int1);
-		place_opponent_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
+		he_she_places_a_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
+		he_she_places_a_ship_in_direction_on_coordinate(string, string3, string2, int1);
+		he_she_places_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
 	}
 
-	@When("I shoot at coordinate {string} {int} on his\\/her grid")
+	@Given("Coordinate {string} {int} on my opponent's grid has been hit")
+	public void coordinate_on_my_opponent_s_grid_has_been_hit(String string, Integer int1) {
+		opponentGrid.setTile(new Coordinate(string.charAt(0), int1), true);
+	}
+
+	@When("I shoot at coordinate {string} {int} on my opponent's grid")
 	public String i_shoot_at_coordinate_on_his_her_grid(String string, Integer int1) {
-		player.shoot(new Coordinate(string.charAt(0), int1), new Cannon());
+		player.shoot(new Coordinate(string.charAt(0), int1));
 		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
 		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
-		if (Objects.equals(tileType, "X") && ship.isSunk()) {
+		if (tileType == "X" && ship.isSunk()) {
 			return "You sunk a ship! 💥🚢";
-		} else if (Objects.equals(tileType, "/")) {
+		} else if (tileType == "/") {
 			return "You missed";
-		} else if (Objects.equals(tileType, "X")) {
+		} else if (tileType == "X") {
 			return "You hit something!";
 		} else {
 			return "Something went wrong";
 		}
 	}
 
-	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int} on his\\/her grid")
+	@Then("The tile {string} {int} on my opponent's grid is hit")
+	public void the_tile_on_my_opponent_s_grid_is_hit(String string, Integer int1) {
+		assertEquals(opponentGrid.getTile(new Coordinate(string.charAt(0), int1)).isHit(), true);
+	}
+
+	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int}")
 	public void i_get_a_message(String string, String string2, Integer int1) {
 		assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
-		assertEquals(true, opponentGrid.getTile(new Coordinate(string2.charAt(0), int1)).isHit());
 	}
 }
