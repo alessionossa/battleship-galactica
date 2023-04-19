@@ -181,6 +181,9 @@ public class Grid {
         }
         return false;
     }
+    public int getGridSize(){
+        return this.gridSize;
+    }
 
     public Tile[][] getTiles() {
         return tiles;

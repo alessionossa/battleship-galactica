@@ -125,7 +125,7 @@ public class StepsDefinition {
 
 	@When("I shoot at coordinate {string} {int} on his\\/her grid")
 	public String i_shoot_at_coordinate_on_his_her_grid(String string, Integer int1) {
-		player.shoot(new Coordinate(string.charAt(0), int1));
+		player.shoot(new Coordinate(string.charAt(0), int1), new Cannon());
 		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
 		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
@@ -143,5 +143,6 @@ public class StepsDefinition {
 	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int} on his\\/her grid")
 	public void i_get_a_message(String string, String string2, Integer int1) {
 		assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
+		assertEquals(true, opponentGrid.getTile(new Coordinate(string2.charAt(0), int1)).isHit());
 	}
 }

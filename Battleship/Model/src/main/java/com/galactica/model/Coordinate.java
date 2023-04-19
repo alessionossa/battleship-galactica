@@ -18,6 +18,13 @@ public class Coordinate { //Send new coordinates to player
     public int getY() {
         return y;
     }
+
+    public void setX(char newX){
+        this.x = newX;
+    }
+    public void setY(int newY){
+        this.y = newY;
+    }
     
  // Override equals() method to compare values of x and y fields
     @Override
