@@ -19,8 +19,8 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <Button mnemonicParsing="false" onAction="#switchToSceneChooseGridMultiplayer" prefHeight="25.0" prefWidth="138.0" text="Multiplayer" />
-            <Button mnemonicParsing="false" onAction="#switchToSceneChooseGridSingleplayer" prefHeight="25.0" prefWidth="122.0" text="Singleplayer" />
+            <Button mnemonicParsing="false" onAction="#switchToSceneSettingsMultiplayer" prefHeight="25.0" prefWidth="138.0" text="Multiplayer" />
+            <Button mnemonicParsing="false" onAction="#switchToSceneSettingsSingleplayer" prefHeight="25.0" prefWidth="122.0" text="Singleplayer" />
          </children>
          <BorderPane.margin>
             <Insets bottom="200.0" left="200.0" right="200.0" top="100.0" />

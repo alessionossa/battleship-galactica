@@ -12,12 +12,15 @@ public class MainController {
 
     private Stage stage;
     private Scene scene;
-    private Parent root;
+
+    private int gridSize;
+    private boolean gravity;
+    private boolean asteroids;
 
     @FXML
-    public void switchToSceneChooseGridMultiplayer(ActionEvent event) throws IOException {
+    public void switchToSceneSettingsMultiplayer(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("chooseGrid-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("settings-view.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -27,14 +30,44 @@ public class MainController {
     }
 
     @FXML
-    public void switchToSceneChooseGridSingleplayer(ActionEvent event) throws IOException {
+    public void switchToSceneSettingsSingleplayer(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("chooseGrid-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("settings-view.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
 
         //TODO: Send info to model
+    }
+
+    @FXML
+    public void switchToSceneStartGame(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("startGame-view.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+        //TODO: Send info to model
+    }
+
+    @FXML
+    public void switchToMainScene(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void activateGravity(ActionEvent event) {
+    }
+
+    @FXML
+    public void activateAsteroids(ActionEvent event) {
     }
 }
