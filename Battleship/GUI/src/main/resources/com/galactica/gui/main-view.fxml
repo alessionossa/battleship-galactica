@@ -24,7 +24,7 @@
    <bottom>
       <FlowPane prefHeight="210.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Next" />
+            <Button mnemonicParsing="false" onAction="#switchToSceneSettings" text="Next" />
          </children>
          <padding>
             <Insets bottom="50.0" left="800.0" top="200.0" />

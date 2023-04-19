@@ -19,46 +19,6 @@
    <padding>
       <Insets top="50.0" />
    </padding>
-   <right>
-      <FlowPane hgap="30.0" prefHeight="297.0" prefWidth="756.0" vgap="100.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="250.0" left="50.0" right="50.0" top="50.0" />
-         </BorderPane.margin>
-         <children>
-            <FlowPane prefHeight="685.0" prefWidth="585.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size of the grid" wrappingWidth="112.3037109375">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <FlowPane.margin>
-                        <Insets left="150.0" right="100.0" top="300.0" />
-                     </FlowPane.margin>
-                  </Text>
-                  <FlowPane hgap="50.0" prefHeight="284.0" prefWidth="340.0">
-                     <children>
-                        <RadioButton mnemonicParsing="false" text="Small" />
-                        <RadioButton mnemonicParsing="false" text="Medium" />
-                        <RadioButton mnemonicParsing="false" text="Large" />
-                     </children>
-                     <padding>
-                        <Insets bottom="200.0" left="60.0" top="50.0" />
-                     </padding>
-                  </FlowPane>
-               </children>
-               <padding>
-                  <Insets left="200.0" right="50.0" top="150.0" />
-               </padding>
-               <FlowPane.margin>
-                  <Insets top="150.0" />
-               </FlowPane.margin>
-            </FlowPane>
-         </children>
-         <padding>
-            <Insets left="100.0" right="200.0" top="80.0" />
-         </padding>
-      </FlowPane>
-   </right>
    <bottom>
       <BorderPane prefHeight="337.0" prefWidth="900.0" BorderPane.alignment="CENTER">
          <bottom>
@@ -76,8 +36,8 @@
                </BorderPane.margin>
             </FlowPane>
          </bottom>
-         <top>
-            <FlowPane hgap="30.0" prefHeight="249.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+         <center>
+            <FlowPane hgap="30.0" prefHeight="219.0" prefWidth="900.0" BorderPane.alignment="CENTER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play including asteroids?" wrappingWidth="252.35546875">
                      <font>
@@ -85,7 +45,7 @@
                      </font>
                   </Text>
                   <CheckBox mnemonicParsing="false" text="Yes" />
-                  <FlowPane hgap="30.0" prefHeight="200.0" prefWidth="408.0">
+                  <FlowPane hgap="30.0" prefHeight="195.0" prefWidth="408.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play in Gravity mode?">
                            <font>
@@ -100,10 +60,46 @@
                   </FlowPane>
                </children>
                <padding>
-                  <Insets left="80.0" top="70.0" />
+                  <Insets left="80.0" top="80.0" />
                </padding>
             </FlowPane>
-         </top>
+         </center>
       </BorderPane>
    </bottom>
+   <center>
+      <FlowPane hgap="50.0" prefHeight="105.0" prefWidth="1887.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets left="320.0" right="100.0" top="80.0" />
+         </padding>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Which playing mode do you want to use?" wrappingWidth="262.591796875">
+               <FlowPane.margin>
+                  <Insets />
+               </FlowPane.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <RadioButton mnemonicParsing="false" text="Singleplayer" />
+            <FlowPane hgap="150.0" prefHeight="189.0" prefWidth="251.0" vgap="20.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size of the grid">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <RadioButton mnemonicParsing="false" text="Small" />
+                  <RadioButton mnemonicParsing="false" text="Medium" />
+                  <RadioButton mnemonicParsing="false" text="Large" />
+               </children>
+               <padding>
+                  <Insets top="50.0" />
+               </padding>
+            </FlowPane>
+         </children>
+         <BorderPane.margin>
+            <Insets top="50.0" />
+         </BorderPane.margin>
+      </FlowPane>
+   </center>
 </BorderPane>

@@ -17,8 +17,8 @@ public class MainController {
     private boolean gravity;
     private boolean asteroids;
 
-    //TODO Handling button help
 
+    //NAVIGATION
     @FXML
     public void switchToSceneSettings(ActionEvent event) throws IOException {
 
@@ -37,8 +37,6 @@ public class MainController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-        //TODO: Send info to model
     }
 
     @FXML
@@ -49,6 +47,21 @@ public class MainController {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    //MAIN SCENE CONTROLLER
+
+    //TODO Handling button help
+
+    //SETTINGS SCENE CONTROLLER
+    @FXML
+    public void activatePlayerMode(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void selectGridSize(ActionEvent event) {
+         //You can't check different sizes at the same time
     }
 
     @FXML
