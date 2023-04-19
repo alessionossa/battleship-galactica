@@ -4,6 +4,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.*;
 import javafx.stage.Stage;
+import javafx.event.*;
+
+import java.io.IOException;
 
 public class MainController {
 
@@ -12,17 +15,26 @@ public class MainController {
     private Parent root;
 
     @FXML
-    protected void onMultiplayerButtonClick() {
-        //Switch scene
+    public void switchToSceneChooseGridMultiplayer(ActionEvent event) throws IOException {
 
-        //TO DO: Send info to model
-        
+        Parent root = FXMLLoader.load(getClass().getResource("chooseGrid-view.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+        //TODO: Send info to model
     }
+
     @FXML
-    protected void onSinglePlayerButtonClick() {
-        //Switch scene
-        
-        //TO DO: Send info to model
-       
+    public void switchToSceneChooseGridSingleplayer(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getResource("chooseGrid-view.fxml"));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+
+        //TODO: Send info to model
     }
 }
