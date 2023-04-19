@@ -104,7 +104,7 @@ public class Planet {
 
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
-            if (planet.planetCoordinate.distance(this.planetCoordinate) <= this.size) { // TODO max size
+            if (planet.planetCoordinate.distance(this.planetCoordinate) <= Math.max(planet.size, this.size)) {
                 return false;
             }
         }
@@ -115,11 +115,12 @@ public class Planet {
         // TODO make more generic?
 
         List<Planet> planets = new ArrayList<Planet>();
-        for (int i = 0; i < 2; i++) {
-            Planet planet = new Planet(2, gridSize);
+
+        if (gridSize >= 20) {
+            Planet planet = new Planet(4, gridSize);
             boolean isValidPlanetPosition = planet.isValidPlanetPosition(planets);
             while (!isValidPlanetPosition) {
-                planet = new Planet(2, gridSize);
+                planet = new Planet(4, gridSize);
                 isValidPlanetPosition = planet.isValidPlanetPosition(planets);
             }
             planets.add(planet);
@@ -135,16 +136,17 @@ public class Planet {
             planets.add(planet);
 
         }
-        if (gridSize >= 20) {
-            Planet planet = new Planet(4, gridSize);
+        for (int i = 0; i < 2; i++) {
+            Planet planet = new Planet(2, gridSize);
             boolean isValidPlanetPosition = planet.isValidPlanetPosition(planets);
             while (!isValidPlanetPosition) {
-                planet = new Planet(4, gridSize);
+                planet = new Planet(2, gridSize);
                 isValidPlanetPosition = planet.isValidPlanetPosition(planets);
             }
             planets.add(planet);
 
         }
+
         return planets;
 
     }
