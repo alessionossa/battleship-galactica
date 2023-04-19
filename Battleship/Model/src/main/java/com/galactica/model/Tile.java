@@ -81,6 +81,10 @@ public class Tile {
         this.hit = hit;
     }
 
+    public boolean getHit() {
+        return hit;
+    }
+
     public Asteroid getAsteroid() {
         return this.asteroid;
     }

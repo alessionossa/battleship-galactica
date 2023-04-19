@@ -67,28 +67,22 @@ public class Grid {
         return true;
     }
 
-    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) throws OutOfBoundsException {
+    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) {
         Coordinate tileCoordinate;
 
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (originCoordinate.getX() + i);
                 tileCoordinate = new Coordinate(newX, originCoordinate.getY());
-                if (!isValidCoordinate(tileCoordinate)) {
-                    throw new OutOfBoundsException("Ship out of bounds");
-                } else {
-                    setTile(tileCoordinate, ship);
-                }
+                setTile(tileCoordinate, ship);
+
             }
         } else {
             for (int i = 0; i < ship.getLength(); i++) {
                 int newY = originCoordinate.getY() + i;
                 tileCoordinate = new Coordinate(originCoordinate.getX(), newY);
-                if (!isValidCoordinate(tileCoordinate)) {
-                    throw new OutOfBoundsException("Ship out of bounds");
-                } else {
-                    setTile(tileCoordinate, ship);
-                }
+                setTile(tileCoordinate, ship);
+
             }
         }
 
@@ -143,7 +137,7 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setPlanet(planet);
     }
 
-    Tile getTile(Coordinate coordinate) {
+    public Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];

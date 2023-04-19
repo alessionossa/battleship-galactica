@@ -24,7 +24,6 @@ public class AI extends Player {
     public AI(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
         this.name = name;
-        this.referenceGrid = ownGrid;
     }
 
     public void shoot(Coordinate c, Weapon weaponToShoot) {

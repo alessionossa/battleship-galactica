@@ -22,8 +22,10 @@ public class StepsDefinition {
 
 	Grid ownGrid;
 	Grid opponentGrid;
+	int gridSize;
 	Human player;
-	Human player1;
+	Human opponent;
+	AI ai;
 	Ship ship;
 	Exception error;
 	BattleshipCLI game;
@@ -34,10 +36,20 @@ public class StepsDefinition {
 
 	@Given("I have started a new game")
 	public void i_have_started_a_new_game() {
-		ownGrid = new Grid();
-		opponentGrid = new Grid();
+		gridSize = 10;
+		ownGrid = new Grid(gridSize);
+		opponentGrid = new Grid(gridSize);
 		player = new Human(ownGrid, opponentGrid);
 
+	}
+
+	@Given("I have started a new game with the AI")
+	public void i_have_started_a_new_game_with_the_ai() {
+		gridSize = 10;
+		ownGrid = new Grid(gridSize);
+		opponentGrid = new Grid(gridSize);
+		player = new Human(ownGrid, opponentGrid);
+		ai = new AI("AI", ownGrid, opponentGrid);
 	}
 
 	@When("I place a {string} in direction {string} on coordinate {string} {int} on my grid")
@@ -51,11 +63,13 @@ public class StepsDefinition {
 		Coordinate coordinate = new Coordinate(x.charAt(0), y);
 		Direction direction = Direction.get(dir.charAt(0));
 
-		try {
-			player.placeShip(ship, coordinate, direction);
-		} catch (OutOfBoundsException e) {
-			error = e;
-		}
+		player.placeShip(ship, coordinate, direction);
+
+	}
+
+	@When("The AI places its ships")
+	public void the_ai_places_its_ships() {
+		ai.placeShips();
 	}
 
 	@Then("The ship is placed on tiles {string} {int}, {string} {int} and {string} {int}")
@@ -66,6 +80,11 @@ public class StepsDefinition {
 		assertEquals(s0, ship);
 		assertEquals(s1, ship);
 		assertEquals(s2, ship);
+	}
+
+	@Then("All the AI ships are placed on tiles")
+	public void all_the_ai_ships_are_placed_on_tiles() {
+		assertEquals(ai.hasAllShipsPlaced(), true);
 	}
 
 	// DELETE SHIP TEST
@@ -100,24 +119,18 @@ public class StepsDefinition {
 
 	}
 
-	// SHOOT TEST
-
 	// Method to place a ship on opponent's grid
-	public void he_she_places_a_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
+	public void place_opponent_ship_in_direction_on_coordinate(String shipString, String dir, String x, int y) {
 		if (shipString.equals("Cruiser"))
 			ship = new Cruiser(1);
 		else if (shipString.equals("Deathstar"))
 			ship = new DeathStar(2);
-		else if (shipString.equals("Scout"))
+		else
 			ship = new Scout(3);
 		Coordinate coordinate = new Coordinate(x.charAt(0), y);
 		Direction direction = Direction.get(dir.charAt(0));
+		opponent.placeShip(ship, coordinate, direction);
 
-		try {
-			player1.placeShip(ship, coordinate, direction);
-		} catch (OutOfBoundsException e) {
-			error = e;
-		}
 	}
 
 	@Given("I have started a new game and I have placed all my ships on my grid")
@@ -129,24 +142,25 @@ public class StepsDefinition {
 	}
 
 	@Given("My opponent has placed a ship of type {string} at coordinate {string} {int} in direction {string} on their grid")
-	public void my_opponent_has_placed_a_ship_of_type_at_coordinate_in_direction_on_their_grid(String string,
-			String string2, Integer int1, String string3) {
-		player1 = new Human(opponentGrid, ownGrid);
-		he_she_places_a_ship_in_direction_on_coordinate("Deathstar", "h", "a", 1);
-		he_she_places_a_ship_in_direction_on_coordinate(string, string3, string2, int1);
-		he_she_places_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
+	public void my_opponent_has_placed_a_ship_of_type_at_coordinate_in_direction_on_their_grid(String shipType,
+			String x, Integer y, String direction) {
+		opponent = new Human(opponentGrid, ownGrid);
+		place_opponent_ship_in_direction_on_coordinate(shipType, direction, x,
+				y);
 	}
 
-	@Given("Coordinate {string} {int} on my opponent's grid has been hit")
-	public void coordinate_on_my_opponent_s_grid_has_been_hit(String string, Integer int1) {
-		opponentGrid.setTile(new Coordinate(string.charAt(0), int1), true);
-	}
+	// @Given("Coordinate {string} {int} on my opponent's grid has been hit")
+	// public void coordinate_on_my_opponent_s_grid_has_been_hit(String string,
+	// Integer int1) {
+	// opponentGrid.setTile(new Coordinate(string.charAt(0), int1), true);
+	// }
 
-	@When("I shoot at coordinate {string} {int} on my opponent's grid")
-	public String i_shoot_at_coordinate_on_his_her_grid(String string, Integer int1) {
-		player.shoot(new Coordinate(string.charAt(0), int1));
-		String tileType = player1.getOwnGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
-		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
+	@When("I shoot a cannon at coordinate {string} {int} on my opponent's grid")
+	public String i_shoot_a_cannon_at_coordinate_on_my_opponents_grid(String string, Integer int1) {
+		player.shoot(new Coordinate(string.charAt(0), int1), new Cannon());
+		String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
+		Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0),
+				int1));
 
 		if (tileType == "X" && ship.isSunk()) {
 			return "You sunk a ship! 💥🚢";
@@ -159,13 +173,41 @@ public class StepsDefinition {
 		}
 	}
 
-	@Then("The tile {string} {int} on my opponent's grid is hit")
-	public void the_tile_on_my_opponent_s_grid_is_hit(String string, Integer int1) {
-		assertEquals(opponentGrid.getTile(new Coordinate(string.charAt(0), int1)).isHit(), true);
+	@When("I shoot a grenade at coordinate {string} {int} on my opponent's grid")
+	public void i_shoot_a_grenade_at_coordinate_on_my_opponent_s_grid(String string, Integer int1) {
+		player.shoot(new Coordinate(string.charAt(0), int1), new Grenade());
 	}
 
-	@Then("I get a message {string} regarding the result of the shot at coordinate {string} {int}")
+	@When("I shoot a laser at row {int} on my opponent's grid")
+	public void i_shoot_a_laser_at_row_on_my_opponent_s_grid(int y) {
+		player.shootLaser(new Coordinate('a', y), 'r', new Laser());
+
+	}
+
+	@Then("The tile {string} {int} on my opponent's grid is hit")
+	public void the_tile_on_my_opponent_s_grid_is_hit(String string, Integer int1) {
+		assertEquals(opponentGrid.getTile(new Coordinate(string.charAt(0),
+				int1)).isHit(), true);
+	}
+
+	@Then("The row {int} on my opponent's grid is hit")
+	public void the_row_on_my_opponent_s_grid_is_hit(int y) {
+		// for (int i = 1; i < 11; i++) {
+		// assertEquals(opponentGrid.getTile(new Coordinate(string.charAt(0),
+		// i)).isHit(), true);
+		// }
+		for (int i = 0; i < gridSize; i++) {
+			the_tile_on_my_opponent_s_grid_is_hit(String.valueOf((char) ('a' + i)), y);
+		}
+	}
+
+	@Then("I get a message {string} regarding the result of the cannon shot at coordinate {string} {int}")
 	public void i_get_a_message(String string, String string2, Integer int1) {
-		assertEquals(string, i_shoot_at_coordinate_on_his_her_grid(string2, int1));
+		assertEquals(string, i_shoot_a_cannon_at_coordinate_on_my_opponents_grid(string2, int1));
+	}
+
+	@Then("I get a message {string} regarding the result of the laser shot at row {string}")
+	public void i_get_a_message_laser(String string, String string2) {
+
 	}
 }

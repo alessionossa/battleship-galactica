@@ -83,7 +83,7 @@ public class BattleshipCLI {
                 } else {
                     rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p1, grid2);
                     coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p1, grid2, rowOrColumn);
-                    p1.shootLaser(coordinateToShoot, rowOrColumn);
+                    p1.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
                 }
 
                 if (p2.areAllShipsSunk()) {
@@ -105,7 +105,7 @@ public class BattleshipCLI {
                     } else {
                         rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
                         coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1, rowOrColumn);
-                        p2.shootLaser(coordinateToShoot, rowOrColumn);
+                        p2.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
                     }
                 }
 
@@ -131,44 +131,12 @@ public class BattleshipCLI {
     }
 
     public void placeShips(AI player) {
-        Random random = new Random();
-        final char[] sequence = { 'v', 'h' };
         Grid ownGrid = player.getOwnGrid();
-        Ship[] ships = player.getShips();
+
         System.out.println("--------------------------------------------- ");
         System.out.println(player.getName() + " is placing the ships... \n");
-        for (Ship ship : ships) {
-            boolean isValidShipPosition;
+        player.placeShips();
 
-            do {
-                Coordinate coordinate;
-                boolean isValidCoordinate = false;
-                do {
-                    char x0 = (char) (random.nextInt(10) + 'a');
-                    int y0 = random.nextInt(11);
-
-                    coordinate = new Coordinate(x0, y0);
-                    isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
-                } while (!isValidCoordinate);
-
-                Direction direction = null;
-                do {
-                    char directionChar = sequence[random.nextInt(sequence.length)];
-                    direction = Direction.get(directionChar);
-                } while (direction == null);
-
-                ship.setCoordinate(coordinate);
-                ship.setDirection(direction);
-
-                isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
-                if (isValidShipPosition)
-                    try {
-                        ownGrid.placeShip(ship, coordinate, direction);
-                    } catch (OutOfBoundsException e) {
-
-                    }
-            } while (!isValidShipPosition);
-        }
         GridCLI.printGrid(ownGrid, true);
     }
 
@@ -200,11 +168,8 @@ public class BattleshipCLI {
 
                     isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
                     if (isValidShipPosition) {
-                        try {
-                            player.placeShip(ship, coordinate, direction);
-                        } catch (OutOfBoundsException e) {
+                        player.placeShip(ship, coordinate, direction);
 
-                        }
                     } else {
                         System.out.println("You cannot place a ship here.");
                     }

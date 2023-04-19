@@ -22,85 +22,29 @@ public class Human extends Player {
         if (damageArea == 1) {
             shootCannon(coordinate);
         } else if (damageArea == 2) {
-            shootGrenade(coordinate);
+            shootGrenade(coordinate, (Grenade) weaponToShoot);
         }
     }
 
-    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
-        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-        boolean hitAtLeastOneShip = false;
+    public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
+        List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
         boolean hitPlanet = false;
-
-        if (rowOrColumn == 'r') {
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX() + i);
-                int newY = coordinate.getY();
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                if (hitPlanet == false)
-                    addToCoordinateList(coordinateList, newCoordinate);
-                if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
-                    hitPlanet = true;
-                }
-
-            }
-        } else { // column
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX());
-                int newY = coordinate.getY() + i;
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                if (hitPlanet == false)
-                    addToCoordinateList(coordinateList, newCoordinate);
-                if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
-                    hitPlanet = true;
-                }
-
-            }
-        }
-        checkOutcomeOfShot(coordinateList, hitAtLeastOneShip, hitPlanet);
+        if (coordinateList.size() < ownGrid.getGridSize())
+            hitPlanet = true;
+        checkOutcomeOfShot(coordinateList, hitPlanet);
     }
 
-    private void shootGrenade(Coordinate coordinate) {
-        Random random = new Random();
-        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-        boolean hitAtLeastOneShip = false;
-        char newX = (char) (coordinate.getX());
-        int newY = coordinate.getY();
-        Coordinate newCoordinate = new Coordinate(newX, newY);
-        addToCoordinateList(coordinateList, newCoordinate);
-
-        for (int i = 0; i < 9; i++) {
-            int randomInt1 = random.nextInt(3) - 1;
-            int randomInt2 = random.nextInt(3) - 1;
-            newX = (char) (coordinate.getX() + randomInt1);
-            newY = coordinate.getY() + randomInt2;
-
-            newCoordinate = new Coordinate(newX, newY);
-            addToCoordinateList(coordinateList, newCoordinate);
-        }
-        checkOutcomeOfShot(coordinateList, hitAtLeastOneShip, false);
+    private void shootGrenade(Coordinate coordinate, Grenade grenade) {
+        List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
+        checkOutcomeOfShot(coordinateList, false);
     }
 
     private void shootCannon(Coordinate coordinate) {
         opponentGrid.setTile(coordinate, true);
+        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+        coordinateList.add(coordinate);
 
-        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
-        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        Planet planetAtCoordinate = opponentGrid.getPlanetAtCoordinate(coordinate);
-
-        if (shipAtCoordinate != null) {
-            boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-            if (isShipSunk) {
-                shipAtCoordinate.setSunk(true);
-                System.out.println("You sunk a ship! 💥🚢");
-            } else
-                System.out.println("You hit something!");
-        } else if (asteroidAtCoordinate != null) {
-            System.out.println("You hit something!");
-        } else if (planetAtCoordinate != null) {
-            System.out.println("That was a planet!");
-        } else {
-            System.out.println("You missed :(");
-        }
+        checkOutcomeOfShot(coordinateList, false);
 
         // if (gravityMode && !gravityUsed) {
         // List<Planet> opponentPlanets = opponentGrid.getPlanets();
@@ -113,7 +57,8 @@ public class Human extends Player {
         // }
     }
 
-    private void checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitAtLeastOneShip, boolean hitPlanet) {
+    private void checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitPlanet) {
+        boolean hitAtLeastOneShip = false;
         if (hitPlanet) {
             System.out.println("Your lasering was intercepted by a planet! 🌎");
         }

@@ -28,7 +28,7 @@ public abstract class Player {
 
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
 
-    public abstract void shootLaser(Coordinate coordinate, char rowOrColumn);
+    public abstract void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser);
 
     private void initializeShips() {
         ships[0] = new DeathStar(1);
@@ -50,7 +50,7 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) throws OutOfBoundsException {
+    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
         ship.setCoordinate(coordinate);
         ship.setDirection(direction);
         ownGrid.placeShip(ship, coordinate, direction);
