@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
@@ -24,14 +25,14 @@
             <Insets bottom="250.0" left="50.0" right="50.0" top="50.0" />
          </BorderPane.margin>
          <children>
-            <FlowPane prefHeight="260.0" prefWidth="603.0">
+            <FlowPane prefHeight="685.0" prefWidth="585.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size of the grid" wrappingWidth="112.3037109375">
                      <font>
                         <Font size="14.0" />
                      </font>
                      <FlowPane.margin>
-                        <Insets left="150.0" right="100.0" top="30.0" />
+                        <Insets left="150.0" right="100.0" top="300.0" />
                      </FlowPane.margin>
                   </Text>
                   <FlowPane hgap="50.0" prefHeight="284.0" prefWidth="340.0">
@@ -75,6 +76,34 @@
                </BorderPane.margin>
             </FlowPane>
          </bottom>
+         <top>
+            <FlowPane hgap="30.0" prefHeight="249.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play including asteroids?" wrappingWidth="252.35546875">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <CheckBox mnemonicParsing="false" text="Yes" />
+                  <FlowPane hgap="30.0" prefHeight="200.0" prefWidth="408.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play in Gravity mode?">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
+                        <CheckBox mnemonicParsing="false" text="Yes" />
+                     </children>
+                     <padding>
+                        <Insets left="50.0" top="88.0" />
+                     </padding>
+                  </FlowPane>
+               </children>
+               <padding>
+                  <Insets left="80.0" top="70.0" />
+               </padding>
+            </FlowPane>
+         </top>
       </BorderPane>
    </bottom>
 </BorderPane>
