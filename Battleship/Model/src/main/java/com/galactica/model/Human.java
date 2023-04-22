@@ -24,6 +24,7 @@ public class Human extends Player {
         } else if (damageArea == 2) {
             shootGrenade(coordinate, (Grenade) weaponToShoot);
         }
+
     }
 
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
@@ -40,7 +41,7 @@ public class Human extends Player {
     }
 
     private void shootCannon(Coordinate coordinate) {
-        opponentGrid.setTile(coordinate, true);
+        //opponentGrid.setTile(coordinate, true);
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         coordinateList.add(coordinate);
 
@@ -75,6 +76,7 @@ public class Human extends Player {
                     if (isShipSunk) {
                         shipAtCoordinate.setSunk(true);
                         System.out.println("You sunk a ship! 💥🚢");
+                        hitAtLeastOneShip = false;
                     }
                 }
             }

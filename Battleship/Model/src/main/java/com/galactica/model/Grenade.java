@@ -2,7 +2,7 @@ package com.galactica.model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Collections;
 
 public class Grenade extends Weapon {
 
@@ -12,24 +12,31 @@ public class Grenade extends Weapon {
     }
 
     public List<Coordinate> getScatterCoordinates(Coordinate coordinate, Grid opponentGrid) {
-        Random random = new Random();
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-        char newX = (char) (coordinate.getX());
-        int newY = coordinate.getY();
-        Coordinate newCoordinate = new Coordinate(newX, newY);
-        coordinateList.add(newCoordinate);
 
-        for (int i = 0; i < 9; i++) {
-            int randomInt1 = random.nextInt(3) - 1;
-            int randomInt2 = random.nextInt(3) - 1;
-            newX = (char) (coordinate.getX() + randomInt1);
-            newY = coordinate.getY() + randomInt2;
+        int y = coordinate.getY();
+        int xInt = coordinate.getX() - 'a';
 
-            newCoordinate = new Coordinate(newX, newY);
-            if (opponentGrid.isValidCoordinate(newCoordinate))
-                coordinateList.add(newCoordinate);
+        for (int i = xInt - 1; i <= xInt + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                if (i == xInt && j == y)
+                    continue;
+
+                char adjacentX = (char) (i + 'a');
+                Coordinate newCoordinate = new Coordinate(adjacentX, j);
+                if (opponentGrid.isValidCoordinate(newCoordinate))
+                    coordinateList.add(newCoordinate);
+            }
         }
+        Collections.shuffle(coordinateList);
+        Coordinate firstCoordinatetoHit = coordinateList.get(0);
+        Coordinate secondCoordinatetoHit = coordinateList.get(1);
+        coordinateList.clear();
+        coordinateList.add(coordinate);
+        coordinateList.add(firstCoordinatetoHit);
+        coordinateList.add(secondCoordinatetoHit);
 
         return coordinateList;
     }
 }
+

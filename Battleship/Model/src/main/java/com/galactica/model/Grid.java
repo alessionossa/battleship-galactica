@@ -155,7 +155,7 @@ public class Grid {
         return getTile(coordinate).getPlanet();
     }
 
-    boolean checkIfShipIsSunk(Ship ship) {
+    public boolean checkIfShipIsSunk(Ship ship) {
         Coordinate startCoordinate = ship.getCoordinate();
 
         switch (ship.getDirection()) {
