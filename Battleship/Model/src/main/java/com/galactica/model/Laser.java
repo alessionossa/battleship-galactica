@@ -15,7 +15,7 @@ public class Laser extends Weapon {
 
         if (rowOrColumn == 'r') {
             for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX() + i);
+                char newX = (char) ('a' + i);
                 int newY = coordinate.getY();
                 Coordinate newCoordinate = new Coordinate(newX, newY);
                 if (hitPlanet == false)
@@ -28,7 +28,7 @@ public class Laser extends Weapon {
         } else { // column
             for (int i = 0; i < opponentGrid.getGridSize(); i++) {
                 char newX = (char) (coordinate.getX());
-                int newY = coordinate.getY() + i;
+                int newY = i;
                 Coordinate newCoordinate = new Coordinate(newX, newY);
                 if (hitPlanet == false)
                     coordinateList.add(newCoordinate);

@@ -1,12 +1,10 @@
 package com.galactica.model;
+import com.galactica.cli.GridCLI;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-
-import com.galactica.cli.GridCLI;
 
 public class AI extends Player {
     private Random random = new Random();
@@ -19,7 +17,6 @@ public class AI extends Player {
     private boolean Up = false;
     private boolean Down = false;
     private Coordinate lastCoordinate;
-    private Grid referenceGrid;
 
     public AI(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
@@ -107,7 +104,7 @@ public class AI extends Player {
                 shootLaser(coordinate, rowOrColumn, (Laser) weapon);
             } else if (weapon instanceof Cannon) {
                 printShootingTurn(coordinate, weapon, ' ');
-                shootCannon(coordinate);
+                shootCannon(coordinate, gravityMode, gravityUsed);
             } else {
                 printShootingTurn(coordinate, weapon, ' ');
                 shootGrenade(coordinate, (Grenade) weapon);
@@ -115,48 +112,48 @@ public class AI extends Player {
         }
     }
 
-    private void shootCannon(Coordinate coordinate) {
-        CoordinatesHit.add(coordinate);
-        lastCoordinate = coordinate;
-
+    private void shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
         opponentGrid.setTile(coordinate, true);
+        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+        coordinateList.add(coordinate);
+        CoordinatesHit.add(coordinate);
 
-        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
+        boolean hit = checkOutcomeOfShot(coordinateList, false);
 
-        if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
-            if (shipAtCoordinate != null) {
-                System.out.println("The AI has hit a ship!");
-
-                followTargetMode = true;
-                Right = true;
-
-                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                sunkCheck(coordinate, shipAtCoordinate, isShipSunk);
-            } else
-                System.out.println("The AI has hit an asteroid!");
-        } else
-            System.out.println("The AI has missed...");
+        if (!hit && gravityMode && !gravityUsed) {
+            List<Planet> opponentPlanets = opponentGrid.getPlanets();
+            for (Planet planet : opponentPlanets) {
+                if (!gravityUsed) {
+                    Coordinate rebound = planet.getPlanetRebound(coordinate);
+                    if (rebound != null) {
+                        shootCannon(rebound, true, true);
+                    }
+                }
+            }
+        }
     }
 
     private void shootGrenade(Coordinate coordinate, Grenade grenade) {
         List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
-
         updateCoordinatesHit(coordinateList, CoordinatesHit);
-        checkOutcomeOfShot(coordinateList);
+        checkOutcomeOfShot(coordinateList, false);
     }
 
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
         List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
-
+        boolean hitPlanet = false;
+        if (coordinateList.size() < ownGrid.getGridSize())
+            hitPlanet = true;
         updateCoordinatesHit(coordinateList, CoordinatesHit);
-        checkOutcomeOfShot(coordinateList);
+        checkOutcomeOfShot(coordinateList, hitPlanet);
     }
 
-    private void checkOutcomeOfShot(List<Coordinate> coordinateList) {
-        boolean hitAShip = false;
-        boolean hitAnAsteroid = false;
-
+    private boolean checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitPlanet) {
+        boolean hitAtLeastOneShip = false;
+        boolean hitSomething = true;
+        if (hitPlanet)
+            System.out.println("AI's lasering was intercepted by a planet! 🌎");
+             
         for (int i = 0; i < coordinateList.size(); i++) {
             opponentGrid.setTile(coordinateList.get(i), true);
 
@@ -164,21 +161,28 @@ public class AI extends Player {
             Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
 
             if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
+                hitAtLeastOneShip = true;
                 if (shipAtCoordinate != null) {
-                    System.out.println("The AI has hit something!");
                     lastCoordinate = coordinateList.get(i);
-                    hitAShip = true;
                     followTargetMode = true;
                     Right = true;
                     boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
                     sunkCheck(coordinateList.get(i), shipAtCoordinate, isShipSunk);
-                } else if (asteroidAtCoordinate != null)
-                    hitAnAsteroid = true;
-                System.out.println("The AI has hit something!");
+                    if (isShipSunk) {
+                        shipAtCoordinate.setSunk(true);
+                        System.out.println("The AI has sunk a ship! 💥🚢");
+                        hitAtLeastOneShip = false;
+                    }
+                }
             }
         }
-        if (!(hitAShip || hitAnAsteroid))
-            System.out.println("The AI has missed all the shots:(");
+        if (hitAtLeastOneShip) {
+            System.out.println("The AI has hit something!");
+        } else {
+            hitSomething = false;
+            System.out.println("The AI has missed all shots:(");
+        }
+        return hitSomething;
     }
 
     private void updateCoordinatesHit(List<Coordinate> coordinateList, HashSet<Coordinate> coordinatesHit) {
@@ -212,8 +216,8 @@ public class AI extends Player {
     }
 
     public Coordinate getNewRandomCoordinate() {
-        char x0 = (char) (random.nextInt(referenceGrid.getGridSize()) + 'a');
-        int y0 = random.nextInt(referenceGrid.getGridSize() + 1);
+        char x0 = (char) (random.nextInt(ownGrid.getGridSize()) + 'a');
+        int y0 = random.nextInt(ownGrid.getGridSize() + 1);
         return new Coordinate(x0, y0);
     }
 
@@ -306,9 +310,9 @@ public class AI extends Player {
         int probability = random.nextInt(100);
         if (probability < 5) { // 5% chance to choose laser
             return "laser";
-        } else if (probability < 65) { // 80% chance to choose cannon
+        } else if (probability < 75) { // 70% chance to choose cannon
             return "cannon";
-        } else { // 15% chance to choose grenade
+        } else { // 25% chance to choose grenade
             return "grenade";
         }
     }
