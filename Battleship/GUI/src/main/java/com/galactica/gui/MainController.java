@@ -23,7 +23,7 @@ public class MainController {
     public void switchToSceneSettings(ActionEvent event) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("settings-view.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -32,8 +32,8 @@ public class MainController {
     @FXML
     public void switchToSceneStartGame(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("startGame-view.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent root = FXMLLoader.load(getClass().getResource("setup-ships-view.fxml"));
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -43,7 +43,7 @@ public class MainController {
     public void switchToMainScene(ActionEvent event) throws IOException {
 
         Parent root = FXMLLoader.load(getClass().getResource("main-view.fxml"));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
