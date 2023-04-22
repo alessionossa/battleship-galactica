@@ -104,13 +104,13 @@ public class AI extends Player {
             if (weapon instanceof Laser) {
                 char rowOrColumn = decideRowOrColumn();
                 printShootingTurn(coordinate, weapon, rowOrColumn);
-                shootLaser(coordinate, rowOrColumn);
+                shootLaser(coordinate, rowOrColumn, (Laser) weapon);
             } else if (weapon instanceof Cannon) {
                 printShootingTurn(coordinate, weapon, ' ');
                 shootCannon(coordinate);
             } else {
                 printShootingTurn(coordinate, weapon, ' ');
-                shootGrenade(coordinate);
+                shootGrenade(coordinate, (Grenade) weapon);
             }
         }
     }
@@ -139,55 +139,16 @@ public class AI extends Player {
             System.out.println("The AI has missed...");
     }
 
-    private void shootGrenade(Coordinate coordinate) {
-        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
-        // TODO: Make the Human shoot method like this one and maybe randomize the
-        // number of tiles that are hit
-        int y = coordinate.getY();
-        int xInt = coordinate.getX() - 'a';
-
-        for (int i = xInt - 1; i <= xInt + 1; i++) {
-            for (int j = y - 1; j <= y + 1; j++) {
-                if (i == xInt && j == y)
-                    continue;
-
-                char adjacentX = (char) (i + 'a');
-                Coordinate adjacentCoordinate = new Coordinate(adjacentX, j);
-                addToCoordinateList(coordinateList, adjacentCoordinate);
-            }
-        }
-
-        // TODO: Here is where we could randomize the amout of tiles to hit
-        Collections.shuffle(coordinateList);
-        Coordinate firstCoordinatetoHit = coordinateList.get(0);
-        Coordinate secondCoordinatetoHit = coordinateList.get(1);
-        coordinateList.clear();
-        coordinateList.add(coordinate);
-        coordinateList.add(firstCoordinatetoHit);
-        coordinateList.add(secondCoordinatetoHit);
+    private void shootGrenade(Coordinate coordinate, Grenade grenade) {
+        List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
 
         updateCoordinatesHit(coordinateList, CoordinatesHit);
         checkOutcomeOfShot(coordinateList);
     }
 
-    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
-        List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+    public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
+        List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
 
-        if (rowOrColumn == 'r') {
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) ('a' + i);
-                int newY = coordinate.getY();
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                addToCoordinateList(coordinateList, newCoordinate);
-            }
-        } else { // column
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX());
-                int newY = i;
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                addToCoordinateList(coordinateList, newCoordinate);
-            }
-        }
         updateCoordinatesHit(coordinateList, CoordinatesHit);
         checkOutcomeOfShot(coordinateList);
     }
