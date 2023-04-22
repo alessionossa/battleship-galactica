@@ -7,7 +7,7 @@ import com.galactica.model.Weapon;
 
 public class WeaponCLI {
     public static Weapon askWeaponToShoot(CLI cli, Player player) {
-        System.out.println(player.getName() + ", select a weapon: 'c' for cannon, 'g' for grenade, 'l' for laser");
+        System.out.println("\n" + player.getName() + ", select a weapon: 'c' for cannon, 'g' for grenade, 'l' for laser");
         boolean isValidWeaponToShoot;
         int whichWeaponToReturn = 0;
 
