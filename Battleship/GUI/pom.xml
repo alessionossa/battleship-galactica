@@ -11,8 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>GUI</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>GUI</name>
+    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +44,7 @@
         </dependency>
         <dependency>
             <artifactId>Model</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${project.parent.version}</version>
             <groupId>com.galactica</groupId>
         </dependency>
     </dependencies>
@@ -61,7 +60,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.galactica.gui/com.galactica.gui.HelloApplication</mainClass>
+                            <mainClass>com.galactica.gui/com.galactica.gui.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
