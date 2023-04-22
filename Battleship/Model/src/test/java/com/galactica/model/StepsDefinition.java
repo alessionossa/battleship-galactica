@@ -138,9 +138,8 @@ public class StepsDefinition {
 
     }
 
-    @Given("I have started a new game and I have placed all my ships on my grid")
+    @Given("I have placed all my ships on my grid")
     public void i_have_placed_all_my_ships_on_my_grid() {
-        i_have_started_a_new_game();
         i_place_a_ship_in_direction_on_coordinate("Cruiser", "h", "a", 1);
         i_place_a_ship_in_direction_on_coordinate("Scout", "v", "f", 3);
         i_place_a_ship_in_direction_on_coordinate("Deathstar", "v", "c", 5);
@@ -160,20 +159,22 @@ public class StepsDefinition {
     // opponentGrid.setTile(new Coordinate(string.charAt(0), int1), true);
     // }
 
-    @When("I shoot a cannon at coordinate {string} {int} on my opponent's grid")
-    public void i_shoot_a_cannon_at_coordinate_on_my_opponents_grid(String string, Integer int1) {
-        player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
-        String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
-        Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
+    @When("{string} shot a cannon at coordinate {string} {int}")
+    public void shoot_a_cannon_at_coordinate_on_my_opponents_grid(String whoShoots, String string, Integer int1) {
+        if (whoShoots.equals("I")) {
+            player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
+            ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
+        } else {
+            ai.shootCannon(new Coordinate(string.charAt(0), int1));
+            ship = ownGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
+        }
 
-        if (Objects.equals(tileType, "X") && ship.isSunk()) {
+        if (ship.isSunk()) {
             message = "You sunk a ship! 💥🚢";
-        } else if (Objects.equals(tileType, "/")) {
-            message = "You missed";
-        } else if (Objects.equals(tileType, "X")) {
+        } else if (ship != null) {
             message = "You hit something!";
         } else {
-            message = "Something went wrong";
+            message = "You missed";
         }
     }
 
@@ -227,16 +228,22 @@ public class StepsDefinition {
         }
     }
 
-    @Then("The tile {string} {int} on my opponent's grid is hit")
-    public void the_tile_on_my_opponent_s_grid_is_hit(String string, Integer int1) {
-        assertEquals(opponentGrid.getTile(new Coordinate(string.charAt(0),
-                int1)).isHit(), true);
+    @Then("The tile {string} {int} on my {string} grid is hit")
+    public void the_tile_on_grid(String string, Integer int1, String whoseGrid) {
+        GridCLI.printGrid(ownGrid, true);
+        GridCLI.printGrid(opponentGrid, true);
+        if (whoseGrid.equals("opponent's"))
+            assertEquals(true, opponentGrid.getTile(new Coordinate(string.charAt(0),
+                    int1)).isHit());
+        else
+            assertEquals(true, ownGrid.getTile(new Coordinate(string.charAt(0),
+                    int1)).isHit());
     }
 
     @Then("The row {int} on my opponent's grid is hit")
     public void the_row_on_my_opponent_s_grid_is_hit(int y) {
         for (int i = 0; i < gridSize; i++) {
-            the_tile_on_my_opponent_s_grid_is_hit(String.valueOf((char) ('a' + i)), y);
+            the_tile_on_grid(String.valueOf((char) ('a' + i)), y, "opponent's");
         }
     }
 
@@ -251,7 +258,7 @@ public class StepsDefinition {
         assertEquals(string, message);
     }
 
-    @And("I get a message {string} or {string} or {string} regarding the result of the grenade shot at coordinate {string} {int}")
+    @Then("I get a message {string} or {string} or {string} regarding the result of the grenade shot at coordinate {string} {int}")
     public void iGetAMessageOrOrRegardingTheResultOfTheGrenadeShotAtCoordinate(String arg0, String arg1, String arg2,
             String arg3, int arg4) {
         // if (Objects.equals(arg0, message)){
@@ -268,7 +275,7 @@ public class StepsDefinition {
         assertThat(message, CoreMatchers.anyOf(CoreMatchers.is(arg0), CoreMatchers.is(arg1), CoreMatchers.is(arg2)));
     }
 
-    @And("I shoot randomly at {int} tiles")
+    @Then("{int} random adjacent tiles on my opponent's grid are hit")
     public void iShootRandomlyAtTiles(int arg0) {
         assertEquals(grenadeScatterCoordinates.size() - 1, arg0);
         for (Coordinate coordinate : grenadeScatterCoordinates) {
@@ -279,4 +286,5 @@ public class StepsDefinition {
             // TODO: Need to fix this random coordinate problem
         }
     }
+
 }

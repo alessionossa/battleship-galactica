@@ -19,7 +19,6 @@ public class AI extends Player {
     private boolean Up = false;
     private boolean Down = false;
     private Coordinate lastCoordinate;
-    private Grid referenceGrid;
 
     public AI(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
@@ -115,7 +114,7 @@ public class AI extends Player {
         }
     }
 
-    private void shootCannon(Coordinate coordinate) {
+    void shootCannon(Coordinate coordinate) {
         CoordinatesHit.add(coordinate);
         lastCoordinate = coordinate;
 
@@ -212,8 +211,8 @@ public class AI extends Player {
     }
 
     public Coordinate getNewRandomCoordinate() {
-        char x0 = (char) (random.nextInt(referenceGrid.getGridSize()) + 'a');
-        int y0 = random.nextInt(referenceGrid.getGridSize() + 1);
+        char x0 = (char) (random.nextInt(ownGrid.getGridSize()) + 'a');
+        int y0 = random.nextInt(ownGrid.getGridSize() + 1);
         return new Coordinate(x0, y0);
     }
 
