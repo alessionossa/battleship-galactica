@@ -8,6 +8,7 @@ import com.galactica.controller.*;
 import com.galactica.cli.*;
 
 import io.cucumber.java.an.Y;
+import io.cucumber.java.bs.A;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,9 +17,11 @@ import io.cucumber.messages.internal.com.fasterxml.jackson.databind.cfg.Construc
 import junit.framework.ComparisonFailure;
 import org.hamcrest.CoreMatchers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
 
 public class StepsDefinition {
@@ -34,9 +37,10 @@ public class StepsDefinition {
     BattleshipCLI game;
     Asteroid asteroid;
     BattleshipCLI startShooting;
-    Laser laser;
+    Laser laser = new Laser();
     String message;
     List<Coordinate> grenadeScatterCoordinates;
+    String tileAsteroid;
     // PLACE SHIP TEST
 
     @Given("I have started a new game")
@@ -159,19 +163,19 @@ public class StepsDefinition {
     // opponentGrid.setTile(new Coordinate(string.charAt(0), int1), true);
     // }
 
-    @When("{string} shot a cannon at coordinate {string} {int}")
-    public void shoot_a_cannon_at_coordinate_on_my_opponents_grid(String whoShoots, String string, Integer int1) {
-        if (whoShoots.equals("I")) {
-            player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
-            ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
-        } else {
-            ai.shootCannon(new Coordinate(string.charAt(0), int1), false, false);
-            ship = ownGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
-        }
+        @Whn("I public void i_shoot_a_cannon_at_coordinate_on_my_opponents_g
+
+        player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
+        String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
+
+        //Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
         if (ship.isSunk()) {
             message = "You sunk a ship! 💥🚢";
-        } else if (ship != null) {
+        } else if (Objects.equals(tileType, "/")) {
+       
+
+        } else if ((Objects.equals(tileType, "X") || (Objects.equals(tileType, "A") ) || (Objects.equals(tileType, "P") ))){
             message = "You hit something!";
         } else {
             message = "You missed";
@@ -216,8 +220,8 @@ public class StepsDefinition {
     @When("I shoot a laser at row {int} on my opponent's grid")
     public void i_shoot_a_laser_at_row_on_my_opponent_s_grid(int y) {
 
-        Laser laser = new Laser();
         player.shootLaser(new Coordinate('a', y), 'r', laser);
+        laser.setAmountOfUses();
         List<Coordinate> coordinateList = laser.getLaserCoordinates(new Coordinate('a', y), opponentGrid, 'r');
         for (int i = 0; i < coordinateList.size(); i++) {
             String tileType = player.getOpponentGrid().getTile(coordinateList.get(i)).displayValue(false);
@@ -226,6 +230,34 @@ public class StepsDefinition {
             if (tileType == "X" && ship.isSunk())
                 message = "You sunk a ship! 💥🚢";
         }
+    }
+    @When("I shoot a laser at column {string} on my opponent's grid")
+    public void iShootALaserAtColumnOnMyOpponentSGrid(String x) {
+
+        laser.setAmountOfUses();
+        player.shootLaser(new Coordinate(x.charAt(0), 0), 'c', laser);
+        List<Coordinate> coordinateList = laser.getLaserCoordinates(new Coordinate(x.charAt(0),0), opponentGrid, 'c');
+        for (int i = 0; i < coordinateList.size(); i++) {
+            String tileType = player.getOpponentGrid().getTile(coordinateList.get(i)).displayValue(false);
+            Ship ship = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
+
+            if (tileType == "X" && ship.isSunk())
+                message = "You sunk a ship! 💥🚢";
+        }
+
+    }
+
+
+    @Then("The column {string} on my opponent's grid is hit")
+    public void theColumnOnMyOpponentSGridIsHit(String x) {
+        for (int i = 0; i < gridSize; i++) {
+            the_tile_on_my_opponent_s_grid_is_hit(String.valueOf(x), i);
+        }
+    } 
+
+    @And("I get a message {string} regarding the result of the laser shot at column {string}")
+    public void iGetAMessageRegardingTheResultOfTheLaserShotAtColumn(String arg0, String arg1) {
+        assertEquals(arg0, message);
     }
 
     @Then("The tile {string} {int} on my {string} grid is hit")
@@ -277,14 +309,43 @@ public class StepsDefinition {
 
     @Then("{int} random adjacent tiles on my opponent's grid are hit")
     public void iShootRandomlyAtTiles(int arg0) {
-        assertEquals(grenadeScatterCoordinates.size() - 1, arg0);
-        for (Coordinate coordinate : grenadeScatterCoordinates) {
-            // GridCLI.printGrid(player.getOpponentGrid(),true);
-            // System.out.println(coordinate.getX());
-            // System.out.println(coordinate.getY());
-            assertEquals(true, opponentGrid.getTile(coordinate).isHit());
-            // TODO: Need to fix this random coordinate problem
+        assertEquals(grenadeScatterCoordinates.size() -1, arg0);
+        Coordinate coordinate = grenadeScatterCoordinates.get(0);
+        int y = coordinate.getY();
+        int xInt = coordinate.getX() - 'a';
+        List<Coordinate> newList = new ArrayList<Coordinate>();
+
+        for (int i = xInt - 1; i <= xInt + 1; i++) {
+            for (int j = y - 1; j <= y + 1; j++) {
+                char adjacentX = (char) (i + 'a');
+                Coordinate newCoordinate = new Coordinate(adjacentX, j);
+                if (opponentGrid.isValidCoordinate(newCoordinate))
+                    newList.add(newCoordinate);
+            }
         }
+        assertThat(newList,hasItems(grenadeScatterCoordinates.get(1),grenadeScatterCoordinates.get(2)));
+
+    } 
+
+
+    @And("There is an asteroid on tile {string} {int} on my opponent's grid")
+    public void thereIsAnAsteroidOnTileOnMyOpponentSGrid(String arg0, int arg1) {
+        opponentGrid.setTile(new Coordinate(arg0.charAt(0),arg1), new Asteroid());
+        assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),arg1)).getAsteroid(),  null);
     }
 
-}
+    @And("There is an planet on tile {string} {int} on my opponent's grid")
+    public void thereIsAnPlanetOnTileOnMyOpponentSGrid(String arg0, int arg1) {
+        opponentGrid.setTile(new Coordinate(arg0.charAt(0),arg1), new Planet(2, ownGrid.getGridSize()));
+        assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),arg1)).getPlanet(),  null);
+    }
+  
+
+    @
+
+    }
+
+} 
+     
+
+     
