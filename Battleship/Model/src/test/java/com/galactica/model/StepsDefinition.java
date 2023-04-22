@@ -275,7 +275,7 @@ public class StepsDefinition {
             // GridCLI.printGrid(player.getOpponentGrid(),true);
             // System.out.println(coordinate.getX());
             // System.out.println(coordinate.getY());
-            assertEquals(true, player.getOpponentGrid().getTile(coordinate).isHit());
+            assertEquals(true, opponentGrid.getTile(coordinate).isHit());
             // TODO: Need to fix this random coordinate problem
         }
     }

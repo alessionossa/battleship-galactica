@@ -338,10 +338,4 @@ public class AI extends Player {
 
         return getWeapons()[whichWeaponToReturn];
     }
-
-    private void addToCoordinateList(List<Coordinate> coordinateList, Coordinate newCoordinate) {
-        if (opponentGrid.isValidCoordinate(newCoordinate)) {
-            coordinateList.add(newCoordinate);
-        }
-    }
 }
