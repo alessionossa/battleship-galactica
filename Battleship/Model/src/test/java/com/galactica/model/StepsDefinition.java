@@ -148,7 +148,7 @@ public class StepsDefinition {
 
     @Given("My opponent has placed a ship of type {string} at coordinate {string} {int} in direction {string} on their grid")
     public void my_opponent_has_placed_a_ship_of_type_at_coordinate_in_direction_on_their_grid(String shipType,
-                                                                                               String x, Integer y, String direction) {
+            String x, Integer y, String direction) {
         opponent = new Human(opponentGrid, ownGrid);
         place_opponent_ship_in_direction_on_coordinate(shipType, direction, x,
                 y);
@@ -162,7 +162,7 @@ public class StepsDefinition {
 
     @When("I shoot a cannon at coordinate {string} {int} on my opponent's grid")
     public void i_shoot_a_cannon_at_coordinate_on_my_opponents_grid(String string, Integer int1) {
-        player.shoot(new Coordinate(string.charAt(0), int1), new Cannon());
+        player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
         String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
         Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
@@ -180,21 +180,21 @@ public class StepsDefinition {
     @When("I shoot a grenade at coordinate {string} {int} on my opponent's grid")
     public void i_shoot_a_grenade_at_coordinate_on_my_opponent_s_grid(String string, Integer int1) {
         Grenade grenade = new Grenade();
-        player.shoot(new Coordinate(string.charAt(0), int1), grenade);
+        player.shoot(new Coordinate(string.charAt(0), int1), grenade, false, false);
         grenadeScatterCoordinates = grenade.getScatterCoordinates(new Coordinate(string.charAt(0), int1), opponentGrid);
 
         boolean hitAtLeastOneShip = false;
         for (int i = 0; i < grenadeScatterCoordinates.size(); i++) {
 
-
-            String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1)).displayValue(false);
+            String tileType = player.getOpponentGrid().getTile(new Coordinate(string.charAt(0), int1))
+                    .displayValue(false);
             Ship ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
 
-//            for (Coordinate coordinate: grenadeScatterCoordinates) {
-//                GridCLI.printGrid(player.getOpponentGrid(), true);
-//                System.out.println(coordinate.getX());
-//                System.out.println(coordinate.getY());
-//            }
+            // for (Coordinate coordinate: grenadeScatterCoordinates) {
+            // GridCLI.printGrid(player.getOpponentGrid(), true);
+            // System.out.println(coordinate.getX());
+            // System.out.println(coordinate.getY());
+            // }
             if (ship != null) {
                 hitAtLeastOneShip = true;
                 boolean isShipSunk = opponentGrid.checkIfShipIsSunk(ship);
@@ -248,33 +248,35 @@ public class StepsDefinition {
     @Then("I get a message {string} regarding the result of the laser shot at row {int}")
     public void i_get_a_message_laser(String string, int y) {
 
-		assertEquals(string, message);
+        assertEquals(string, message);
     }
 
     @And("I get a message {string} or {string} or {string} regarding the result of the grenade shot at coordinate {string} {int}")
-    public void iGetAMessageOrOrRegardingTheResultOfTheGrenadeShotAtCoordinate(String arg0, String arg1, String arg2, String arg3, int arg4) {
-//		if (Objects.equals(arg0, message)){
-//			assertEquals(arg0,message);
-//		}
-//		else if (Objects.equals(arg1, message)){
-//			assertEquals(arg1,message);
-//		}
-//		else if (Objects.equals(arg2, message)){
-//			assertEquals(arg2,message);
-//		}
-		//this doesnt really check if it's actually the correct message eg if we hit a ship but the message is missed the test will still pass
-		assertThat(message, CoreMatchers.anyOf(CoreMatchers.is(arg0), CoreMatchers.is(arg1), CoreMatchers.is(arg2)));
+    public void iGetAMessageOrOrRegardingTheResultOfTheGrenadeShotAtCoordinate(String arg0, String arg1, String arg2,
+            String arg3, int arg4) {
+        // if (Objects.equals(arg0, message)){
+        // assertEquals(arg0,message);
+        // }
+        // else if (Objects.equals(arg1, message)){
+        // assertEquals(arg1,message);
+        // }
+        // else if (Objects.equals(arg2, message)){
+        // assertEquals(arg2,message);
+        // }
+        // this doesnt really check if it's actually the correct message eg if we hit a
+        // ship but the message is missed the test will still pass
+        assertThat(message, CoreMatchers.anyOf(CoreMatchers.is(arg0), CoreMatchers.is(arg1), CoreMatchers.is(arg2)));
     }
 
     @And("I shoot randomly at {int} tiles")
     public void iShootRandomlyAtTiles(int arg0) {
-        assertEquals(grenadeScatterCoordinates.size()-1, arg0);
-      for (Coordinate coordinate: grenadeScatterCoordinates){
-            //GridCLI.printGrid(player.getOpponentGrid(),true);
-//            System.out.println(coordinate.getX());
-//            System.out.println(coordinate.getY());
+        assertEquals(grenadeScatterCoordinates.size() - 1, arg0);
+        for (Coordinate coordinate : grenadeScatterCoordinates) {
+            // GridCLI.printGrid(player.getOpponentGrid(),true);
+            // System.out.println(coordinate.getX());
+            // System.out.println(coordinate.getY());
             assertEquals(true, player.getOpponentGrid().getTile(coordinate).isHit());
-            //TODO: Need to fix this random coordinate problem
-           }
+            // TODO: Need to fix this random coordinate problem
+        }
     }
 }

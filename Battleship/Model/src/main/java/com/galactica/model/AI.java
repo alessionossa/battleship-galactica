@@ -26,7 +26,42 @@ public class AI extends Player {
         this.name = name;
     }
 
-    public void shoot(Coordinate c, Weapon weaponToShoot) {
+    public void placeShips() {
+        final char[] sequence = { 'v', 'h' };
+        Random random = new Random();
+
+        for (Ship ship : ships) {
+            boolean isValidShipPosition;
+
+            do {
+                Coordinate coordinate;
+                boolean isValidCoordinate = false;
+                do {
+                    char x0 = (char) (random.nextInt(10) + 'a');
+                    int y0 = random.nextInt(11);
+
+                    coordinate = new Coordinate(x0, y0);
+                    isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
+                } while (!isValidCoordinate);
+
+                Direction direction = null;
+                do {
+                    char directionChar = sequence[random.nextInt(sequence.length)];
+                    direction = Direction.get(directionChar);
+                } while (direction == null);
+
+                ship.setCoordinate(coordinate);
+                ship.setDirection(direction);
+
+                isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
+                if (isValidShipPosition)
+                    ownGrid.placeShip(ship, coordinate, direction);
+
+            } while (!isValidShipPosition);
+        }
+    }
+
+    public void shoot(Coordinate c, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed) {
         Coordinate coordinate;
         boolean isValidCoordinate;
         Weapon weapon;

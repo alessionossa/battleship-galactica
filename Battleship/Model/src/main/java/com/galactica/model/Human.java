@@ -16,11 +16,11 @@ public class Human extends Player {
         this.name = "Joe"; // TODO make compatible with cucumber tests
     }
 
-    public void shoot(Coordinate coordinate, Weapon weaponToShoot) {
+    public void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed) {
         int damageArea = weaponToShoot.getAreaOfEffect();
 
         if (damageArea == 1) {
-            shootCannon(coordinate);
+            shootCannon(coordinate, gravityMode, gravityUsed);
         } else if (damageArea == 2) {
             shootGrenade(coordinate, (Grenade) weaponToShoot);
         }
@@ -40,26 +40,29 @@ public class Human extends Player {
         checkOutcomeOfShot(coordinateList, false);
     }
 
-    private void shootCannon(Coordinate coordinate) {
-        //opponentGrid.setTile(coordinate, true);
+    private void shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
+        opponentGrid.setTile(coordinate, true);
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         coordinateList.add(coordinate);
 
-        checkOutcomeOfShot(coordinateList, false);
+        boolean hit = checkOutcomeOfShot(coordinateList, false);
 
-        // if (gravityMode && !gravityUsed) {
-        // List<Planet> opponentPlanets = opponentGrid.getPlanets();
-        // for (Planet planet : opponentPlanets) {
-        // Coordinate rebound = planet.getPlanetRebound(coordinate);
-        // if (rebound != null) {
-        // shoot(rebound, true, true);
-        // }
-        // }
-        // }
+        if (!hit && gravityMode && !gravityUsed) {
+            List<Planet> opponentPlanets = opponentGrid.getPlanets();
+            for (Planet planet : opponentPlanets) {
+                if (!gravityUsed) {
+                    Coordinate rebound = planet.getPlanetRebound(coordinate);
+                    if (rebound != null) {
+                        shoot(rebound, new Cannon(), true, true);
+                    }
+                }
+            }
+        }
     }
 
-    private void checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitPlanet) {
+    private boolean checkOutcomeOfShot(List<Coordinate> coordinateList, boolean hitPlanet) {
         boolean hitAtLeastOneShip = false;
+        boolean hitSomething = true;
         if (hitPlanet) {
             System.out.println("Your lasering was intercepted by a planet! 🌎");
         }
@@ -84,14 +87,10 @@ public class Human extends Player {
         if (hitAtLeastOneShip) {
             System.out.println("You hit something!");
         } else {
+            hitSomething = false;
             System.out.println("You missed all shots:(");
         }
-    }
-
-    private void addToCoordinateList(List<Coordinate> coordinateList, Coordinate newCoordinate) {
-        if (opponentGrid.isValidCoordinate(newCoordinate)) {
-            coordinateList.add(newCoordinate);
-        }
+        return hitSomething;
     }
 
 }

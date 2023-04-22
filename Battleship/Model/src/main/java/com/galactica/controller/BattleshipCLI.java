@@ -78,7 +78,7 @@ public class BattleshipCLI {
 
                 if (weaponsToShoot.getAreaOfEffect() != 3) {
                     coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
-                    p1.shoot(coordinateToShoot, weaponsToShoot);
+                    p1.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
 
                 } else {
                     rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p1, grid2);
@@ -94,13 +94,13 @@ public class BattleshipCLI {
             } else {
 
                 if (singlePlayerMode) {
-                    p2.shoot(null, null);
+                    p2.shoot(null, null, gravityMode, false);
                 } else {
                     Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
 
                     if (weaponsToShoot.getAreaOfEffect() != 3) {
                         coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                        p2.shoot(coordinateToShoot, weaponsToShoot);
+                        p2.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
 
                     } else {
                         rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);

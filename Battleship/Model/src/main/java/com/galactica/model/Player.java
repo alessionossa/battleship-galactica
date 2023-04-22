@@ -26,7 +26,7 @@ public abstract class Player {
         initializeShips();
     }
 
-    public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot);
+    public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
 
     public abstract void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser);
 
