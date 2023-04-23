@@ -6,7 +6,7 @@ public class Tile {
     private boolean hit;
     private Planet planet;
 
-    public Tile(Ship ship) { // Needs to be modified so we can have <T> type of ship, obstacles
+    public Tile(Ship ship) { // TODO: Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
         this.hit = false;
     }
@@ -18,23 +18,6 @@ public class Tile {
     public Tile(Asteroid asteroid) {
         this.asteroid = asteroid;
     }
-
-    /*
-     * @Override
-     * public String toString() {
-     * if (this.ship == null) {
-     * if (this.hit)
-     * return "/";
-     * else
-     * return "0";
-     * } else {
-     * if (this.hit)
-     * return "X";
-     * else
-     * return Integer.toString(ship.getIdentifier());
-     * }
-     * }
-     */
 
     public String displayValue(boolean showGridObjects) {
         if (this.ship != null) {
