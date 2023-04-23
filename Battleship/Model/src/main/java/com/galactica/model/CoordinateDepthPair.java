@@ -27,14 +27,16 @@ public class CoordinateDepthPair<L, R> {
 
     @Override
     public boolean equals(Object o) {
-        // TODO check if downcast possible
+        if (!(o instanceof CoordinateDepthPair)) {
+            return false;
+        }
+
         CoordinateDepthPair<Coordinate, Integer> pair = (CoordinateDepthPair<Coordinate, Integer>) o;
         if (pair.getL().equals(this.getL()) && pair.getR().equals(this.getR())) {
             return true;
         }
 
         return false;
-
     }
 
 }
