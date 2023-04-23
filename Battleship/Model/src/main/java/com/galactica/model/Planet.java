@@ -104,7 +104,7 @@ public class Planet {
 
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
-            if (planet.planetCoordinate.distance(this.planetCoordinate) <= Math.max(planet.size, this.size)) {
+            if (planet.planetCoordinate.distance(this.planetCoordinate) <= 2 * Math.max(planet.size, this.size)) {
                 return false;
             }
         }
@@ -112,8 +112,6 @@ public class Planet {
     }
 
     public static List<Planet> generatePlanets(int gridSize) {
-        // TODO make more generic?
-
         List<Planet> planets = new ArrayList<Planet>();
 
         if (gridSize >= 20) {
@@ -193,7 +191,7 @@ public class Planet {
                 } else
                     continue;
                 System.out.println(
-                        "A nearby planet's gravitational field has pulled your cannon ball around!");
+                        "A nearby planet's gravitational field has pulled the cannon ball around!");
                 return coordinate;
 
             }

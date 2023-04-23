@@ -37,30 +37,28 @@ public class Grid {
      * This method checks if the position is a valid position
      */
     public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
-
+        char x = coordinate.getX();
+        int y = coordinate.getY();
         if (direction == Direction.Horizontal) {
             if ((convertXToMatrixIndex(coordinate.getX()) + ship.getLength()) > gridSize) {
                 return false;
-            }
-
-            for (int i = 0; i < ship.getLength(); i++) {
-                char newX = (char) (coordinate.getX() + i);
-                Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
-                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
-                    return false;
-                }
             }
         } else {
             if ((coordinate.getY() + ship.getLength()) > gridSize) {
                 return false;
             }
+        }
 
-            for (int i = 0; i < ship.getLength(); i++) {
-                int newY = coordinate.getY() + i;
-                Coordinate tileCoordinate = new Coordinate(coordinate.getX(), newY);
-                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
-                    return false;
-                }
+        for (int i = 0; i < ship.getLength(); i++) {
+            if (direction == Direction.Horizontal) {
+                x = (char) (coordinate.getX() + i);
+            } else {
+                y = coordinate.getY() + i;
+            }
+            Coordinate tileCoordinate = new Coordinate(x, y);
+            if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null
+                    || getTile(tileCoordinate).getPlanet() != null) {
+                return false;
             }
         }
 

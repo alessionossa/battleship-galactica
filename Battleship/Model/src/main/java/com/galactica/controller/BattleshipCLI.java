@@ -96,16 +96,16 @@ public class BattleshipCLI {
                 if (singlePlayerMode) {
                     p2.shoot(null, null, gravityMode, false);
                 } else {
-                    Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
+                    Weapon weaponToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
 
-                    if (weaponsToShoot.getAreaOfEffect() != 3) {
+                    if (weaponToShoot.getAreaOfEffect() != 3) {
                         coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                        p2.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
+                        p2.shoot(coordinateToShoot, weaponToShoot, gravityMode, false);
 
                     } else {
                         rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
                         coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1, rowOrColumn);
-                        p2.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
+                        p2.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponToShoot);
                     }
                 }
 

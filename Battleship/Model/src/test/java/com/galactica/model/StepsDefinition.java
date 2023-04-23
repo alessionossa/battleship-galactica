@@ -165,7 +165,7 @@ public class StepsDefinition {
             player.shoot(new Coordinate(string.charAt(0), int1), new Cannon(), false, false);
             ship = opponentGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
         } else {
-            ai.shootCannon(new Coordinate(string.charAt(0), int1));
+            ai.shootCannon(new Coordinate(string.charAt(0), int1), false, false);
             ship = ownGrid.getShipAtCoordinate(new Coordinate(string.charAt(0), int1));
         }
 

@@ -12,32 +12,23 @@ public class Laser extends Weapon {
     public List<Coordinate> getLaserCoordinates(Coordinate coordinate, Grid opponentGrid, char rowOrColumn) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         boolean hitPlanet = false;
+        char x = coordinate.getX();
+        int y = coordinate.getY();
 
-        if (rowOrColumn == 'r') {
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX() + i);
-                int newY = coordinate.getY();
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                if (hitPlanet == false)
-                    coordinateList.add(newCoordinate);
-                if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
-                    hitPlanet = true;
-                }
-
+        for (int i = 0; i < opponentGrid.getGridSize(); i++) {
+            if (rowOrColumn == 'r') { // row
+                x = (char) ('a' + i);
+            } else { // column
+                y = i;
             }
-        } else { // column
-            for (int i = 0; i < opponentGrid.getGridSize(); i++) {
-                char newX = (char) (coordinate.getX());
-                int newY = coordinate.getY() + i;
-                Coordinate newCoordinate = new Coordinate(newX, newY);
-                if (hitPlanet == false)
-                    coordinateList.add(newCoordinate);
-                if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
-                    hitPlanet = true;
-                }
-
+            Coordinate newCoordinate = new Coordinate(x, y);
+            if (hitPlanet == false)
+                coordinateList.add(newCoordinate);
+            if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
+                hitPlanet = true;
             }
         }
+
         return coordinateList;
     }
 }

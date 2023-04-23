@@ -1,40 +1,35 @@
 package com.galactica.cli;
 
-import com.galactica.model.Coordinate;
-import com.galactica.model.Grid;
+import com.galactica.model.Cannon;
+import com.galactica.model.Grenade;
+import com.galactica.model.Laser;
 import com.galactica.model.Player;
 import com.galactica.model.Weapon;
 
 public class WeaponCLI {
     public static Weapon askWeaponToShoot(CLI cli, Player player) {
-        System.out
-                .println("\n" + player.getName() + ", select a weapon: 'c' for cannon, 'g' for grenade, 'l' for laser");
-        boolean isValidWeaponToShoot;
-        int whichWeaponToReturn = 0;
+        Cannon cannon = player.getCannon();
+        Grenade grenade = player.getGrenade();
+        Laser laser = player.getLaser();
+        char resp;
 
-        do {
-            char resp = Character.toLowerCase(cli.scanner.nextLine().charAt(0));
+        for (;;) {
+            System.out
+                    .println("\n" + player.getName() + ", select a weapon: 'c' for cannon, 'g' for grenade ("
+                            + player.getGrenade().getAmountOfUses() + " use(s) left), 'l' for laser ("
+                            + player.getLaser().getAmountOfUses() + " use(s) left)");
+            resp = Character.toLowerCase(cli.scanner.nextLine().charAt(0));
+
             if (resp == 'c') {
-                isValidWeaponToShoot = true;
-                whichWeaponToReturn = 0;
-                // return player.getWeapons()[0];
-            } else if (resp == 'g' && player.getWeapons()[1].getAmountOfUses() != 0) {
-                player.getWeapons()[1].setAmountOfUses();
-                whichWeaponToReturn = 1;
-                isValidWeaponToShoot = true;
-                // return player.getWeapons()[1];
-            } else if (resp == 'l' && player.getWeapons()[2].getAmountOfUses() != 0) {
-                player.getWeapons()[2].setAmountOfUses();
-                System.out.println(player.getWeapons()[2].getAmountOfUses());
-                whichWeaponToReturn = 2;
-                isValidWeaponToShoot = true;
-                // return player.getWeapons()[2];
-            } else {
-                isValidWeaponToShoot = false;
-                System.out.println("Please only type 'c', 'g' or 'l'");
+                return cannon;
+            } else if (resp == 'g' && grenade.getAmountOfUses() != 0) {
+                grenade.decrementAmountOfUses();
+                return grenade;
+            } else if (resp == 'l' && laser.getAmountOfUses() != 0) {
+                laser.decrementAmountOfUses();
+                return laser;
             }
-        } while (!isValidWeaponToShoot);
+        }
 
-        return player.getWeapons()[whichWeaponToReturn];
     }
 }

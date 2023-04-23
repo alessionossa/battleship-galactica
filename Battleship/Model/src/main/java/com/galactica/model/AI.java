@@ -106,7 +106,7 @@ public class AI extends Player {
                 shootLaser(coordinate, rowOrColumn, (Laser) weapon);
             } else if (weapon instanceof Cannon) {
                 printShootingTurn(coordinate, weapon, ' ');
-                shootCannon(coordinate);
+                shootCannon(coordinate, gravityMode, gravityUsed);
             } else {
                 printShootingTurn(coordinate, weapon, ' ');
                 shootGrenade(coordinate, (Grenade) weapon);
@@ -114,75 +114,15 @@ public class AI extends Player {
         }
     }
 
-    void shootCannon(Coordinate coordinate) {
-        CoordinatesHit.add(coordinate);
+    public void updateTracking(Coordinate coordinate) {
         lastCoordinate = coordinate;
-
-        opponentGrid.setTile(coordinate, true);
-
-        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
-
-        if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
-            if (shipAtCoordinate != null) {
-                System.out.println("The AI has hit a ship!");
-
-                followTargetMode = true;
-                Right = true;
-
-                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                sunkCheck(coordinate, shipAtCoordinate, isShipSunk);
-            } else
-                System.out.println("The AI has hit an asteroid!");
-        } else
-            System.out.println("The AI has missed...");
+        followTargetMode = true;
+        Right = true;
     }
 
-    private void shootGrenade(Coordinate coordinate, Grenade grenade) {
-        List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
-
-        updateCoordinatesHit(coordinateList, CoordinatesHit);
-        checkOutcomeOfShot(coordinateList);
-    }
-
-    public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
-        List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
-
-        updateCoordinatesHit(coordinateList, CoordinatesHit);
-        checkOutcomeOfShot(coordinateList);
-    }
-
-    private void checkOutcomeOfShot(List<Coordinate> coordinateList) {
-        boolean hitAShip = false;
-        boolean hitAnAsteroid = false;
-
-        for (int i = 0; i < coordinateList.size(); i++) {
-            opponentGrid.setTile(coordinateList.get(i), true);
-
-            Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinateList.get(i));
-            Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinateList.get(i));
-
-            if ((shipAtCoordinate != null || asteroidAtCoordinate != null)) {
-                if (shipAtCoordinate != null) {
-                    System.out.println("The AI has hit something!");
-                    lastCoordinate = coordinateList.get(i);
-                    hitAShip = true;
-                    followTargetMode = true;
-                    Right = true;
-                    boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                    sunkCheck(coordinateList.get(i), shipAtCoordinate, isShipSunk);
-                } else if (asteroidAtCoordinate != null)
-                    hitAnAsteroid = true;
-                System.out.println("The AI has hit something!");
-            }
-        }
-        if (!(hitAShip || hitAnAsteroid))
-            System.out.println("The AI has missed all the shots:(");
-    }
-
-    private void updateCoordinatesHit(List<Coordinate> coordinateList, HashSet<Coordinate> coordinatesHit) {
+    void updateCoordinatesHit(List<Coordinate> coordinateList) {
         for (Coordinate coordinate : coordinateList) {
-            coordinatesHit.add(coordinate);
+            CoordinatesHit.add(coordinate);
         }
     }
 
@@ -301,40 +241,31 @@ public class AI extends Player {
         }
     }
 
-    public String getRandomWeapon() {
+    public char getRandomWeapon() {
         int probability = random.nextInt(100);
         if (probability < 5) { // 5% chance to choose laser
-            return "laser";
+            return 'l';
         } else if (probability < 65) { // 80% chance to choose cannon
-            return "cannon";
+            return 'c';
         } else { // 15% chance to choose grenade
-            return "grenade";
+            return 'g';
         }
     }
 
     public Weapon getWeaponToShoot() {
-        boolean isValidWeaponToShoot;
-        int whichWeaponToReturn = 0;
-        do {
-            String resp = getRandomWeapon();
+        for (;;) {
+            char resp = getRandomWeapon();
 
-            if (resp.equals("cannon")) {
-                isValidWeaponToShoot = true;
-                whichWeaponToReturn = 0;
-            } else if (resp.equals("grenade") && getWeapons()[1].getAmountOfUses() != 0) {
-                getWeapons()[1].setAmountOfUses();
-                whichWeaponToReturn = 1;
-                isValidWeaponToShoot = true;
-            } else if (resp.equals("laser") && getWeapons()[2].getAmountOfUses() != 0) {
-                getWeapons()[2].setAmountOfUses();
-                System.out.println(getWeapons()[2].getAmountOfUses());
-                whichWeaponToReturn = 2;
-                isValidWeaponToShoot = true;
-            } else {
-                isValidWeaponToShoot = false;
+            if (resp == 'c') {
+                return cannon;
+            } else if (resp == 'g' && grenade.getAmountOfUses() != 0) {
+                grenade.decrementAmountOfUses();
+                return grenade;
+            } else if (resp == 'l' && laser.getAmountOfUses() != 0) {
+                laser.decrementAmountOfUses();
+                return laser;
             }
-        } while (!isValidWeaponToShoot);
+        }
 
-        return getWeapons()[whichWeaponToReturn];
     }
 }

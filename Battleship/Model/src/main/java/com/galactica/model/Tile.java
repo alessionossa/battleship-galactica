@@ -38,7 +38,9 @@ public class Tile {
 
     public String displayValue(boolean showGridObjects) {
         if (this.ship != null) {
-            if (this.hit)
+            if (ship.isSunk()) {
+                return "S";
+            } else if (this.hit)
                 return "X";
             else {
                 if (showGridObjects)
