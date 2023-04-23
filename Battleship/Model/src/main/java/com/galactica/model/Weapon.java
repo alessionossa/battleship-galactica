@@ -5,13 +5,15 @@ public abstract class Weapon {
     public int areaOfEffect;
     protected int amountOfUses;
 
-    public int getAreaOfEffect(){
+    public int getAreaOfEffect() {
         return areaOfEffect;
     }
+
     public int getAmountOfUses() {
         return amountOfUses;
     }
-    public void setAmountOfUses() {
-        this.amountOfUses = amountOfUses - 1 ;
+
+    public void decrementAmountOfUses() {
+        this.amountOfUses = amountOfUses - 1;
     }
 }
