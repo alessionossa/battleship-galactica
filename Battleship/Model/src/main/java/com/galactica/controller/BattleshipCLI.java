@@ -16,40 +16,79 @@ public class BattleshipCLI {
     private Human p1;
     private Player p2;
 
+    private Grid grid1;
+    private Grid grid2;
+
     private final CLI cli;
 
     public BattleshipCLI(CLI cli) {
         this.cli = cli;
     }
 
+    public void placeShips(AI player) {
+        Grid ownGrid = player.getOwnGrid();
+
+        System.out.println("--------------------------------------------- ");
+        System.out.println(player.getName() + " is placing the ships... \n");
+        player.placeShips();
+
+        GridCLI.printGrid(ownGrid, true);
+    }
+
+    public void placeShips(Human player) {
+        boolean allShipsPlaced = false;
+        while (!allShipsPlaced) {
+            GridCLI.printGrid(player.getOwnGrid(), true);
+            boolean placeOrRemove = cli.getPlaceOrRemoveResponse(player);
+
+            Ship ship = ShipCLI.askShip(cli, player);
+            if (!placeOrRemove && !ship.isPlaced()) {
+                System.out.println("Cannot remove a ship that hasn't been placed");
+            } else if (placeOrRemove && ship.isPlaced()) {
+                System.out.println("Cannot place a ship that is already on the grid");
+            } else if (!placeOrRemove && ship.isPlaced()) {
+                try {
+                    player.removeShip(ship);
+                } catch (UnplacedShipException e) {
+
+                }
+
+            } else if (placeOrRemove && !ship.isPlaced()) {
+                boolean isValidShipPosition;
+                Coordinate coordinate;
+                Direction direction;
+                do {
+                    coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player);
+                    direction = DirectionCLI.askDirection(cli, player);
+
+                    isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
+                    if (isValidShipPosition) {
+                        player.placeShip(ship, coordinate, direction);
+
+                    } else {
+                        System.out.println("You cannot place a ship here.");
+                    }
+
+                } while (!isValidShipPosition);
+            }
+
+            allShipsPlaced = player.hasAllShipsPlaced();
+
+        }
+
+    }
+
     void playGame() {
 
-        singlePlayerMode = cli.getPlayerModeResponse(); // TODO refactor singlplayerMode from cli to model
+        singlePlayerMode = cli.getPlayerModeResponse();
         gridSize = cli.getGridSizeResponse();
         if (gridSize >= 10) {
             gravityMode = cli.getGravityModeResponse();
         }
         asteroidMode = cli.getAsteroidModeResponse();
 
-        Coordinate.setMaxValue(gridSize);
-        Planet.setMaxPlanetLength((int) (Math.floor(Math.abs(Math.min(gridSize, 20) / 5))));
-        Grid grid1 = new Grid(gridSize);
-        Grid grid2 = new Grid(gridSize);
-        Coordinate coordinateToShoot;
-        char rowOrColumn;
-
-        if (gravityMode) {
-            List<Planet> planets1 = Planet.generatePlanets(gridSize);
-            List<Planet> planets2 = Planet.generatePlanets(gridSize);
-
-            grid1.placePlanets(planets1);
-            grid2.placePlanets(planets2);
-        }
-
-        if (asteroidMode) {
-            grid1.placeAsteroids();
-            grid2.placeAsteroids();
-        }
+        grid1 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
+        grid2 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
 
         p1 = new Human(grid1, grid2);
         placeShips(p1);
@@ -62,15 +101,11 @@ public class BattleshipCLI {
             placeShips((Human) p2);
         }
 
-        boolean startShooting = true;
-        // if (p1.hasAllShipsPlaced() || p2.hasAllShipsPlaced()) {
-        // startShooting = true;
-        // } else {
-        // startShooting = false;
-        // }
+        Coordinate coordinateToShoot;
+        char rowOrColumn;
 
         playerTurn = 1;
-        while (startShooting) {
+        while (true) {
 
             if (playerTurn == 1) {
 
@@ -128,59 +163,6 @@ public class BattleshipCLI {
         BattleshipCLI game = new BattleshipCLI(cli);
 
         game.playGame();
-    }
-
-    public void placeShips(AI player) {
-        Grid ownGrid = player.getOwnGrid();
-
-        System.out.println("--------------------------------------------- ");
-        System.out.println(player.getName() + " is placing the ships... \n");
-        player.placeShips();
-
-        GridCLI.printGrid(ownGrid, true);
-    }
-
-    public void placeShips(Human player) {
-        boolean allShipsPlaced = false;
-        while (!allShipsPlaced) {
-            GridCLI.printGrid(player.getOwnGrid(), true);
-            boolean placeOrRemove = cli.getPlaceOrRemoveResponse(player);
-
-            Ship ship = ShipCLI.askShip(cli, player);
-            if (!placeOrRemove && !ship.isPlaced()) {
-                System.out.println("Cannot remove a ship that hasn't been placed");
-            } else if (placeOrRemove && ship.isPlaced()) {
-                System.out.println("Cannot place a ship that is already on the grid");
-            } else if (!placeOrRemove && ship.isPlaced()) {
-                try {
-                    player.removeShip(ship);
-                } catch (UnplacedShipException e) {
-
-                }
-
-            } else if (placeOrRemove && !ship.isPlaced()) {
-                boolean isValidShipPosition;
-                Coordinate coordinate;
-                Direction direction;
-                do {
-                    coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player);
-                    direction = DirectionCLI.askDirection(cli, player);
-
-                    isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
-                    if (isValidShipPosition) {
-                        player.placeShip(ship, coordinate, direction);
-
-                    } else {
-                        System.out.println("You cannot place a ship here.");
-                    }
-
-                } while (!isValidShipPosition);
-            }
-
-            allShipsPlaced = player.hasAllShipsPlaced();
-
-        }
-
     }
 
     void endGame(Player winner) {
