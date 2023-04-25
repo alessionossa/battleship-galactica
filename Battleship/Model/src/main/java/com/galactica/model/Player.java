@@ -37,6 +37,7 @@ public abstract class Player {
             AI ai = (AI) this;
             ai.updateCoordinatesHit(coordinateList);
         }
+        grenade.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
     }
 
@@ -47,6 +48,7 @@ public abstract class Player {
             AI ai = (AI) this;
             ai.updateCoordinatesHit(coordinateList);
         }
+        laser.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
     }
 
@@ -88,10 +90,14 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
-        ship.setCoordinate(coordinate);
-        ship.setDirection(direction);
-        ownGrid.placeShip(ship, coordinate, direction);
+    public Ship placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+        if (ownGrid.isValidShipPosition(ship, coordinate, direction)) {
+            ship.setCoordinate(coordinate);
+            ship.setDirection(direction);
+            ownGrid.placeShip(ship, coordinate, direction);
+            return ship;
+        }
+        return null;
     }
 
     public void removeShip(Ship ship) throws UnplacedShipException {

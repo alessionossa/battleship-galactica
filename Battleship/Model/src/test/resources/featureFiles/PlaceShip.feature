@@ -15,4 +15,24 @@ Feature: Placing ships on a grid
 
   @tag3
   Scenario: Unable to place a ship on an obstacle
-    Given I have started a new game in asteroid mode
+    Given I have started a new game on a size 10 grid in "single" player mode, <asteroids> asteroid mode, <planets> gravity mode
+    When I try to place a "Cruiser" on <obstacle>
+    Then The ship is not placed on the grid
+
+    Examples: 
+      | asteroids | planets   | obstacle      |
+      | "with"    | "without" | "an asteroid" |
+      | "without" | "with"    | "a planet"    |
+
+  @tag4
+  Scenario: Unable to place a ship on another ship
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And "I place" a "Deathstar" in direction "v" on coordinate "b" 3
+    When I try to place a "Scout" on "the ship"
+    Then The ship is not placed on the grid
+
+  @tag5
+  Scenario: Unable to place ship out of bounds
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    When I try to place a "Deathstar" on "the right corner of the grid"
+    Then The ship is not placed on the grid

@@ -7,6 +7,7 @@ import java.util.Random;
 public class Grid {
     private Tile[][] tiles;
     private List<Planet> planets = new ArrayList<Planet>();
+    private List<Asteroid> asteroids = new ArrayList<Asteroid>();
 
     private static int gridSize;
 
@@ -26,6 +27,10 @@ public class Grid {
 
     public List<Planet> getPlanets() {
         return planets;
+    }
+
+    public List<Asteroid> getAsteroids() {
+        return asteroids;
     }
 
     public boolean isValidCoordinate(Coordinate coordinate) {
@@ -184,7 +189,11 @@ public class Grid {
         int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
                 .toArray();
         for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
-            setTile(new Coordinate((char) ('a' + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
+            Coordinate asteroidCoordinate = new Coordinate((char) ('a' + asteroidCoordinates[i]),
+                    asteroidCoordinates[i + 1]);
+            Asteroid asteroid = new Asteroid(asteroidCoordinate);
+            asteroids.add(asteroid);
+            setTile(asteroidCoordinate, asteroid);
         }
     }
 

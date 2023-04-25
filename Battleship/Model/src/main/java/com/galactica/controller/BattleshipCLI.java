@@ -54,22 +54,18 @@ public class BattleshipCLI {
                 }
 
             } else if (placeOrRemove && !ship.isPlaced()) {
-                boolean isValidShipPosition;
+                Ship placedShip;
                 Coordinate coordinate;
                 Direction direction;
                 do {
                     coordinate = CoordinateCLI.askCoordinateToPlaceShip(cli, player);
                     direction = DirectionCLI.askDirection(cli, player);
 
-                    isValidShipPosition = player.getOwnGrid().isValidShipPosition(ship, coordinate, direction);
-                    if (isValidShipPosition) {
-                        player.placeShip(ship, coordinate, direction);
-
-                    } else {
+                    placedShip = player.placeShip(ship, coordinate, direction);
+                    if (placedShip == null)
                         System.out.println("You cannot place a ship here.");
-                    }
 
-                } while (!isValidShipPosition);
+                } while (placedShip == null);
             }
 
             allShipsPlaced = player.hasAllShipsPlaced();

@@ -33,6 +33,7 @@ public class StepsDefinition {
     Human opponent;
     AI ai;
     Ship ship;
+    Ship ship2;
     Exception error;
     BattleshipCLI game;
     Asteroid asteroid;
@@ -41,6 +42,8 @@ public class StepsDefinition {
     String message;
     List<Coordinate> grenadeScatterCoordinates;
     String tileAsteroid;
+    Coordinate asteroidCoordinate;
+    Coordinate planetCoordinate;
     // PLACE SHIP TEST
 
     @Given("I have started a new game on a size {int} grid in {string} player mode, {string} asteroid mode, {string} gravity mode")
@@ -88,6 +91,29 @@ public class StepsDefinition {
 
     }
 
+    @When("I try to place a {string} on {string}")
+    public void i_try_to_place_a_ship_on_an_asteroid(String shipString, String obstacle) {
+        if (shipString.equals("Cruiser"))
+            ship2 = new Cruiser(1);
+        else if (shipString.equals("Deathstar"))
+            ship2 = new DeathStar(2);
+        else if (shipString.equals("Scout"))
+            ship2 = new Scout(3);
+
+        if (obstacle.equals("an asteroid")) {
+            asteroidCoordinate = ownGrid.getAsteroids().get(0).getCoordinate();
+            player.placeShip(ship2, asteroidCoordinate, Direction.get('h'));
+        } else if (obstacle.equals("a planet")) {
+            planetCoordinate = ownGrid.getPlanets().get(0).getCoordinate();
+            player.placeShip(ship2, planetCoordinate, Direction.get('v'));
+        } else if (obstacle.equals("the ship")) {
+            player.placeShip(ship2, ship.getCoordinate(), Direction.get('v'));
+        } else if (obstacle.equals("the right corner of the grid")) {
+            player.placeShip(ship2, new Coordinate('j', 0), Direction.get('h'));
+        }
+
+    }
+
     @When("The AI places its ships")
     public void the_ai_places_its_ships() {
         ai.placeShips();
@@ -101,6 +127,12 @@ public class StepsDefinition {
         assertEquals(s0, ship);
         assertEquals(s1, ship);
         assertEquals(s2, ship);
+    }
+
+    @Then("The ship is not placed on the grid")
+    public void the_ship_is_not_placed() {
+        assertEquals(ship2.getDirection(), null);
+        assertEquals(ship2.isPlaced(), false);
     }
 
     @Then("All the AI ships are placed on tiles")
@@ -144,7 +176,7 @@ public class StepsDefinition {
         if (whoShoots.equals("I shoot"))
             player.shoot(new Coordinate(x.charAt(0), y), new Cannon(), false, false);
         else if (whoShoots.equals("The AI shoots"))
-            ai.shoot(new Coordinate(x.charAt(0), y), new Cannon(), false, false);
+            ai.shootCannon(new Coordinate(x.charAt(0), y), false, false);
         else
             opponent.shoot(new Coordinate(x.charAt(0), y), new Cannon(), false, false);
         String tileType = player.getOpponentGrid().getTile(new Coordinate(x.charAt(0), y)).displayValue(false);
@@ -204,7 +236,6 @@ public class StepsDefinition {
     public void i_shoot_a_laser_at_row_on_my_opponent_s_grid(int y) {
 
         player.shootLaser(new Coordinate('a', y), 'r', laser);
-        laser.decrementAmountOfUses();
         List<Coordinate> coordinateList = laser.getLaserCoordinates(new Coordinate('a', y), opponentGrid, 'r');
         for (int i = 0; i < coordinateList.size(); i++) {
             String tileType = player.getOpponentGrid().getTile(coordinateList.get(i)).displayValue(false);
@@ -219,7 +250,6 @@ public class StepsDefinition {
     public void iShootALaserAtColumnOnMyOpponentSGrid(String x) {
 
         player.shootLaser(new Coordinate(x.charAt(0), 0), 'c', laser);
-        laser.decrementAmountOfUses();
         List<Coordinate> coordinateList = laser.getLaserCoordinates(new Coordinate(x.charAt(0), 0), opponentGrid, 'c');
         for (int i = 0; i < coordinateList.size(); i++) {
             String tileType = player.getOpponentGrid().getTile(coordinateList.get(i)).displayValue(false);
@@ -310,20 +340,24 @@ public class StepsDefinition {
 
     }
 
-    @And("There is an asteroid on tile {string} {int} on my opponent's grid")
-    public void thereIsAnAsteroidOnTileOnMyOpponentSGrid(String arg0, int arg1) {
-        opponentGrid.setTile(new Coordinate(arg0.charAt(0), arg1), new Asteroid());
-        assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0), arg1)).getAsteroid(), null);
-    }
+    // @And("There is an asteroid on tile {string} {int} on my opponent's grid")
+    // public void thereIsAnAsteroidOnTileOnMyOpponentSGrid(String arg0, int arg1) {
+    // opponentGrid.setTile(new Coordinate(arg0.charAt(0), arg1), new Asteroid(new
+    // Coordinate(arg0.charAt(0), arg1)));
+    // assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),
+    // arg1)).getAsteroid(), null);
+    // }
 
-    @And("There is an planet on tile {string} {int} on my opponent's grid")
-    public void thereIsAnPlanetOnTileOnMyOpponentSGrid(String arg0, int arg1) {
-        opponentGrid.setTile(new Coordinate(arg0.charAt(0), arg1), new Planet(2, ownGrid.getGridSize()));
-        assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0), arg1)).getPlanet(), null);
-    }
+    // opponentGrid.setTile(new Coordinate(arg0.charAt(0),arg1),new
+    // Planet(2,ownGrid.getGridSize()));
+
+    // assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),
+    // arg1)).getPlanet(), null);
+    // }
 
     @And("I can no longer shoot with a laser")
     public void iCanNoLongerShootWithALaser() {
         assertEquals(0, laser.amountOfUses);
     }
+
 }
