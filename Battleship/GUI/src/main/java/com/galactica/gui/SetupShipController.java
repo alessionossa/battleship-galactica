@@ -1,17 +1,28 @@
 package com.galactica.gui;
 
+import com.galactica.model.Ship;
+import com.galactica.model.ships.Cruiser;
+import com.galactica.model.ships.DeathStar;
+import com.galactica.model.ships.Scout;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.image.Image;
+import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
 
 public class SetupShipController {
+
+    int gridSize;
+
+    Ship[] ships;
 
     @FXML
     private BorderPane borderPane;
@@ -19,33 +30,87 @@ public class SetupShipController {
     @FXML
     private GridPane grid;
 
-    public void initialize() {
-        int gridSize = 10; // Set the desired grid size here
-        // String backgroundImage = ""; // Set the path to your background image
+    @FXML
+    private StackPane gridContainer;
 
-        // Load the background image
-        Image image = new Image("assets/background.png");
-        ImageView imageView = new ImageView(image);
-        borderPane.setCenter(imageView);
-        imageView.fitWidthProperty().bind(borderPane.widthProperty());
-        imageView.fitHeightProperty().bind(borderPane.heightProperty());
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-        imageView.setCache(true);
+    @FXML
+    private ImageView backgroundImageView;
 
+    @FXML
+    private ListView<Ship> shipsListView;
+
+    @FXML
+    private Button rotateButton;
+
+    private Ship selectedShip;
+
+    public SetupShipController(int gridSize) {
+        this.gridSize = gridSize;
+        this.ships = new Ship[] {new Cruiser(1), new DeathStar(2), new Scout(3)};
+
+    }
+
+    public void initialize() {// Set the desired grid size here
+        backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
+        backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
+
+        grid.getStyleClass().add("grid");
+
+        createGrid();
+
+        // Bind the column and row constraints to maintain square tiles
+        NumberBinding tileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2), borderPane.heightProperty().divide(gridSize + 2));
+        tileSize.addListener((obs, oldSize, newSize) -> {
+            for (ColumnConstraints column : grid.getColumnConstraints()) {
+                column.setPrefWidth(newSize.doubleValue());
+                column.setMaxWidth(newSize.doubleValue());
+            }
+            for (RowConstraints row : grid.getRowConstraints()) {
+                row.setPrefHeight(newSize.doubleValue());
+                row.setMaxHeight(newSize.doubleValue());
+            }
+        });
+
+        setupShipList();
+
+        for (Node node : grid.getChildren()) {
+            node.setOnMouseEntered((MouseEvent t) -> {
+                node.setStyle("-fx-background-color:#FFFF00;");
+            });
+
+            node.setOnMouseExited((MouseEvent t) -> {
+                node.setStyle("-fx-background-color:#dae7f3;");
+            });
+        }
+    }
+
+    private void setupShipList() {
+        shipsListView.getItems().addAll(ships);
+        shipsListView.setCellFactory(listView -> new ShipListCell());
+
+        shipsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ship>() {
+            @Override
+            public void changed(ObservableValue<? extends Ship> observableValue, Ship ship, Ship t1) {
+                selectedShip = t1;
+            }
+        });
+    }
+
+    private void createGrid() {
+        int tableSize = gridSize + 1;
         // Create the grid
-        for (int i = 0; i < gridSize; i++) {
+        for (int i = 0; i < tableSize; i++) {
             ColumnConstraints column = new ColumnConstraints();
-            column.setPercentWidth(100.0 / gridSize);
+            column.setHgrow(Priority.NEVER);
             grid.getColumnConstraints().add(column);
 
             RowConstraints row = new RowConstraints();
-            row.setPercentHeight(100.0 / gridSize);
+            row.setVgrow(Priority.NEVER);
             grid.getRowConstraints().add(row);
 
-            for (int j = 0; j < gridSize; j++) {
+            for (int j = 0; j < tableSize; j++) {
                 StackPane tile = new StackPane();
-                tile.setStyle("-fx-border-color: black;");
+                tile.getStyleClass().add("tile");
                 grid.add(tile, i, j);
 
                 if (i == 0 || j == 0) {
@@ -56,7 +121,5 @@ public class SetupShipController {
                 }
             }
         }
-
-        grid.toFront();
     }
 }
