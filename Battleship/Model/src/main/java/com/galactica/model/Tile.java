@@ -4,6 +4,7 @@ public class Tile {
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit;
+    private Planet planet;
 
     public Tile(Ship ship) { // Needs to be modified so we can have <T> type of ship, obstacles
         this.ship = ship;
@@ -37,7 +38,9 @@ public class Tile {
 
     public String displayValue(boolean showGridObjects) {
         if (this.ship != null) {
-            if (this.hit)
+            if (ship.isSunk()) {
+                return "S";
+            } else if (this.hit)
                 return "X";
             else {
                 if (showGridObjects)
@@ -45,6 +48,12 @@ public class Tile {
                 else
                     return "0";
             }
+
+        } else if (this.planet != null) {
+            if (this.hit || showGridObjects) {
+                return "P";
+            } else
+                return "0";
 
         } else {
             if (this.hit) {
@@ -74,6 +83,10 @@ public class Tile {
         this.hit = hit;
     }
 
+    public boolean getHit() {
+        return hit;
+    }
+
     public Asteroid getAsteroid() {
         return this.asteroid;
     }
@@ -84,5 +97,13 @@ public class Tile {
 
     public boolean isHit() {
         return hit;
+    }
+
+    public void setPlanet(Planet planet) {
+        this.planet = planet;
+    }
+
+    public Planet getPlanet() {
+        return this.planet;
     }
 }

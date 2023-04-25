@@ -1,18 +1,31 @@
 package com.galactica.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Grid {
-    private Tile[][] tiles = new Tile[gridSize][gridSize];
+    private Tile[][] tiles;
+    private List<Planet> planets = new ArrayList<Planet>();
 
-    private static int gridSize = 10;
+    private static int gridSize;
 
-    public Grid() {
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[i].length; j++) {
+    public Grid(int gridSize) {
+        Grid.gridSize = gridSize;
+        tiles = new Tile[Grid.gridSize][Grid.gridSize];
+        for (int i = 0; i < Grid.gridSize; i++) {
+            for (int j = 0; j < Grid.gridSize; j++) {
                 tiles[i][j] = new Tile();
             }
         }
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
+
+    public List<Planet> getPlanets() {
+        return planets;
     }
 
     public boolean isValidCoordinate(Coordinate coordinate) {
@@ -24,65 +37,58 @@ public class Grid {
      * This method checks if the position is a valid position
      */
     public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
-
+        char x = coordinate.getX();
+        int y = coordinate.getY();
         if (direction == Direction.Horizontal) {
             if ((convertXToMatrixIndex(coordinate.getX()) + ship.getLength()) > gridSize) {
                 return false;
-            }
-
-            for (int i = 0; i < ship.getLength(); i++) {
-                char newX = (char) (coordinate.getX() + i);
-                Coordinate tileCoordinate = new Coordinate(newX, coordinate.getY());
-                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
-                    return false;
-                }
             }
         } else {
             if ((coordinate.getY() + ship.getLength()) > gridSize) {
                 return false;
             }
+        }
 
-            for (int i = 0; i < ship.getLength(); i++) {
-                int newY = coordinate.getY() + i;
-                Coordinate tileCoordinate = new Coordinate(coordinate.getX(), newY);
-                if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null) {
-                    return false;
-                }
+        for (int i = 0; i < ship.getLength(); i++) {
+            if (direction == Direction.Horizontal) {
+                x = (char) (coordinate.getX() + i);
+            } else {
+                y = coordinate.getY() + i;
+            }
+            Coordinate tileCoordinate = new Coordinate(x, y);
+            if (getTile(tileCoordinate).getShip() != null || getTile(tileCoordinate).getAsteroid() != null
+                    || getTile(tileCoordinate).getPlanet() != null) {
+                return false;
             }
         }
 
         return true;
     }
 
-    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) throws OutOfBoundsException {
+    public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) {
         Coordinate tileCoordinate;
 
         if (direction == Direction.Horizontal) {
             for (int i = 0; i < ship.getLength(); i++) {
                 char newX = (char) (originCoordinate.getX() + i);
                 tileCoordinate = new Coordinate(newX, originCoordinate.getY());
-                if (!isValidCoordinate(tileCoordinate)) {
-                    throw new OutOfBoundsException("Ship out of bounds");
-                } else {
-                    setTile(tileCoordinate, ship);
-                }
+                setTile(tileCoordinate, ship);
+
             }
         } else {
             for (int i = 0; i < ship.getLength(); i++) {
                 int newY = originCoordinate.getY() + i;
                 tileCoordinate = new Coordinate(originCoordinate.getX(), newY);
-                if (!isValidCoordinate(tileCoordinate)) {
-                    throw new OutOfBoundsException("Ship out of bounds");
-                } else {
-                    setTile(tileCoordinate, ship);
-                }
+                setTile(tileCoordinate, ship);
+
             }
         }
 
     }
 
-    void removeShip(Ship ship) throws UnplacedShipException{
-        if (ship == null) throw new UnplacedShipException("Ship has not been placed in the grid before");
+    void removeShip(Ship ship) throws UnplacedShipException {
+        if (ship == null)
+            throw new UnplacedShipException("Ship has not been placed in the grid before");
         Coordinate startCoordinate = ship.getCoordinate();
         switch (ship.getDirection()) {
             case Vertical:
@@ -124,6 +130,11 @@ public class Grid {
         tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
     }
 
+    void setTile(Coordinate coordinate, Planet planet) {
+        int xIndex = convertXToMatrixIndex(coordinate.getX());
+        tiles[coordinate.getY()][xIndex].setPlanet(planet);
+    }
+
     public Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
@@ -134,11 +145,15 @@ public class Grid {
         return getTile(coordinate).getShip();
     }
 
-    Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
+    public Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getAsteroid();
     }
 
-    boolean checkIfShipIsSunk(Ship ship) {
+    public Planet getPlanetAtCoordinate(Coordinate coordinate) {
+        return getTile(coordinate).getPlanet();
+    }
+
+    public boolean checkIfShipIsSunk(Ship ship) {
         Coordinate startCoordinate = ship.getCoordinate();
 
         switch (ship.getDirection()) {
@@ -166,9 +181,10 @@ public class Grid {
 
     public void placeAsteroids() {
         Random random = new Random();
-        int[] asteroidCoordinates = random.ints(10, 0, 10).toArray();
-        for (int i = 0; i < 10; i += 2) {
-            setTile(new Coordinate((char) (97 + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
+        int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
+                .toArray();
+        for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
+            setTile(new Coordinate((char) ('a' + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
         }
     }
 
@@ -181,11 +197,23 @@ public class Grid {
         }
         return false;
     }
-    public int getGridSize(){
-        return this.gridSize;
-    }
 
     public Tile[][] getTiles() {
         return tiles;
     }
+
+    public void placePlanets(List<Planet> planets) {
+        for (Planet planet : planets) {
+            this.planets.add(planet);
+            Coordinate planetCoordinate = planet.getCoordinate();
+
+            for (int i = 0; i < planet.getSize(); i++) {
+                for (int j = 0; j < planet.getSize(); j++) {
+                    setTile(new Coordinate((char) (planetCoordinate.getX() + i), planetCoordinate.getY() + j),
+                            planet);
+                }
+            }
+        }
+    }
+
 }

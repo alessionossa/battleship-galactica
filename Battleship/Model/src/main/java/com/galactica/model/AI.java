@@ -1,7 +1,12 @@
 package com.galactica.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+
+import com.galactica.cli.GridCLI;
 
 public class AI extends Player {
     private Random random = new Random();
@@ -20,10 +25,45 @@ public class AI extends Player {
         this.name = name;
     }
 
+    public void placeShips() {
+        final char[] sequence = { 'v', 'h' };
+        Random random = new Random();
 
-    public void shoot(Coordinate c, Weapon w) {
+        for (Ship ship : ships) {
+            boolean isValidShipPosition;
+
+            do {
+                Coordinate coordinate;
+                boolean isValidCoordinate = false;
+                do {
+                    char x0 = (char) (random.nextInt(10) + 'a');
+                    int y0 = random.nextInt(11);
+
+                    coordinate = new Coordinate(x0, y0);
+                    isValidCoordinate = ownGrid.isValidCoordinate(coordinate);
+                } while (!isValidCoordinate);
+
+                Direction direction = null;
+                do {
+                    char directionChar = sequence[random.nextInt(sequence.length)];
+                    direction = Direction.get(directionChar);
+                } while (direction == null);
+
+                ship.setCoordinate(coordinate);
+                ship.setDirection(direction);
+
+                isValidShipPosition = ownGrid.isValidShipPosition(ship, coordinate, direction);
+                if (isValidShipPosition)
+                    ownGrid.placeShip(ship, coordinate, direction);
+
+            } while (!isValidShipPosition);
+        }
+    }
+
+    public void shoot(Coordinate c, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed) {
         Coordinate coordinate;
         boolean isValidCoordinate;
+        Weapon weapon;
 
         if (followTargetMode) {
             hasShot = false;
@@ -53,46 +93,75 @@ public class AI extends Player {
             } while (!hasShot);
 
         } else {
+            weapon = getWeaponToShoot();
 
             do {
                 coordinate = getNewRandomCoordinate();
                 isValidCoordinate = opponentGrid.isValidCoordinate(coordinate);
             } while (!isValidCoordinate || CoordinatesHit.contains(coordinate));
 
-            printShootingTurn(coordinate);
-
-            CoordinatesHit.add(coordinate);
-            lastCoordinate = coordinate;
-
-            opponentGrid.setTile(coordinate, true);
-
-            Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-
-            if (shipAtCoordinate != null) {
-                System.out.println("The AI has hit a ship!");
-
-                followTargetMode = true;
-                Right = true;
-
-                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                sunkCheck(coordinate, shipAtCoordinate, isShipSunk);
-
-            } else
-                System.out.println("The AI has missed...");
+            if (weapon instanceof Laser) {
+                char rowOrColumn = decideRowOrColumn();
+                printShootingTurn(coordinate, weapon, rowOrColumn);
+                shootLaser(coordinate, rowOrColumn, (Laser) weapon);
+            } else if (weapon instanceof Cannon) {
+                printShootingTurn(coordinate, weapon, ' ');
+                shootCannon(coordinate, gravityMode, gravityUsed);
+            } else {
+                printShootingTurn(coordinate, weapon, ' ');
+                shootGrenade(coordinate, (Grenade) weapon);
+            }
         }
     }
 
-    public void printShootingTurn(Coordinate coordinate) {
+    public void updateTracking(Coordinate coordinate) {
+        lastCoordinate = coordinate;
+        followTargetMode = true;
+        Right = true;
+    }
+
+    void updateCoordinatesHit(List<Coordinate> coordinateList) {
+        for (Coordinate coordinate : coordinateList) {
+            CoordinatesHit.add(coordinate);
+        }
+    }
+
+    public void printShootingTurn(Coordinate coordinate, Weapon weapon, char c) {
         System.out.println("\n-------------\nAI's turn to shoot:");
-        System.out.println(name + ", is shooting...");
-        String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
-        System.out.println(message);
+        if (weapon instanceof Laser)
+            System.out.println(name + ", is shooting a laser...");
+        if (c == 'r') {
+            String message = "The " + name + " has shot in row: " + coordinate.getY();
+            System.out.println(message);
+        } else if (c == 'c') {
+            String message = "The " + name + " has shot in column: " + coordinate.getX();
+            System.out.println(message);
+        }
+
+        else if (weapon instanceof Cannon) {
+            System.out.println(name + ", is shooting with the cannon...");
+            String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
+            System.out.println(message);
+        } else {
+            System.out.println(name + ", is shooting a grenade...");
+            String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
+            System.out.println(message);
+        }
+        GridCLI.printGrid(opponentGrid, false);
     }
 
     public Coordinate getNewRandomCoordinate() {
-        char x0 = (char) (random.nextInt(10) + 'a');
-        int y0 = random.nextInt(11);
+        char x0 = (char) (random.nextInt(ownGrid.getGridSize()) + 'a');
+        int y0 = random.nextInt(ownGrid.getGridSize() + 1);
         return new Coordinate(x0, y0);
+    }
+
+    public char decideRowOrColumn() {
+        int random = this.random.nextInt(2);
+        if (random == 0)
+            return 'r';
+        else
+            return 'c';
     }
 
     public Coordinate getNewCoordinate(Coordinate lastCoordinate) {
@@ -139,13 +208,13 @@ public class AI extends Player {
             Down = false;
             Moves[0] = 0;
             Moves[1] = 0;
-        } 
+        }
     }
 
     public void automaticShooting(Coordinate newCoordinate, char direction, char nextDirection) {
         if (opponentGrid.isValidCoordinate(newCoordinate) && !CoordinatesHit.contains(newCoordinate)) {
-
-            printShootingTurn(newCoordinate);
+            Weapon w = new Cannon();
+            printShootingTurn(newCoordinate, w, ' ');
 
             CoordinatesHit.add(newCoordinate);
             hasShot = true;
@@ -167,14 +236,36 @@ public class AI extends Player {
 
         } else {
             nextDirection(direction, nextDirection);
+            Moves[0] = 0;
+            Moves[1] = 0;
         }
     }
 
-
-    @Override
-    public void shootLaser(Coordinate coordinate, char rowOrColumn) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'shootLaser'");
+    public char getRandomWeapon() {
+        int probability = random.nextInt(100);
+        if (probability < 5) { // 5% chance to choose laser
+            return 'l';
+        } else if (probability < 65) { // 80% chance to choose cannon
+            return 'c';
+        } else { // 15% chance to choose grenade
+            return 'g';
+        }
     }
 
+    public Weapon getWeaponToShoot() {
+        for (;;) {
+            char resp = getRandomWeapon();
+
+            if (resp == 'c') {
+                return cannon;
+            } else if (resp == 'g' && grenade.getAmountOfUses() != 0) {
+                grenade.decrementAmountOfUses();
+                return grenade;
+            } else if (resp == 'l' && laser.getAmountOfUses() != 0) {
+                laser.decrementAmountOfUses();
+                return laser;
+            }
+        }
+
+    }
 }
