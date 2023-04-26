@@ -3,20 +3,20 @@ Feature: Playing a turn
 
   @tag1
   Scenario: Successfully shoot with a cannon at a ship
-    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
+    Given I have started a new game on a size 20 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And "My opponent places" a "Cruiser" in direction "h" on coordinate "a" 1
     When "I shoot" a cannon at coordinate "a" 1
     Then The tile "a" 1 on "my opponent's" grid is hit
 
   @tag2
   Scenario: Successfully shoot with a cannon at an asteroid
-    Given I have started a new game on a size 10 grid in "multi" player mode, "with" asteroid mode, "without" gravity mode
+    Given I have started a new game on a size 15 grid in "multi" player mode, "with" asteroid mode, "without" gravity mode
     When "I shoot" a cannon at "an asteroid"
     Then The "asteroid" on my opponent's grid is hit
 
   @tag3
   Scenario: Successfully shoot with a cannon at a planet
-    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "with" gravity mode
+    Given I have started a new game on a size 20 grid in "multi" player mode, "without" asteroid mode, "with" gravity mode
     When "I shoot" a cannon at "a planet"
     Then The "planet" on my opponent's grid is hit
     And The entire planet on "my opponent's" grid is revealed
@@ -123,3 +123,4 @@ Feature: Playing a turn
     Then The column "a" on "my" grid is hit
     And The ship is sunk
     And "The AI" can no longer shoot with a laser
+

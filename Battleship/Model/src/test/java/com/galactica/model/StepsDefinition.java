@@ -390,9 +390,9 @@ public class StepsDefinition {
     @And("{string} can no longer shoot with a laser")
     public void can_no_longer_shoot_with_a_laser(String whoCanNot) {
         if (whoCanNot.equals("I")) {
-            assertEquals(0, laserP.amountOfUses);
+            assertEquals(0, laserP.getAmountOfUses());
         } else if (whoCanNot.equals("The AI")) {
-            assertEquals(0, laserAI.amountOfUses);
+            assertEquals(0, laserAI.getAmountOfUses());
         }
     }
 

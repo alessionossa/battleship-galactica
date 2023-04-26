@@ -29,43 +29,6 @@ public class Planet {
     public List<Coordinate> getPlanetCoordinates() {
         return planetCoordinates;
     }
-
-    public List<CoordinateDepthPair> getAbovePlanet() {
-        return abovePlanet;
-    }
-
-    public List<CoordinateDepthPair> getBelowPlanet() {
-        return belowPlanet;
-    }
-
-    public List<CoordinateDepthPair> getRightOfPlanet() {
-        return rightOfPlanet;
-    }
-
-    public List<CoordinateDepthPair> getLeftOfPlanet() {
-        return leftOfPlanet;
-    }
-
-    public List<CoordinateDepthPair> getRightAbovePlanet() {
-        return rightAbovePlanet;
-    }
-
-    public List<CoordinateDepthPair> getLeftAbovePlanet() {
-        return leftAbovePlanet;
-    }
-
-    public List<CoordinateDepthPair> getRightBelowPlanet() {
-        return rightBelowPlanet;
-    }
-
-    public List<CoordinateDepthPair> getLeftBelowPlanet() {
-        return leftBelowPlanet;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
     public Planet(int size, int gridSize) {
         this.size = size;
 

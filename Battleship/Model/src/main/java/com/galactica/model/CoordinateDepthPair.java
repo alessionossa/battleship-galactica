@@ -17,14 +17,6 @@ public class CoordinateDepthPair {
         return depth;
     }
 
-    public void setCoordinate(Coordinate l) {
-        this.coordinate = coordinate;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
-
     @Override
     public boolean equals(Object o) {
 

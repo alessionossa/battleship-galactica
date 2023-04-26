@@ -3,6 +3,7 @@ package com.galactica.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import com.galactica.cli.AICLI;
 
 import com.galactica.cli.GridCLI;
 
@@ -101,13 +102,13 @@ public class AI extends Player {
 
             if (weapon instanceof Laser) {
                 char rowOrColumn = decideRowOrColumn();
-                printShootingTurn(coordinate, weapon, rowOrColumn);
+                AICLI.printShootingTurn(this,coordinate, weapon, rowOrColumn);
                 shootLaser(coordinate, rowOrColumn, (Laser) weapon);
             } else if (weapon instanceof Cannon) {
-                printShootingTurn(coordinate, weapon, ' ');
+                AICLI.printShootingTurn(this,coordinate, weapon, ' ');
                 shootCannon(coordinate, gravityMode, gravityUsed);
             } else {
-                printShootingTurn(coordinate, weapon, ' ');
+                AICLI.printShootingTurn(this,coordinate, weapon, ' ');
                 shootGrenade(coordinate, (Grenade) weapon);
             }
         }
@@ -123,30 +124,6 @@ public class AI extends Player {
         for (Coordinate coordinate : coordinateList) {
             CoordinatesHit.add(coordinate);
         }
-    }
-
-    public void printShootingTurn(Coordinate coordinate, Weapon weapon, char c) {
-        System.out.println("\n-------------\nAI's turn to shoot:");
-        if (weapon instanceof Laser)
-            System.out.println(name + ", is shooting a laser...");
-        if (c == 'r') {
-            String message = "The " + name + " has shot in row: " + coordinate.getY();
-            System.out.println(message);
-        } else if (c == 'c') {
-            String message = "The " + name + " has shot in column: " + coordinate.getX();
-            System.out.println(message);
-        }
-
-        else if (weapon instanceof Cannon) {
-            System.out.println(name + ", is shooting with the cannon...");
-            String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
-            System.out.println(message);
-        } else {
-            System.out.println(name + ", is shooting a grenade...");
-            String message = "The " + name + " has shot in: " + coordinate.getX() + "-" + coordinate.getY();
-            System.out.println(message);
-        }
-        GridCLI.printGrid(opponentGrid, false);
     }
 
     public Coordinate getNewRandomCoordinate() {
