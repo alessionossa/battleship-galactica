@@ -21,7 +21,7 @@ public class CoordinateDepthPair {
         this.coordinate = coordinate;
     }
 
-    public void setint(int depth) {
+    public void setDepth(int depth) {
         this.depth = depth;
     }
 
