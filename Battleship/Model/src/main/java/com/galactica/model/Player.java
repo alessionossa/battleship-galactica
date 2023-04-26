@@ -53,7 +53,7 @@ public abstract class Player {
         checkOutcomeOfShot(coordinateList);
     }
 
-    public void shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
+    public boolean shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         coordinateList.add(coordinate);
 
@@ -75,6 +75,7 @@ public abstract class Player {
                 }
             }
         }
+        return hit;
     }
 
     private void initializeShips() {
@@ -152,6 +153,10 @@ public abstract class Player {
 
             if (asteroidAtCoordinate != null) {
                 asteroidsHit++;
+                if (this instanceof AI) {
+                    AI ai = (AI) this;
+                    ai.updateTracking(coordinate);
+                }
             } else if (planet != null) {
                 planetsHit.add(planet);
             } else if (shipAtCoordinate != null) {
@@ -164,6 +169,10 @@ public abstract class Player {
                 if (isShipSunk) {
                     shipAtCoordinate.setSunk(true);
                     shipsSunk++;
+                    if (this instanceof AI) {
+                        AI ai = (AI) this;
+                        ai.resetTracking();
+                    }
                 }
 
             }
