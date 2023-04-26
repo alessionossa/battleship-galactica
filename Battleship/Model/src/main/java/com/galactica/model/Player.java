@@ -30,14 +30,16 @@ public abstract class Player {
 
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
 
-    public void shootGrenade(Coordinate coordinate, Grenade grenade) {
+    public List<Coordinate> shootGrenade(Coordinate coordinate, Grenade grenade) {
         List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
 
         if (this instanceof AI) {
             AI ai = (AI) this;
             ai.updateCoordinatesHit(coordinateList);
         }
+        grenade.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
+        return coordinateList;
     }
 
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
@@ -47,6 +49,7 @@ public abstract class Player {
             AI ai = (AI) this;
             ai.updateCoordinatesHit(coordinateList);
         }
+        laser.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
     }
 
@@ -88,10 +91,14 @@ public abstract class Player {
         return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate, Direction direction) {
-        ship.setCoordinate(coordinate);
-        ship.setDirection(direction);
-        ownGrid.placeShip(ship, coordinate, direction);
+    public Ship placeShip(Ship ship, Coordinate coordinate, Direction direction) {
+        if (ownGrid.isValidShipPosition(ship, coordinate, direction)) {
+            ship.setCoordinate(coordinate);
+            ship.setDirection(direction);
+            ownGrid.placeShip(ship, coordinate, direction);
+            return ship;
+        }
+        return null;
     }
 
     public void removeShip(Ship ship) throws UnplacedShipException {
@@ -164,15 +171,11 @@ public abstract class Player {
         }
 
         for (Planet planet : planetsHit) {
-            char x = planet.getCoordinate().getX();
-            int y = planet.getCoordinate().getY();
-            int size = planet.getSize();
-            for (int r = 0; r < size; r++) {
-                for (int c = 0; c < size; c++) {
-                    opponentGrid.setTile(new Coordinate((char) (x + r), y + c), true);
-                    coordinatesWithPlanets.add(new Coordinate((char) (x + r), y + c));
-                }
+            for (Coordinate coordinate : planet.getPlanetCoordinates()) {
+                opponentGrid.setTile(coordinate, true);
+                coordinatesWithPlanets.add(coordinate);
             }
+
         }
         if (this instanceof AI) {
             AI ai = (AI) this;

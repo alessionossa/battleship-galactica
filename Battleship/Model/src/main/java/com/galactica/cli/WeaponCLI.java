@@ -23,10 +23,8 @@ public class WeaponCLI {
             if (resp == 'c') {
                 return cannon;
             } else if (resp == 'g' && grenade.getAmountOfUses() != 0) {
-                grenade.decrementAmountOfUses();
                 return grenade;
             } else if (resp == 'l' && laser.getAmountOfUses() != 0) {
-                laser.decrementAmountOfUses();
                 return laser;
             }
         }

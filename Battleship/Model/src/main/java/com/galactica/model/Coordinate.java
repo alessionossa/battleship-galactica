@@ -24,14 +24,6 @@ public class Coordinate { // Send new coordinates to player
         return y;
     }
 
-    public void setX(char newX) {
-        this.x = newX;
-    }
-
-    public void setY(int newY) {
-        this.y = newY;
-    }
-
     public Coordinate up(int distance) throws OutOfBoundsException {
         if (y > 0)
             return new Coordinate(x, y - distance);
