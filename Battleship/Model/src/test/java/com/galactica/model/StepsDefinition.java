@@ -1,27 +1,15 @@
 package com.galactica.model;
 
-import com.galactica.model.*;
-import com.galactica.model.ships.Cruiser;
-import com.galactica.model.ships.DeathStar;
-import com.galactica.model.ships.Scout;
+import com.galactica.model.ships.*;
 import com.galactica.controller.*;
 import com.galactica.cli.*;
 
-import io.cucumber.java.an.Y;
-import io.cucumber.java.bs.A;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.fasterxml.jackson.databind.cfg.ConstructorDetector.SingleArgConstructor;
-import junit.framework.ComparisonFailure;
-import org.hamcrest.CoreMatchers;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
 
 public class StepsDefinition {
