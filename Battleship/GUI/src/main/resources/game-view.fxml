@@ -44,7 +44,7 @@
          <children>
             <ImageView fitHeight="308.0" fitWidth="263.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@assets/background.png" />
+                  <Image url="@assets/Grid_Background_%201.png" />
                </image>
                <StackPane.margin>
                   <Insets right="30.0" />
@@ -71,7 +71,7 @@
          <children>
             <ImageView fitHeight="291.0" fitWidth="264.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@assets/background.png" />
+                  <Image url="@assets/Grid_Background_%201.png" />
                </image>
                <StackPane.margin>
                   <Insets left="30.0" />
