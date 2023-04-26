@@ -7,6 +7,7 @@ import java.util.Random;
 public class Grid {
     private Tile[][] tiles;
     private List<Planet> planets = new ArrayList<Planet>();
+    private List<Asteroid> asteroids = new ArrayList<Asteroid>();
 
     private static int gridSize;
 
@@ -26,6 +27,10 @@ public class Grid {
 
     public List<Planet> getPlanets() {
         return planets;
+    }
+
+    public List<Asteroid> getAsteroids() {
+        return asteroids;
     }
 
     public boolean isValidCoordinate(Coordinate coordinate) {
@@ -181,7 +186,11 @@ public class Grid {
         int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
                 .toArray();
         for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
-            setTile(new Coordinate((char) ('a' + asteroidCoordinates[i]), asteroidCoordinates[i + 1]), new Asteroid());
+            Coordinate asteroidCoordinate = new Coordinate((char) ('a' + asteroidCoordinates[i]),
+                    asteroidCoordinates[i + 1]);
+            Asteroid asteroid = new Asteroid(asteroidCoordinate);
+            asteroids.add(asteroid);
+            setTile(asteroidCoordinate, asteroid);
         }
     }
 
@@ -202,13 +211,8 @@ public class Grid {
     public void placePlanets(List<Planet> planets) {
         for (Planet planet : planets) {
             this.planets.add(planet);
-            Coordinate planetCoordinate = planet.getCoordinate();
-
-            for (int i = 0; i < planet.getSize(); i++) {
-                for (int j = 0; j < planet.getSize(); j++) {
-                    setTile(new Coordinate((char) (planetCoordinate.getX() + i), planetCoordinate.getY() + j),
-                            planet);
-                }
+            for (Coordinate coordinate : planet.getPlanetCoordinates()) {
+                setTile(coordinate, planet);
             }
         }
     }
