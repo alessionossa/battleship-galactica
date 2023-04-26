@@ -1,42 +1,42 @@
 package com.galactica.model;
 
-public class CoordinateDepthPair<L, R> {
-    private L l;
-    private R r;
+public class CoordinateDepthPair {
+    private Coordinate coordinate;
+    private int depth;
 
-    public CoordinateDepthPair(L l, R r) {
+    public CoordinateDepthPair(Coordinate coordinate, int depth) {
+        this.coordinate = coordinate;
+        this.depth = depth;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public int getDepth() {
+        return depth;
+    }
+
+    public void setCoordinate(Coordinate l) {
         this.l = l;
-        this.r = r;
     }
 
-    public L getL() {
-        return l;
-    }
-
-    public R getR() {
-        return r;
-    }
-
-    public void setL(L l) {
-        this.l = l;
-    }
-
-    public void setR(R r) {
-        this.r = r;
+    public void setint(int depth) {
+        this.depth = depth;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof CoordinateDepthPair)) {
+
+        if (o == this) return true;
+        if (!(o instanceof CoordinateDepthPair)) return false;
+
+        CoordinateDepthPair coordinateDepthPairObject = (CoordinateDepthPair) o;
+        if (coordinateDepthPairObject.getCoordinate().equals(this.getCoordinate()) && (coordinateDepthPairObject.getDepth() == this.getDepth())) {
+            return true;
+        } else {
             return false;
         }
-
-        CoordinateDepthPair<Coordinate, Integer> pair = (CoordinateDepthPair<Coordinate, Integer>) o;
-        if (pair.getL().equals(this.getL()) && pair.getR().equals(this.getR())) {
-            return true;
-        }
-
-        return false;
     }
 
 }

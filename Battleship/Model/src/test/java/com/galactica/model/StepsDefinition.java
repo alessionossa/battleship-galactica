@@ -7,13 +7,9 @@ import com.galactica.model.ships.Scout;
 import com.galactica.controller.*;
 import com.galactica.cli.*;
 
-import io.cucumber.java.an.Y;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.messages.internal.com.fasterxml.jackson.databind.cfg.ConstructorDetector.SingleArgConstructor;
-import junit.framework.ComparisonFailure;
 import org.hamcrest.CoreMatchers;
 
 import java.util.List;
