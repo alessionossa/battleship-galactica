@@ -2,26 +2,29 @@ package com.galactica.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import com.galactica.model.*;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        Grid grid1 = new Grid();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("main-view.fxml"));
+        Scene scene = new Scene(root);
+        stage.setTitle("Battleship");
         stage.setScene(scene);
+
+        stage.setMinWidth(900);
+        stage.setMinHeight(750);
+
         stage.show();
     }
 
     public static void main(String[] args) {
-        launch();
+        launch(args);
     }
 }
