@@ -25,19 +25,19 @@ Feature: Playing a turn
   Scenario: Successfully shoot with a laser at row
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And "My opponent places" a "Cruiser" in direction "h" on coordinate "a" 1
-    When I shot a laser at row 1
-    Then The row 1 on my opponent's grid is hit
+    When "I shot" a laser at row 1
+    Then The row 1 on "my opponent's" grid is hit
     And The ship is sunk
-    And I can no longer shoot with a laser
+    And "I" can no longer shoot with a laser
 
   @tag5
   Scenario: Successfully shoot with a laser at column
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And "My opponent places" a "Cruiser" in direction "v" on coordinate "a" 1
-    When I shot a laser at column "a"
-    Then The column "a" on my opponent's grid is hit
+    When "I shot" a laser at column "a"
+    Then The column "a" on "my opponent's" grid is hit
     And The ship is sunk
-    And I can no longer shoot with a laser
+    And "I" can no longer shoot with a laser
 
   @tag6
   Scenario: Successfully shoot with a grenade
@@ -103,3 +103,23 @@ Feature: Playing a turn
       | "left below"  | "right above" |
       | "right below" | "left above"  |
       | "left above"  | "right below" |
+
+  @tag11
+  Scenario: AI shoots with a laser at row
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And The AI places its ships
+    And "I place" a "Cruiser" in direction "h" on coordinate "a" 0
+    When "The AI shoots" a laser at row 0
+    Then The row 0 on "my" grid is hit
+    And The ship is sunk
+    And "The AI" can no longer shoot with a laser
+
+  @tag12
+  Scenario: AI shoots with a laser at column
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And The AI places its ships
+    And "I place" a "Cruiser" in direction "v" on coordinate "a" 0
+    When "The AI shoots" a laser at column "a"
+    Then The column "a" on "my" grid is hit
+    And The ship is sunk
+    And "The AI" can no longer shoot with a laser
