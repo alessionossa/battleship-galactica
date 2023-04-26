@@ -49,11 +49,11 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <RadioButton mnemonicParsing="false" selected="true" text="Multiplayer">
+                        <RadioButton mnemonicParsing="false" onAction="#onRadioButtonMultiplayerSelected" selected="true" text="Multiplayer">
                            <toggleGroup>
                               <ToggleGroup fx:id="playerModeGroup" />
                            </toggleGroup></RadioButton>
-                        <RadioButton mnemonicParsing="false" text="Singleplayer" toggleGroup="$playerModeGroup" />
+                        <RadioButton mnemonicParsing="false" onAction="#onRadioButtonSingleplayerSelected" text="Singleplayer" toggleGroup="$playerModeGroup" />
                      </children>
                      <HBox.margin>
                         <Insets bottom="20.0" />
@@ -71,7 +71,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <CheckBox mnemonicParsing="false" text="Yes" />
+                  <CheckBox mnemonicParsing="false" onAction="#onCheckBoxAsteroidsSelected" text="Yes" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefWidth="900.0" spacing="16.0">
@@ -81,7 +81,7 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <CheckBox mnemonicParsing="false" text="Yes" />
+                  <CheckBox mnemonicParsing="false" onAction="#onCheckBoxGravitySelected" text="Yes" />
                </children>
             </HBox>
          </children>

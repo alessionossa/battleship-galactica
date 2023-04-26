@@ -6,6 +6,7 @@ import javafx.scene.*;
 import javafx.stage.Stage;
 import javafx.event.*;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.CheckBox;
 
 import java.io.IOException;
 
@@ -58,6 +59,48 @@ public class MainController {
         if (radioButton.isSelected()) {
             this.gridSize = 20;
             System.out.println("Large grid selected");
+        }
+    }
+
+    @FXML
+    private void onRadioButtonMultiplayerSelected(ActionEvent event) {
+        RadioButton radioButton = (RadioButton) event.getSource();
+        if (radioButton.isSelected()) {
+            this.singlePlayer = false;
+            System.out.println("Multiplayer selected");
+        }
+    }
+
+    @FXML
+    private void onRadioButtonSingleplayerSelected(ActionEvent event) {
+        RadioButton radioButton = (RadioButton) event.getSource();
+        if (radioButton.isSelected()) {
+            this.singlePlayer = true;
+            System.out.println("Singleplayer selected");
+        }
+    }
+
+    @FXML
+    private void onCheckBoxAsteroidsSelected(ActionEvent event) {
+        CheckBox checkBox = (CheckBox) event.getSource();
+        if (checkBox.isSelected()) {
+            this.asteroids = true;
+            System.out.println("Asteroids selected");
+        } else {
+            this.asteroids = false;
+            System.out.println("Asteroids not selected");
+        }
+    }
+
+    @FXML
+    private void onCheckBoxGravitySelected(ActionEvent event) {
+        CheckBox checkBox = (CheckBox) event.getSource();
+        if (checkBox.isSelected()) {
+            this.gravity = true;
+            System.out.println("Gravity selected");
+        } else {
+            this.gravity = false;
+            System.out.println("Gravity not selected");
         }
     }
 
