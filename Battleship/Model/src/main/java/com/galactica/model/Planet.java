@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class Planet {
     private Coordinate planetCoordinate;
+    private List<Coordinate> planetCoordinates = new ArrayList<Coordinate>();
     private List<CoordinateDepthPair<Coordinate, Integer>> abovePlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
     private List<CoordinateDepthPair<Coordinate, Integer>> belowPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
     private List<CoordinateDepthPair<Coordinate, Integer>> rightOfPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
@@ -23,6 +24,10 @@ public class Planet {
 
     public Coordinate getCoordinate() {
         return planetCoordinate;
+    }
+
+    public List<Coordinate> getPlanetCoordinates() {
+        return planetCoordinates;
     }
 
     public List<CoordinateDepthPair<Coordinate, Integer>> getAbovePlanet() {
@@ -65,9 +70,16 @@ public class Planet {
         this.size = size;
 
         Random random = new Random();
-        int[] planetCoordinates = random.ints(2, 1, gridSize - maxPlanetLength).toArray();
-        planetCoordinate = new Coordinate((char) ('a' + planetCoordinates[0]), planetCoordinates[1]);
+        int[] planetRandomCoordinates = random.ints(2, 1, gridSize - maxPlanetLength).toArray();
+        planetCoordinate = new Coordinate((char) ('a' + planetRandomCoordinates[0]), planetRandomCoordinates[1]);
         Coordinate borderCoordinate = planetCoordinate;
+
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                planetCoordinates
+                        .add(new Coordinate((char) (planetCoordinate.getX() + r), planetCoordinate.getY() + c));
+            }
+        }
 
         for (int depth = 0; depth < (size - 1); depth++) {
             try {

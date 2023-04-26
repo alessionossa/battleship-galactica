@@ -214,13 +214,8 @@ public class Grid {
     public void placePlanets(List<Planet> planets) {
         for (Planet planet : planets) {
             this.planets.add(planet);
-            Coordinate planetCoordinate = planet.getCoordinate();
-
-            for (int i = 0; i < planet.getSize(); i++) {
-                for (int j = 0; j < planet.getSize(); j++) {
-                    setTile(new Coordinate((char) (planetCoordinate.getX() + i), planetCoordinate.getY() + j),
-                            planet);
-                }
+            for (Coordinate coordinate : planet.getPlanetCoordinates()) {
+                setTile(coordinate, planet);
             }
         }
     }

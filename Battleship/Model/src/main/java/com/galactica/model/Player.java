@@ -30,7 +30,7 @@ public abstract class Player {
 
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
 
-    public void shootGrenade(Coordinate coordinate, Grenade grenade) {
+    public List<Coordinate> shootGrenade(Coordinate coordinate, Grenade grenade) {
         List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
 
         if (this instanceof AI) {
@@ -39,6 +39,7 @@ public abstract class Player {
         }
         grenade.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
+        return coordinateList;
     }
 
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
@@ -170,15 +171,11 @@ public abstract class Player {
         }
 
         for (Planet planet : planetsHit) {
-            char x = planet.getCoordinate().getX();
-            int y = planet.getCoordinate().getY();
-            int size = planet.getSize();
-            for (int r = 0; r < size; r++) {
-                for (int c = 0; c < size; c++) {
-                    opponentGrid.setTile(new Coordinate((char) (x + r), y + c), true);
-                    coordinatesWithPlanets.add(new Coordinate((char) (x + r), y + c));
-                }
+            for (Coordinate coordinate : planet.getPlanetCoordinates()) {
+                opponentGrid.setTile(coordinate, true);
+                coordinatesWithPlanets.add(coordinate);
             }
+
         }
         if (this instanceof AI) {
             AI ai = (AI) this;
