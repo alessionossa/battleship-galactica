@@ -71,23 +71,24 @@ public class AI extends Player {
                 if (Right) {
                     directionToMove('h', '+'); // Updates the Moves vector
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate); // Creates the new set of coordinate
-                    automaticShooting(newCoordinate, 'R', 'L'); // Shoots if possible otherwise goes to the next
+                    automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible
+                                                                                          // otherwise goes to the next
                     // direction
 
                 } else if (Left) {
                     directionToMove('h', '-');
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate);
-                    automaticShooting(newCoordinate, 'L', 'U');
+                    automaticShooting(newCoordinate, 'L', 'U', gravityMode, gravityUsed);
 
                 } else if (Up) {
                     directionToMove('v', '-');
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate);
-                    automaticShooting(newCoordinate, 'U', 'D');
+                    automaticShooting(newCoordinate, 'U', 'D', gravityMode, gravityUsed);
 
                 } else if (Down) {
                     directionToMove('v', '+');
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate);
-                    automaticShooting(newCoordinate, 'D', 'R');
+                    automaticShooting(newCoordinate, 'D', 'R', gravityMode, gravityUsed);
                 }
 
             } while (!hasShot);
@@ -197,41 +198,30 @@ public class AI extends Player {
         }
     }
 
-    public void sunkCheck(Coordinate coordinate, Ship shipAtCoordinate, boolean isShipSunk) {
-        if (isShipSunk) {
-            shipAtCoordinate.setSunk(true);
-            System.out.println("The AI has sunk a ship! 💥🚢");
-            followTargetMode = false;
-            Right = false;
-            Left = false;
-            Up = false;
-            Down = false;
-            Moves[0] = 0;
-            Moves[1] = 0;
-        }
+    public void resetTracking() {
+        followTargetMode = false;
+        Right = false;
+        Left = false;
+        Up = false;
+        Down = false;
+        Moves[0] = 0;
+        Moves[1] = 0;
+
     }
 
-    public void automaticShooting(Coordinate newCoordinate, char direction, char nextDirection) {
+    public void automaticShooting(Coordinate newCoordinate, char direction, char nextDirection, boolean gravityMode,
+            boolean gravityUsed) {
         if (opponentGrid.isValidCoordinate(newCoordinate) && !CoordinatesHit.contains(newCoordinate)) {
-            Weapon w = new Cannon();
-            printShootingTurn(newCoordinate, w, ' ');
-
-            CoordinatesHit.add(newCoordinate);
+            boolean hitSomething = shootCannon(newCoordinate, gravityMode, gravityUsed);
             hasShot = true;
-
-            opponentGrid.setTile(newCoordinate, true);
-            Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(newCoordinate);
-
-            if (shipAtCoordinate != null) {
-                System.out.println("The AI has hit a ship!");
-
-                boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-                sunkCheck(newCoordinate, shipAtCoordinate, isShipSunk);
-            } else {
-                System.out.println("The AI has missed...");
-                Moves[0] = 0;
-                Moves[1] = 0;
-                nextDirection(direction, nextDirection);
+            if (hitSomething == false) {
+                if (direction == 'D') {
+                    resetTracking();
+                } else {
+                    Moves[0] = 0;
+                    Moves[1] = 0;
+                    nextDirection(direction, nextDirection);
+                }
             }
 
         } else {

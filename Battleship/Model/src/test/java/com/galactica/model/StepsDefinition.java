@@ -183,7 +183,6 @@ public class StepsDefinition {
             ai.shootCannon(new Coordinate(x.charAt(0), y), false, false);
         else
             opponent.shoot(new Coordinate(x.charAt(0), y), new Cannon(), false, false);
-        String tileType = player.getOpponentGrid().getTile(new Coordinate(x.charAt(0), y)).displayValue(false);
     }
 
     @When("{string} a cannon at {string}")
@@ -219,6 +218,84 @@ public class StepsDefinition {
     public void iShootALaserAtColumnOnMyOpponentSGrid(String x) {
         player.shootLaser(new Coordinate(x.charAt(0), 0), 'c', laser);
 
+    }
+
+    @When("The AI tries to track the ship until it's sunk")
+    public void the_ai_tries_to_track_the_ship() {
+        while (!(ship.isSunk()))
+            ai.shoot(null, null, false, false);
+    }
+
+    @When("{string} a cannon {string} a planet")
+    public void shoot_a_cannon_next_to_a_planet(String whoShoots, String shootWhere) {
+        Coordinate coordinate = opponentGrid.getPlanets().get(0).getCoordinate();
+        if (whoShoots.equals("The AI shoots"))
+            coordinate = ownGrid.getPlanets().get(0).getCoordinate();
+
+        if (shootWhere.equals("above")) {
+            coordinateToShoot = new Coordinate(coordinate.getX(), coordinate.getY() - 1);
+        } else if (shootWhere.equals("below")) {
+            coordinateToShoot = new Coordinate(coordinate.getX(), coordinate.getY() + 2);
+        } else if (shootWhere.equals("left of")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() - 1), coordinate.getY());
+        } else if (shootWhere.equals("right of")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() + 2), coordinate.getY());
+        } else if (shootWhere.equals("right above")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() + 2), coordinate.getY() - 1);
+        } else if (shootWhere.equals("right below")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() + 2), coordinate.getY() + 2);
+        } else if (shootWhere.equals("left above")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() - 1), coordinate.getY() - 1);
+        } else if (shootWhere.equals("left below")) {
+            coordinateToShoot = new Coordinate((char) (coordinate.getX() - 1), coordinate.getY() + 2);
+        }
+        if (whoShoots.equals("I shoot")) {
+            player.shoot(coordinateToShoot, player.getCannon(), true, false);
+        } else if (whoShoots.equals("The AI shoots")) {
+            ai.shootCannon(coordinateToShoot, true, false);
+        }
+    }
+
+    @Then("The shot gets rebounded {string} the planet on {string} grid")
+    public void the_shot_gets_rebounded(String reboundWhere, String whosGrid) {
+        Coordinate coordinate;
+        Grid grid;
+        if (whosGrid.equals("my")) {
+            grid = ownGrid;
+            coordinate = ownGrid.getPlanets().get(0).getCoordinate();
+        } else {
+            grid = opponentGrid;
+            coordinate = opponentGrid.getPlanets().get(0).getCoordinate();
+        }
+        if (reboundWhere.equals("above")) {
+            assertEquals(grid.getTile(new Coordinate(coordinate.getX(), coordinate.getY() - 1)).isHit(), true);
+        } else if (reboundWhere.equals("below")) {
+            assertEquals(grid.getTile(new Coordinate(coordinate.getX(), coordinate.getY() + 2)).isHit(), true);
+        } else if (reboundWhere.equals("left of")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() - 1), coordinate.getY())).isHit(),
+                    true);
+        } else if (reboundWhere.equals("right of")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() + 2), coordinate.getY())).isHit(),
+                    true);
+        } else if (reboundWhere.equals("right above")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() + 2), coordinate.getY() - 1)).isHit(),
+                    true);
+        } else if (reboundWhere.equals("right below")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() + 2), coordinate.getY() + 2)).isHit(),
+                    true);
+        } else if (reboundWhere.equals("left above")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() - 1), coordinate.getY() - 1)).isHit(),
+                    true);
+        } else if (reboundWhere.equals("left below")) {
+            assertEquals(
+                    grid.getTile(new Coordinate((char) (coordinate.getX() - 1), coordinate.getY() + 2)).isHit(),
+                    true);
+        }
     }
 
     @Then("The column {string} on my opponent's grid is hit")
@@ -265,26 +342,18 @@ public class StepsDefinition {
         assertEquals(ship.isSunk(), true);
     }
 
-    @Then("The entire planet is revealed")
-    public void the_entire_planet_is_revealed() {
-        for (Coordinate coordinate : ownGrid.getPlanets().get(0).getPlanetCoordinates()) {
-            assertEquals(ownGrid.getTile(coordinate).isHit(), true);
+    @Then("The entire planet on {string} grid is revealed")
+    public void the_entire_planet_is_revealed(String whosGrid) {
+        Grid grid;
+        if (whosGrid.equals("my"))
+            grid = ownGrid;
+        else
+            grid = opponentGrid;
+
+        for (Coordinate coordinate : grid.getPlanets().get(0).getPlanetCoordinates()) {
+            assertEquals(grid.getTile(coordinate).isHit(), true);
         }
     }
-    // @And("There is an asteroid on tile {string} {int} on my opponent's grid")
-    // public void thereIsAnAsteroidOnTileOnMyOpponentSGrid(String arg0, int arg1) {
-    // opponentGrid.setTile(new Coordinate(arg0.charAt(0), arg1), new Asteroid(new
-    // Coordinate(arg0.charAt(0), arg1)));
-    // assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),
-    // arg1)).getAsteroid(), null);
-    // }
-
-    // opponentGrid.setTile(new Coordinate(arg0.charAt(0),arg1),new
-    // Planet(2,ownGrid.getGridSize()));
-
-    // assertNotEquals(opponentGrid.getTile(new Coordinate(arg0.charAt(0),
-    // arg1)).getPlanet(), null);
-    // }
 
     @And("I can no longer shoot with a laser")
     public void iCanNoLongerShootWithALaser() {
