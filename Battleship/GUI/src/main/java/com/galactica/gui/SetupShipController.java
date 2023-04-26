@@ -18,10 +18,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.FXML;
+import javafx.scene.*;
+import javafx.stage.Stage;
+import javafx.event.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class SetupShipController {
+
+    private Stage stage;
+    private Scene scene;
 
     private int gridSize;
     private boolean singlePlayer;
@@ -166,5 +175,19 @@ public class SetupShipController {
                 }
             }
         }
+    }
+
+    @FXML
+    public void switchToSceneGame(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("game-view.fxml"));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        final boolean resizable = stage.isResizable();
+        stage.setScene(scene);
+        // stage.show();
+
+        stage.setResizable(!resizable);
+        stage.setResizable(resizable);
     }
 }

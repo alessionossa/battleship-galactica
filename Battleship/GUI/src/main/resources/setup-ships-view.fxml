@@ -27,7 +27,7 @@
    <bottom>
       <ButtonBar disable="true" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
-          <Button defaultButton="true" mnemonicParsing="false" text="Start the game!" />
+          <Button defaultButton="true" mnemonicParsing="false" onAction="#switchToSceneGame" text="Start the game!" />
         </buttons>
          <BorderPane.margin>
             <Insets />
