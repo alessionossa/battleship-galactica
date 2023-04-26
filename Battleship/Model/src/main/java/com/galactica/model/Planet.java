@@ -26,7 +26,11 @@ public class Planet {
         return planetCoordinate;
     }
 
-    public List<CoordinateDepthPair<Coordinate, Integer>> getAbovePlanet() {
+    public List<Coordinate> getPlanetCoordinates() {
+        return planetCoordinates;
+    }
+
+    public List<CoordinateDepthPair> getAbovePlanet() {
         return abovePlanet;
     }
 

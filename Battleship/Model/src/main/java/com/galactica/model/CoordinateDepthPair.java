@@ -18,7 +18,7 @@ public class CoordinateDepthPair {
     }
 
     public void setCoordinate(Coordinate l) {
-        this.l = l;
+        this.coordinate = coordinate;
     }
 
     public void setint(int depth) {
