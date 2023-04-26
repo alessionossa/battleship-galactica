@@ -25,10 +25,12 @@ public class MainController {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("settings-view.fxml"));
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
+        final boolean resizable = stage.isResizable();
         stage.setScene(scene);
-        stage.setWidth(800);
-        stage.setHeight(700);
-        stage.show();
+//        stage.show();
+
+        stage.setResizable(!resizable);
+        stage.setResizable(resizable);
     }
 
     @FXML
@@ -40,7 +42,7 @@ public class MainController {
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
+//        stage.show();
     }
 
     @FXML
