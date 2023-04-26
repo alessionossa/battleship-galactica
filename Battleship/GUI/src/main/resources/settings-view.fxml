@@ -34,12 +34,12 @@
                               <Font size="14.0" />
                            </font>
                         </Text>
-                        <RadioButton mnemonicParsing="false" text="Small">
+                        <RadioButton mnemonicParsing="false" onAction="#onRadioButtonSmallSelected" text="Small">
                            <toggleGroup>
                               <ToggleGroup fx:id="gridSizeGroup" />
                            </toggleGroup></RadioButton>
-                        <RadioButton mnemonicParsing="false" selected="true" text="Medium" toggleGroup="$gridSizeGroup" />
-                        <RadioButton mnemonicParsing="false" text="Large" toggleGroup="$gridSizeGroup" />
+                        <RadioButton mnemonicParsing="false" onAction="#onRadioButtonMediumSelected" selected="true" text="Medium" toggleGroup="$gridSizeGroup" />
+                        <RadioButton mnemonicParsing="false" onAction="#onRadioButtonLargeSelected" text="Large" toggleGroup="$gridSizeGroup" />
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0">
