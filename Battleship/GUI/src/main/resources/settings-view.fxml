@@ -25,7 +25,7 @@
    <center>
       <VBox alignment="CENTER" spacing="32.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="32.0">
+            <HBox alignment="TOP_CENTER" prefHeight="56.0" prefWidth="900.0" spacing="32.0">
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0">
                      <children>
@@ -55,8 +55,14 @@
                            </toggleGroup></RadioButton>
                         <RadioButton mnemonicParsing="false" text="Singleplayer" toggleGroup="$playerModeGroup" />
                      </children>
+                     <HBox.margin>
+                        <Insets bottom="20.0" />
+                     </HBox.margin>
                   </VBox>
                </children>
+               <VBox.margin>
+                  <Insets top="40.0" />
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefWidth="200.0" spacing="16.0">
                <children>

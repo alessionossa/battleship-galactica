@@ -24,6 +24,9 @@ import java.util.HashMap;
 public class SetupShipController {
 
     int gridSize;
+    boolean singlePlayer;
+    boolean asteroids;
+    boolean gravity;
 
     ObservableList<Ship> ships;
 
@@ -49,14 +52,20 @@ public class SetupShipController {
 
     private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
 
-    public SetupShipController(int gridSize) {
+    public SetupShipController(int gridSize, boolean singlePlayer, boolean asteroids, boolean gravity) {
         this.gridSize = gridSize;
+        this.singlePlayer = singlePlayer;
+        this.asteroids = asteroids;
+        this. gravity = gravity;
+
         Ship[] ships = new Ship[] {new Cruiser(1), new DeathStar(2), new Scout(3)};
 
         this.ships = FXCollections.observableArrayList(ships);
     }
 
     public void initialize() {// Set the desired grid size here
+        //TODO: Set up the player mode, asteroids and gravity if needed here
+        
         backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
         backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
 
@@ -115,7 +124,7 @@ public class SetupShipController {
         ImageView shipImageView =this.shipImages.get(ship);
 
         if (shipImageView == null) {
-            ImageView
+            //ImageView
         }
     }
 

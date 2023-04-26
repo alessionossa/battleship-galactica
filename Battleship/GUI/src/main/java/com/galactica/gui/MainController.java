@@ -37,7 +37,10 @@ public class MainController {
     public void switchToSceneStartGame(ActionEvent event) throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
-        fxmlLoader.setController(new SetupShipController(10));
+
+        
+        //PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS
+        fxmlLoader.setController(new SetupShipController(10, false, false, false));
         Parent root = fxmlLoader.load();
         stage = (Stage)((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -55,26 +58,5 @@ public class MainController {
         stage.show();
     }
 
-    //MAIN SCENE CONTROLLER
-
     //TODO Handling button help
-
-    //SETTINGS SCENE CONTROLLER
-    @FXML
-    public void activatePlayerMode(ActionEvent event) {
-
-    }
-
-    @FXML
-    public void selectGridSize(ActionEvent event) {
-         //You can't check different sizes at the same time
-    }
-
-    @FXML
-    public void activateGravity(ActionEvent event) {
-    }
-
-    @FXML
-    public void activateAsteroids(ActionEvent event) {
-    }
 }

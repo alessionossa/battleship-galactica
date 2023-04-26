@@ -4,7 +4,7 @@ import com.galactica.model.Ship;
 import com.galactica.model.ships.DeathStar;
 import javafx.scene.image.Image;
 
-class ShipImage extends Image {
+/*class ShipImage extends Image {
 
     ShipImage(Ship ship) {
         String path = "";
@@ -14,5 +14,5 @@ class ShipImage extends Image {
 
         super(path);
 
-    }
-}
+   
+} */
