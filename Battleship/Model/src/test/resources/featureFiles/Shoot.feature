@@ -124,3 +124,35 @@ Feature: Playing a turn
     And The ship is sunk
     And "The AI" can no longer shoot with a laser
 
+  @tag13
+  Scenario: AI shoots with a random weapon on a random tile
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And The AI places its ships
+    When The AI shoots a random weapon on a random tile
+    Then A random tile on my grid is hit
+
+  @tag14
+  Scenario: AI tracks down a ship that has an asteroid nearby
+    Given I have started a new game on a size 10 grid in "single" player mode, "with" asteroid mode, "without" gravity mode
+    And "I place" a "Cruiser" in direction "v" on coordinate "c" 1
+    And An asteroid is placed at coordinate "b" 1
+    And "The AI shoots" a cannon at coordinate "c" 1
+    When The AI tries to track the ship until it's sunk
+    Then The tile "c" 1 on "my" grid is hit
+    And The tile "d" 1 on "my" grid is hit
+    And The tile "b" 1 on "my" grid is hit
+    And The tile "a" 1 on "my" grid is hit
+    And The tile "b" 0 on "my" grid is hit
+    And The tile "b" 2 on "my" grid is hit
+    And The asteroid at coordinate "b" 1 on my grid is hit
+    And The ship is not sunk
+    And The AI is not tracking down any ship
+
+  @tag15
+  Scenario: Laser successfully stopped by a planet 
+    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
+    When "I shoot" a laser at "a planet"
+    Then The "planet" on my opponent's grid is hit
+    And "I" can no longer shoot with a laser
+    And The entire planet on "my opponent's" grid is revealed
+    And The laser was stopped by "a planet"

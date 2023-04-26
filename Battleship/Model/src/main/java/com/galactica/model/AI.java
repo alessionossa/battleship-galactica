@@ -118,6 +118,11 @@ public class AI extends Player {
         lastCoordinate = coordinate;
         followTargetMode = true;
         Right = true;
+        Left = false;
+        Up = false;
+        Down = false;
+        Moves[0] = 0;
+        Moves[1] = 0;
     }
 
     void updateCoordinatesHit(List<Coordinate> coordinateList) {
@@ -181,7 +186,6 @@ public class AI extends Player {
         Down = false;
         Moves[0] = 0;
         Moves[1] = 0;
-
     }
 
     public void automaticShooting(Coordinate newCoordinate, char direction, char nextDirection, boolean gravityMode,
@@ -229,6 +233,9 @@ public class AI extends Player {
                 return laser;
             }
         }
+    }
 
+    public boolean getFollowTragetMode() {
+        return followTargetMode;
     }
 }
