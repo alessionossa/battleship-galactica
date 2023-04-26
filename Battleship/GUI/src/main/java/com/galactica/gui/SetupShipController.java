@@ -7,6 +7,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -23,7 +25,7 @@ public class SetupShipController {
 
     int gridSize;
 
-    Ship[] ships;
+    ObservableList<Ship> ships;
 
     @FXML
     private BorderPane borderPane;
@@ -49,8 +51,9 @@ public class SetupShipController {
 
     public SetupShipController(int gridSize) {
         this.gridSize = gridSize;
-        this.ships = new Ship[] {new Cruiser(1), new DeathStar(2), new Scout(3)};
+        Ship[] ships = new Ship[] {new Cruiser(1), new DeathStar(2), new Scout(3)};
 
+        this.ships = FXCollections.observableArrayList(ships);
     }
 
     public void initialize() {// Set the desired grid size here
@@ -104,11 +107,16 @@ public class SetupShipController {
                 direction = Direction.Horizontal;
             }
             selectedShip.setDirection(direction);
+            shipsListView.refresh();
         });
     }
 
-    private void previewShipPlacement() {
+    private void previewShipPlacement(Ship ship) {
+        ImageView shipImageView =this.shipImages.get(ship);
 
+        if (shipImageView == null) {
+            ImageView
+        }
     }
 
     private void createGrid() {
