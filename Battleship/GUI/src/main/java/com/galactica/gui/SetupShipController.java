@@ -23,10 +23,10 @@ import java.util.HashMap;
 
 public class SetupShipController {
 
-    int gridSize;
-    boolean singlePlayer;
-    boolean asteroids;
-    boolean gravity;
+    private int gridSize;
+    private boolean singlePlayer;
+    private boolean asteroids;
+    private boolean gravity;
 
     ObservableList<Ship> ships;
 
@@ -56,16 +56,16 @@ public class SetupShipController {
         this.gridSize = gridSize;
         this.singlePlayer = singlePlayer;
         this.asteroids = asteroids;
-        this. gravity = gravity;
+        this.gravity = gravity;
 
-        Ship[] ships = new Ship[] {new Cruiser(1), new DeathStar(2), new Scout(3)};
+        Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
 
         this.ships = FXCollections.observableArrayList(ships);
     }
 
     public void initialize() {// Set the desired grid size here
-        //TODO: Set up the player mode, asteroids and gravity if needed here
-        
+        // TODO: Set up the player mode, asteroids and gravity if needed here
+
         backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
         backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
 
@@ -74,7 +74,8 @@ public class SetupShipController {
         createGrid();
 
         // Bind the column and row constraints to maintain square tiles
-        NumberBinding tileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2), borderPane.heightProperty().divide(gridSize + 2));
+        NumberBinding tileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
+                borderPane.heightProperty().divide(gridSize + 2));
         tileSize.addListener((obs, oldSize, newSize) -> {
             for (ColumnConstraints column : grid.getColumnConstraints()) {
                 column.setPrefWidth(newSize.doubleValue());
@@ -121,10 +122,10 @@ public class SetupShipController {
     }
 
     private void previewShipPlacement(Ship ship) {
-        ImageView shipImageView =this.shipImages.get(ship);
+        ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
-            //ImageView
+            // ImageView
         }
     }
 
@@ -146,7 +147,8 @@ public class SetupShipController {
                 grid.add(tile, rowIndex, columnIndex);
 
                 if (rowIndex == 0 || columnIndex == 0) {
-                    String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex) : (columnIndex == 0 && rowIndex > 0) ? String.valueOf((char) ('A' + rowIndex - 1)) : "";
+                    String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex)
+                            : (columnIndex == 0 && rowIndex > 0) ? String.valueOf((char) ('A' + rowIndex - 1)) : "";
                     Label label = new Label(coordinate);
                     tile.setAlignment(Pos.CENTER);
                     tile.getChildren().add(label);
