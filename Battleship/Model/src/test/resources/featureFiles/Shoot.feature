@@ -141,18 +141,21 @@ Feature: Playing a turn
     Then The tile "c" 1 on "my" grid is hit
     And The tile "d" 1 on "my" grid is hit
     And The tile "b" 1 on "my" grid is hit
-    And The tile "a" 1 on "my" grid is hit
-    And The tile "b" 0 on "my" grid is hit
-    And The tile "b" 2 on "my" grid is hit
+    And The tile "c" 0 on "my" grid is hit
+    And The tile "c" 2 on "my" grid is hit
+    And The tile "c" 3 on "my" grid is hit
     And The asteroid at coordinate "b" 1 on my grid is hit
-    And The ship is not sunk
     And The AI is not tracking down any ship
-
+    And The ship is sunk
+    
   @tag15
   Scenario: Laser successfully stopped by a planet 
-    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
+    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "with" gravity mode
     When "I shoot" a laser at "a planet"
     Then The "planet" on my opponent's grid is hit
     And "I" can no longer shoot with a laser
     And The entire planet on "my opponent's" grid is revealed
     And The laser was stopped by "a planet"
+
+
+
