@@ -13,6 +13,11 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    
+# The API requires write permission on the repository to submit dependencies
+# https://github.com/advanced-security/maven-dependency-submission-action/issues/17
+permissions:
+  contents: write
 
 jobs:
   build:
