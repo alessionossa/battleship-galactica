@@ -15,7 +15,7 @@ Feature: Placing ships on a grid
 
   @tag3
   Scenario: Unable to place a ship on an obstacle
-    Given I have started a new game on a size 10 grid in "single" player mode, <asteroids> asteroid mode, <planets> gravity mode
+    Given I have started a new game on a size 15 grid in "single" player mode, <asteroids> asteroid mode, <planets> gravity mode
     When I try to place a "Cruiser" on <obstacle>
     Then The ship is not placed on the grid
 

@@ -38,9 +38,6 @@ public class Grid {
                 && coordinate.getY() >= 0 && coordinate.getY() < gridSize;
     }
 
-    /**
-     * This method checks if the position is a valid position
-     */
     public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
         char x = coordinate.getX();
         int y = coordinate.getY();

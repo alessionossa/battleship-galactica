@@ -32,11 +32,6 @@ public abstract class Player {
 
     public List<Coordinate> shootGrenade(Coordinate coordinate, Grenade grenade) {
         List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
-
-        if (this instanceof AI) {
-            AI ai = (AI) this;
-            ai.updateCoordinatesHit(coordinateList);
-        }
         grenade.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
         return coordinateList;
@@ -44,23 +39,13 @@ public abstract class Player {
 
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
         List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
-
-        if (this instanceof AI) {
-            AI ai = (AI) this;
-            ai.updateCoordinatesHit(coordinateList);
-        }
         laser.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
     }
 
-    public void shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
+    public boolean shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         coordinateList.add(coordinate);
-
-        if (this instanceof AI) {
-            AI ai = (AI) this;
-            ai.updateCoordinatesHit(coordinateList);
-        }
 
         boolean hit = checkOutcomeOfShot(coordinateList);
 
@@ -75,6 +60,7 @@ public abstract class Player {
                 }
             }
         }
+        return hit;
     }
 
     private void initializeShips() {
@@ -152,12 +138,18 @@ public abstract class Player {
 
             if (asteroidAtCoordinate != null) {
                 asteroidsHit++;
+                if (this instanceof AI) {
+                    AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
+                    ai.updateTracking(coordinate);
+                }
             } else if (planet != null) {
                 planetsHit.add(planet);
             } else if (shipAtCoordinate != null) {
                 shipsHit++;
                 if (this instanceof AI) {
                     AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
                     ai.updateTracking(coordinate);
                 }
                 boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
@@ -167,20 +159,24 @@ public abstract class Player {
                 }
 
             }
-
+            if (this instanceof AI) {
+                AI ai = (AI) this;
+                ai.updateCoordinateHit(coordinate);
+            }
         }
 
         for (Planet planet : planetsHit) {
             for (Coordinate coordinate : planet.getPlanetCoordinates()) {
                 opponentGrid.setTile(coordinate, true);
                 coordinatesWithPlanets.add(coordinate);
+                if (this instanceof AI) {
+                    AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
+                }
             }
 
         }
-        if (this instanceof AI) {
-            AI ai = (AI) this;
-            ai.updateCoordinatesHit(coordinatesWithPlanets);
-        }
+
         successfulHits = asteroidsHit + shipsHit;
 
         if (successfulHits + planetsHit.size() == 0) {

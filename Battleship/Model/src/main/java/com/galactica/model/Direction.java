@@ -6,6 +6,7 @@ public enum Direction {
     Horizontal('h'), Vertical('v');
 
     private final char charIdentifier;
+
     Direction(char charIdentifier) {
         this.charIdentifier = charIdentifier;
     }

@@ -7,14 +7,14 @@ import java.util.Random;
 public class Planet {
     private Coordinate planetCoordinate;
     private List<Coordinate> planetCoordinates = new ArrayList<Coordinate>();
-    private List<CoordinateDepthPair<Coordinate, Integer>> abovePlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> belowPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> rightOfPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> leftOfPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> rightAbovePlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> leftAbovePlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> rightBelowPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
-    private List<CoordinateDepthPair<Coordinate, Integer>> leftBelowPlanet = new ArrayList<CoordinateDepthPair<Coordinate, Integer>>();;
+    private List<CoordinateDepthPair> abovePlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> belowPlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> rightOfPlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> leftOfPlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> rightAbovePlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> leftAbovePlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> rightBelowPlanet = new ArrayList<CoordinateDepthPair>();;
+    private List<CoordinateDepthPair> leftBelowPlanet = new ArrayList<CoordinateDepthPair>();;
     private int size;
     private static int maxPlanetLength;
 
@@ -29,43 +29,6 @@ public class Planet {
     public List<Coordinate> getPlanetCoordinates() {
         return planetCoordinates;
     }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getAbovePlanet() {
-        return abovePlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getBelowPlanet() {
-        return belowPlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getRightOfPlanet() {
-        return rightOfPlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getLeftOfPlanet() {
-        return leftOfPlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getRightAbovePlanet() {
-        return rightAbovePlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getLeftAbovePlanet() {
-        return leftAbovePlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getRightBelowPlanet() {
-        return rightBelowPlanet;
-    }
-
-    public List<CoordinateDepthPair<Coordinate, Integer>> getLeftBelowPlanet() {
-        return leftBelowPlanet;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
     public Planet(int size, int gridSize) {
         this.size = size;
 
@@ -85,29 +48,29 @@ public class Planet {
             try {
                 borderCoordinate = borderCoordinate.up(1);
                 for (int i = 0; i < size + depth * 2; i++) {
-                    abovePlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                    abovePlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                     borderCoordinate = borderCoordinate.right(1);
                 }
-                rightAbovePlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                rightAbovePlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                 borderCoordinate = borderCoordinate.down(1);
                 for (int i = 0; i < size + depth * 2; i++) {
-                    rightOfPlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                    rightOfPlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                     borderCoordinate = borderCoordinate.down(1);
 
                 }
-                rightBelowPlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                rightBelowPlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                 borderCoordinate = borderCoordinate.left(1);
                 for (int i = 0; i < size + depth * 2; i++) {
-                    belowPlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                    belowPlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                     borderCoordinate = borderCoordinate.left(1);
                 }
-                leftBelowPlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                leftBelowPlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                 borderCoordinate = borderCoordinate.up(1);
                 for (int i = 0; i < size + depth * 2; i++) {
-                    leftOfPlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                    leftOfPlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
                     borderCoordinate = borderCoordinate.up(1);
                 }
-                leftAbovePlanet.add(new CoordinateDepthPair<Coordinate, Integer>(borderCoordinate, depth));
+                leftAbovePlanet.add(new CoordinateDepthPair(borderCoordinate, depth));
 
             } catch (OutOfBoundsException e) {
             }
@@ -165,38 +128,38 @@ public class Planet {
         try {
             for (int depth = 0; depth < size; depth++) {
                 if (abovePlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.down(size + 2 * depth + 1);
 
                 } else if (belowPlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.up(size + 2 * depth + 1);
 
                 } else if (leftOfPlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.right(size + 2 * depth + 1);
 
                 } else if (rightOfPlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.left(size + 2 * depth + 1);
 
                 } else if (rightAbovePlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.left(size + 2 * depth + 1)
                             .down(size + 2 * depth + 1);
 
                 } else if (rightBelowPlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.left(size + 2 * depth + 1)
                             .up(size + 2 * depth + 1);
 
                 } else if (leftAbovePlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.right(size + 2 * depth + 1)
                             .down(size + 2 * depth + 1);
 
                 } else if (leftBelowPlanet
-                        .contains(new CoordinateDepthPair<Coordinate, Integer>(coordinate, depth))) {
+                        .contains(new CoordinateDepthPair(coordinate, depth))) {
                     coordinate = coordinate.right(size + 2 * depth + 1)
                             .up(size + 2 * depth + 1);
 

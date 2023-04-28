@@ -1,40 +1,34 @@
 package com.galactica.model;
 
-public class CoordinateDepthPair<L, R> {
-    private L l;
-    private R r;
+public class CoordinateDepthPair {
+    private Coordinate coordinate;
+    private int depth;
 
-    public CoordinateDepthPair(L l, R r) {
-        this.l = l;
-        this.r = r;
+    public CoordinateDepthPair(Coordinate coordinate, int depth) {
+        this.coordinate = coordinate;
+        this.depth = depth;
     }
 
-    public L getL() {
-        return l;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
-    public R getR() {
-        return r;
-    }
-
-    public void setL(L l) {
-        this.l = l;
-    }
-
-    public void setR(R r) {
-        this.r = r;
+    public int getDepth() {
+        return depth;
     }
 
     @Override
     public boolean equals(Object o) {
-        // TODO check if downcast possible
-        CoordinateDepthPair<Coordinate, Integer> pair = (CoordinateDepthPair<Coordinate, Integer>) o;
-        if (pair.getL().equals(this.getL()) && pair.getR().equals(this.getR())) {
+
+        if (o == this) return true;
+        if (!(o instanceof CoordinateDepthPair)) return false;
+
+        CoordinateDepthPair coordinateDepthPairObject = (CoordinateDepthPair) o;
+        if (coordinateDepthPairObject.getCoordinate().equals(this.getCoordinate()) && (coordinateDepthPairObject.getDepth() == this.getDepth())) {
             return true;
+        } else {
+            return false;
         }
-
-        return false;
-
     }
 
 }

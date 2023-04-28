@@ -39,4 +39,3 @@ public class Grenade extends Weapon {
         return coordinateList;
     }
 }
-
