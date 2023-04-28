@@ -1,5 +1,7 @@
 package com.galactica.model;
 
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class Tile {
     private Ship ship;
     private Asteroid asteroid;
@@ -42,5 +44,14 @@ public class Tile {
 
     public Planet getPlanet() {
         return this.planet;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("ship", ship.toJsonObject());
+        jo.put("asteroid", asteroid.toJsonObject());
+        jo.put("hit", hit);
+        jo.put("planet", planet.toJsonObject());
+        return jo;
     }
 }

@@ -5,9 +5,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import com.galactica.cli.AICLI;
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class AI extends Player {
     private Random random = new Random();
+    
     private HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
     private boolean followTargetMode = false;
     private int[] Moves = { 0, 0 };
@@ -322,5 +325,48 @@ public class AI extends Player {
 
     public boolean getFollowTragetMode() {
         return followTargetMode;
+    }
+
+
+    public JsonArray toJsonArray(HashSet<Coordinate> CoordinatesHit) {
+        JsonArray ja = new JsonArray();
+        for (Coordinate coordinate : CoordinatesHit) {
+            ja.add(coordinate.toJsonObject());
+        }
+        return ja;
+    }
+
+    public JsonArray toJsonArray(int[] Moves) {
+        JsonArray ja = new JsonArray();
+        for (int i : Moves) {
+            ja.add(i);
+        }
+        return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("name", name);
+        jo.put("ownGrid", ownGrid.toJsonObject());
+        jo.put("opponentGrid", opponentGrid.toJsonObject());
+        jo.put("ships", toJsonArray(ships));
+        jo.put("cannon", cannon.toJsonObject());
+        jo.put("grenade", grenade.toJsonObject());
+        jo.put("laser", laser.toJsonObject());
+
+        jo.put("CoordinatesHit", toJsonArray(CoordinatesHit));
+        jo.put("hasShot", hasShot);
+        jo.put("followTargetMode", followTargetMode);
+        jo.put("Right", Right);
+        jo.put("Left", Left);
+        jo.put("Up", Up);
+        jo.put("Down", Down);
+        jo.put("switchDirection", switchDirection);
+        jo.put("Moves", toJsonArray(Moves));
+        jo.put("lastCoordinate", lastCoordinate.toJsonObject());
+        
+
+        return jo;
+
     }
 }

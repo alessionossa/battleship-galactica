@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class Grid {
     private Tile[][] tiles;
     private List<Planet> planets = new ArrayList<Planet>();
@@ -216,5 +219,40 @@ public class Grid {
             }
         }
     }
+
+
+
+
+    public JsonArray toJsonArrayformMatrix(Tile[][] tiles) {
+        JsonArray ja = new JsonArray();
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                ja.add(tiles[i][j].toJsonObject());
+            }
+        }
+        return ja;
+    }
+
+    public JsonArray toJsonArray(List <?> list) {
+        JsonArray ja = new JsonArray();
+        for (Object object : list) {
+            if (object instanceof Planet)
+                ja.add(((Planet) object).toJsonObject());
+            else if (object instanceof Asteroid)
+                ja.add(((Asteroid) object).toJsonObject());
+        }
+        return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("tiles", toJsonArrayformMatrix(tiles));
+        jo.put("asteroids", toJsonArray(asteroids));
+        jo.put("planets", toJsonArray(planets));
+        jo.put("gridSize", gridSize);
+        
+        return jo;
+    }
+
 
 }

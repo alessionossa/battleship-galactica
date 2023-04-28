@@ -1,5 +1,7 @@
 package com.galactica.model;
 
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class CoordinateDepthPair {
     private Coordinate coordinate;
     private int depth;
@@ -31,4 +33,10 @@ public class CoordinateDepthPair {
         }
     }
 
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("coordinate", coordinate.toJsonObject());
+        jo.put("depth", depth);
+        return jo;
+    }
 }

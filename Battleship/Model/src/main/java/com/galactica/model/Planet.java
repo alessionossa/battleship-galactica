@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class Planet {
     private Coordinate planetCoordinate;
     private List<Coordinate> planetCoordinates = new ArrayList<Coordinate>();
@@ -176,6 +179,41 @@ public class Planet {
         }
         return null;
 
+    }
+
+    
+    // Json Object planet has different JsonArray into it
+
+
+    public JsonArray toJsonArray(List <?> list) {
+        JsonArray ja = new JsonArray();
+
+        for (Object object : list) {
+            if (object instanceof Coordinate)
+                ja.add(((Coordinate) object).toJsonObject());
+            else if (object instanceof CoordinateDepthPair)
+                ja.add(((CoordinateDepthPair) object).toJsonObject());
+        }
+        return ja;
+    }
+
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("planetCoordinate", planetCoordinate.toJsonObject());
+        jo.put("planetCoordinates", toJsonArray(planetCoordinates));
+        jo.put("abovePlanet", toJsonArray(abovePlanet));
+        jo.put("belowPlanet", toJsonArray(belowPlanet));
+        jo.put("leftOfPlanet", toJsonArray(leftOfPlanet));
+        jo.put("rightOfPlanet", toJsonArray(rightOfPlanet));
+        jo.put("rightAbovePlanet", toJsonArray(rightAbovePlanet));
+        jo.put("rightBelowPlanet", toJsonArray(rightBelowPlanet));
+        jo.put("leftAbovePlanet", toJsonArray(leftAbovePlanet));
+        jo.put("leftBelowPlanet", toJsonArray(leftBelowPlanet));
+        jo.put("size", size);
+        jo.put("maxPlanetLength", maxPlanetLength);
+        
+        return jo;
     }
 
 }

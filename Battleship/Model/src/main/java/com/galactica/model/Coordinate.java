@@ -2,6 +2,8 @@ package com.galactica.model;
 
 import java.util.Objects;
 
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class Coordinate { // Send new coordinates to player
     private char x;
     private int y;
@@ -74,7 +76,13 @@ public class Coordinate { // Send new coordinates to player
         return Objects.hash(x, y);
     }
 
-    public Object toJasonObject() {
-        return null;
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("x", x);
+        jo.put("y", y);
+        jo.put("maxValue", maxValue);
+        return jo;
     }
+
+
 }

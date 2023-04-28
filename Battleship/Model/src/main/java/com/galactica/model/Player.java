@@ -3,6 +3,8 @@ package com.galactica.model;
 import com.galactica.model.ships.Cruiser;
 import com.galactica.model.ships.DeathStar;
 import com.galactica.model.ships.Scout;
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +20,8 @@ public abstract class Player {
     protected Cannon cannon = new Cannon();
     protected Grenade grenade = new Grenade();
     protected Laser laser = new Laser();
-    static Scanner sc = new Scanner(System.in);
+
+    protected static Scanner sc = new Scanner(System.in);
 
     public Player(Grid ownGrid, Grid opponentGrid) {
         ships = new Ship[3]; // Placeholder 5
@@ -200,6 +203,28 @@ public abstract class Player {
         }
 
         return successfulHits > 0 && planetsHit.size() == 0;
+    }
+
+
+    public JsonArray toJsonArray(Ship[] ships) {
+        JsonArray ja = new JsonArray();
+        for (Ship ship : ships)
+           ja.add(ship.toJsonObject());
+        
+           return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("name", name);
+        jo.put("ownGrid", ownGrid.toJsonObject());
+        jo.put("opponentGrid", opponentGrid.toJsonObject());
+        jo.put("ships", toJsonArray(ships));
+        jo.put("cannon", cannon.toJsonObject());
+        jo.put("grenade", grenade.toJsonObject());
+        jo.put("laser", laser.toJsonObject());
+
+        return jo;
     }
 
 }

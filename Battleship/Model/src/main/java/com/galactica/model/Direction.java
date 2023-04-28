@@ -2,6 +2,8 @@ package com.galactica.model;
 
 import java.util.Arrays;
 
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public enum Direction {
     Horizontal('h'), Vertical('v');
 
@@ -22,7 +24,9 @@ public enum Direction {
                 .orElse(null);
     }
 
-    public Object toJasonObject() {
-        return null;
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("charIdentifier", charIdentifier);
+        return jo;
     }
 }
