@@ -21,4 +21,8 @@ public enum Direction {
                 .findFirst()
                 .orElse(null);
     }
+
+    public Object toJasonObject() {
+        return null;
+    }
 }

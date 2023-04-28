@@ -73,4 +73,8 @@ public class Coordinate { // Send new coordinates to player
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+    public Object toJasonObject() {
+        return null;
+    }
 }

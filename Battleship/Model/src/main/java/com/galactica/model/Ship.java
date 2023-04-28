@@ -1,4 +1,6 @@
 package com.galactica.model;
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 
 public abstract class Ship {
 
@@ -46,5 +48,14 @@ public abstract class Ship {
             return true;
         else
             return false;
+    }
+    public JsonObject toJasonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("length", length);
+        jo.put("sunk", sunk);
+        jo.put("identifier", identifier);
+        jo.put("coordinate", coordinate.toJasonObject());
+        jo.put("direction", direction.toJasonObject());
+        return jo;
     }
 }
