@@ -1,10 +1,6 @@
 package com.galactica.model;
 
 public class Human extends Player {
-    public static char intToChar(int num) {
-        return (char) num;
-    }
-
     public Human(Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
         // System.out.println("Enter player name: ");
@@ -17,9 +13,7 @@ public class Human extends Player {
 
         if (damageArea == 1) {
             shootCannon(coordinate, gravityMode, gravityUsed);
-        } else if (damageArea == 2) {
-            shootGrenade(coordinate, (Grenade) weaponToShoot);
-        }
+        } else if (damageArea == 2) {shootGrenade(coordinate, (Grenade) weaponToShoot);}
 
     }
 
