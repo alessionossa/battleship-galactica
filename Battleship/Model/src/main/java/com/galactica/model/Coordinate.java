@@ -88,8 +88,7 @@ public class Coordinate { // Send new coordinates to player
     public static Coordinate fromJsonObject(JsonObject jo) {
         char x = ((String) jo.get("x")).charAt(0);
         int y = ((BigDecimal) jo.get("y")).intValue();
-        
+
         return new Coordinate(x, y);
     }
-
 }

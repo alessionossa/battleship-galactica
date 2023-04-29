@@ -1,9 +1,9 @@
 package com.galactica.cli;
+
 import com.galactica.model.Asteroid;
 import com.galactica.model.Planet;
 import com.galactica.model.Ship;
 import com.galactica.model.Tile;
-
 
 public class TileCLI {
 

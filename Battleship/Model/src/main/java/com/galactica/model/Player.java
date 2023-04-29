@@ -5,7 +5,6 @@ import com.galactica.model.ships.DeathStar;
 import com.galactica.model.ships.Scout;
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +25,6 @@ public abstract class Player {
     protected static Scanner sc = new Scanner(System.in);
 
     public Player(Grid ownGrid, Grid opponentGrid) {
-        // ships = new ship[3]; // Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
@@ -293,5 +291,4 @@ public abstract class Player {
         }
         return ships;
     }
-
 }

@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.List;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
@@ -23,7 +22,6 @@ public class Game {
 
     protected Grid grid1;
     protected Grid grid2;
-
 
     public Grid getGrid1() {
         return grid1;
@@ -46,7 +44,8 @@ public class Game {
         this.grid2 = grid2;
     }
 
-    public Game() {}
+    public Game() {
+    }
 
     public static Grid setUpGrid(int gridSize, boolean singlePlayerMode, boolean asteroidMode,
             boolean gravityMode) {
@@ -78,7 +77,7 @@ public class Game {
         jo.put("p2", p2.toJsonObject());
         jo.put("grid1", grid1.toJsonObject());
         jo.put("grid2", grid2.toJsonObject());
-        
+
         return jo;
     }
 
@@ -88,8 +87,8 @@ public class Game {
         singlePlayerMode = (boolean) jo.get("singlePlayerMode");
         gravityMode = (boolean) jo.get("gravityMode");
         gridSize = ((BigDecimal) jo.get("gridSize")).intValue();
-        grid1 = Grid.fromJsonObject((JsonObject)jo.get("grid1"));
-        grid2 = Grid.fromJsonObject((JsonObject)jo.get("grid2"));
+        grid1 = Grid.fromJsonObject((JsonObject) jo.get("grid1"));
+        grid2 = Grid.fromJsonObject((JsonObject) jo.get("grid2"));
 
         p1 = Human.fromJsonObject((JsonObject) jo.get("p1"), grid1, grid2);
         if (singlePlayerMode) {
@@ -97,7 +96,7 @@ public class Game {
         } else {
             p2 = Human.fromJsonObject((JsonObject) jo.get("p2"), grid2, grid1);
         }
-      
+
         return this;
     }
 

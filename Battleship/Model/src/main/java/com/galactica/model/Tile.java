@@ -8,7 +8,8 @@ public class Tile {
     private boolean hit = false;
     private Planet planet;
 
-    public Tile() {}
+    public Tile() {
+    }
 
     public Tile(Ship ship, Asteroid asteroid, Planet planet, boolean hit) {
         this.ship = ship;
@@ -28,7 +29,6 @@ public class Tile {
     public void setHit(boolean hit) {
         this.hit = hit;
     }
-
 
     public Asteroid getAsteroid() {
         return this.asteroid;
@@ -56,16 +56,16 @@ public class Tile {
             jo.put("ship", ship.toJsonObject());
         else
             jo.put("ship", null);
-        if (asteroid != null)    
+        if (asteroid != null)
             jo.put("asteroid", asteroid.toJsonObject());
         else
             jo.put("asteroid", null);
         if (planet != null)
             jo.put("planet", planet.toJsonObject());
         else
-            jo.put("planet", null);    
-        
-            jo.put("hit", hit);
+            jo.put("planet", null);
+
+        jo.put("hit", hit);
 
         return jo;
     }
@@ -83,7 +83,7 @@ public class Tile {
             asteroid = null;
         } else {
             asteroid = Asteroid.fromJsonObject((JsonObject) jo.get("asteroid"));
-        }  
+        }
         Planet planet;
         if (jo.get("planet") == null) {
             planet = null;

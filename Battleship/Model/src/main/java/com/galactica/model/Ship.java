@@ -10,7 +10,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 public abstract class Ship {
 
     protected int length;
-    protected boolean sunk; // Status of the ship, true if ship is sunk, false if not
+    protected boolean sunk;
     protected int identifier;
 
     protected Coordinate coordinate;
@@ -65,13 +65,13 @@ public abstract class Ship {
         } else {
             jo.put("coordinate", null);
         }
-        
+
         if (direction != null) {
             jo.put("direction", direction.toJsonObject());
         } else {
             jo.put("direction", null);
         }
-    
+
         return jo;
     }
 
@@ -79,14 +79,14 @@ public abstract class Ship {
         int length = ((BigDecimal) jo.get("length")).intValue();
         boolean sunk = (boolean) jo.get("sunk");
         int identifier = ((BigDecimal) jo.get("identifier")).intValue();
-        
+
         Coordinate coordinate;
         Direction direction;
 
         if (jo.get("coordinate") != null) {
-            coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate")); 
+            coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate"));
         } else {
-            coordinate = null; 
+            coordinate = null;
         }
 
         if (jo.get("direction") != null) {
@@ -102,5 +102,4 @@ public abstract class Ship {
         else
             return new Scout(length, identifier, sunk, coordinate, direction);
     }
-    
 }

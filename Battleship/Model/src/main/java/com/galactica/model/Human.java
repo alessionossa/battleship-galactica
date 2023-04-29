@@ -1,9 +1,7 @@
 package com.galactica.model;
 
 import com.github.cliftonlabs.json_simple.JsonObject;
-
 import java.util.List;
-
 import com.github.cliftonlabs.json_simple.JsonArray;
 
 public class Human extends Player {
@@ -40,5 +38,4 @@ public class Human extends Player {
         return new Human(name, ownGrid, opponentGrid, ships, laser, grenade);
 
     }
-
 }

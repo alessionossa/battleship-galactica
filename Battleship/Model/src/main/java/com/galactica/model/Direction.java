@@ -1,7 +1,6 @@
 package com.galactica.model;
 
 import java.util.Arrays;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public enum Direction {
@@ -32,6 +31,6 @@ public enum Direction {
 
     public static Direction fromJsonObject(JsonObject jo) {
         char charIdentifier = ((String) jo.get("charIdentifier")).charAt(0);
-        return Direction.get(charIdentifier); 
+        return Direction.get(charIdentifier);
     }
 }
