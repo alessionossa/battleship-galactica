@@ -11,18 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.FXML;
 import javafx.scene.*;
 import javafx.stage.Stage;
 import javafx.event.*;
@@ -137,7 +134,7 @@ public class SetupShipController {
         });
     }
 
-    private void previewShipPlacement(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
+    private void previewShipPlacement(Ship ship, int columnIndex, int rowIndex, AnchorPane cell) {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
@@ -159,7 +156,7 @@ public class SetupShipController {
 
     }
 
-    private void updatePosition(ImageView shipImage, StackPane cell) {
+    private void updatePosition(ImageView shipImage, AnchorPane cell) {
         Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
 //        Point2D cellCoordinates = cellBoundsInContainer.
 
