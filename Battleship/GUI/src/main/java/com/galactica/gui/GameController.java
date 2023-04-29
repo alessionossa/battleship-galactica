@@ -29,13 +29,20 @@ public class GameController {
     private BorderPane borderPane;
 
     @FXML
-    private GridPane grid;
+    private GridPane PlayerGrid;
+    @FXML
+    private GridPane OpponentGrid;
 
     @FXML
-    private StackPane gridContainer;
+    private StackPane PlayerGridContainer;
 
     @FXML
-    private ImageView backgroundImageView;
+    private StackPane OpponentGridContainer;
+
+    @FXML
+    private ImageView PlayerBackgroundImageView;
+    @FXML
+    private ImageView OpponentBackgroundImageView;
 
     private Tile selectedTile;
 
@@ -59,23 +66,42 @@ public class GameController {
     public void initialize() {
         // TODO: Set up the player mode, asteroids and gravity if needed here
 
-        backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
-        backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
+        PlayerBackgroundImageView.fitWidthProperty().bind(PlayerGrid.widthProperty());
+        PlayerBackgroundImageView.fitHeightProperty().bind(PlayerGrid.heightProperty());
 
-        grid.getStyleClass().add("grid");
+        PlayerGrid.getStyleClass().add("grid");
+
+        OpponentBackgroundImageView.fitWidthProperty().bind(OpponentGrid.widthProperty());
+        OpponentBackgroundImageView.fitHeightProperty().bind(OpponentGrid.heightProperty());
+
+        OpponentGrid.getStyleClass().add("grid");
 
         createPlayerGrid();
         createOpponentGrid();
 
         // Bind the column and row constraints to maintain square tiles
-        NumberBinding tileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
+        NumberBinding PlayerTileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
                 borderPane.heightProperty().divide(gridSize + 2));
-        tileSize.addListener((obs, oldSize, newSize) -> {
-            for (ColumnConstraints column : grid.getColumnConstraints()) {
+        PlayerTileSize.addListener((obs, oldSize, newSize) -> {
+            for (ColumnConstraints column : PlayerGrid.getColumnConstraints()) {
                 column.setPrefWidth(newSize.doubleValue());
                 column.setMaxWidth(newSize.doubleValue());
             }
-            for (RowConstraints row : grid.getRowConstraints()) {
+            for (RowConstraints row : PlayerGrid.getRowConstraints()) {
+                row.setPrefHeight(newSize.doubleValue());
+                row.setMaxHeight(newSize.doubleValue());
+            }
+        });
+
+        // Bind the column and row constraints to maintain square tiles
+        NumberBinding OpponentTileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
+                borderPane.heightProperty().divide(gridSize + 2));
+        OpponentTileSize.addListener((obs, oldSize, newSize) -> {
+            for (ColumnConstraints column : OpponentGrid.getColumnConstraints()) {
+                column.setPrefWidth(newSize.doubleValue());
+                column.setMaxWidth(newSize.doubleValue());
+            }
+            for (RowConstraints row : OpponentGrid.getRowConstraints()) {
                 row.setPrefHeight(newSize.doubleValue());
                 row.setMaxHeight(newSize.doubleValue());
             }
@@ -88,16 +114,16 @@ public class GameController {
         for (int rowIndex = 0; rowIndex < tableSize; rowIndex++) {
             ColumnConstraints column = new ColumnConstraints();
             column.setHgrow(Priority.NEVER);
-            grid.getColumnConstraints().add(column);
+            PlayerGrid.getColumnConstraints().add(column);
 
             RowConstraints row = new RowConstraints();
             row.setVgrow(Priority.NEVER);
-            grid.getRowConstraints().add(row);
+            PlayerGrid.getRowConstraints().add(row);
 
             for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
                 StackPane tile = new StackPane();
                 tile.getStyleClass().add("tile");
-                grid.add(tile, rowIndex, columnIndex);
+                PlayerGrid.add(tile, rowIndex, columnIndex);
 
                 if (rowIndex == 0 || columnIndex == 0) {
                     String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex)
@@ -105,17 +131,6 @@ public class GameController {
                     Label label = new Label(coordinate);
                     tile.setAlignment(Pos.CENTER);
                     tile.getChildren().add(label);
-                } else {
-                    final int currentRowIndex = rowIndex;
-                    final int currentColumnIndex = columnIndex;
-                    tile.setOnMouseEntered(event -> {
-                        tile.setStyle("-fx-background-color:#FFFF00;");
-                        System.out.printf("Mouse enetered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
-                    });
-
-                    tile.setOnMouseExited(event -> {
-                        tile.setStyle("-fx-background-color:none;");
-                    });
                 }
             }
         }
@@ -127,16 +142,16 @@ public class GameController {
         for (int rowIndex = 0; rowIndex < tableSize; rowIndex++) {
             ColumnConstraints column = new ColumnConstraints();
             column.setHgrow(Priority.NEVER);
-            grid.getColumnConstraints().add(column);
+            OpponentGrid.getColumnConstraints().add(column);
 
             RowConstraints row = new RowConstraints();
             row.setVgrow(Priority.NEVER);
-            grid.getRowConstraints().add(row);
+            OpponentGrid.getRowConstraints().add(row);
 
             for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
                 StackPane tile = new StackPane();
                 tile.getStyleClass().add("tile");
-                grid.add(tile, rowIndex, columnIndex);
+                OpponentGrid.add(tile, rowIndex, columnIndex);
 
                 if (rowIndex == 0 || columnIndex == 0) {
                     String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex)

@@ -24,7 +24,7 @@ public class MainController {
     @FXML
     public void switchToSceneSettings(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("settings-view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("game-view.fxml"));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         final boolean resizable = stage.isResizable();
