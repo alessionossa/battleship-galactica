@@ -8,19 +8,9 @@
 <?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.galactica.gui.MainController">
-   <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Battleship Galactica!" wrappingWidth="369.576171875" BorderPane.alignment="CENTER">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Text>
-   </top>
    <padding>
       <Insets top="50.0" />
    </padding>
-   <center>
-      <Button mnemonicParsing="false" text="Help" BorderPane.alignment="CENTER" />
-   </center>
    <bottom>
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
@@ -31,4 +21,11 @@
          </padding>
       </ButtonBar>
    </bottom>
+   <center>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to Battleship Galactica!" wrappingWidth="369.576171875" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Text>
+   </center>
 </BorderPane>
