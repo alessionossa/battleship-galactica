@@ -109,4 +109,16 @@ public class BattleshipGUIController {
         else
             this.playerTurn = 1;
     }
+
+    public Grid getOwnGrid(Player player) {
+        return player.getOwnGrid();
+    }
+
+    public Grid getOpponentGrid(Player player) {
+        return player.getOpponentGrid();
+    }
+
+    public void loadLastGame() {
+
+    }
 }
