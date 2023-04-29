@@ -7,13 +7,15 @@ import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public abstract class Player {
     protected String name;
-    protected Ship[] ships;
+    protected List<Ship> deathstars = new ArrayList<Ship>();
+    protected List<Ship> cruisers = new ArrayList<Ship>();
+    protected List<Ship> scouts = new ArrayList<Ship>();
+    protected List<Ship> ships = new ArrayList<Ship>();
     protected Grid ownGrid;
     protected Grid opponentGrid;
 
@@ -24,14 +26,15 @@ public abstract class Player {
     protected static Scanner sc = new Scanner(System.in);
 
     public Player(Grid ownGrid, Grid opponentGrid) {
-        ships = new Ship[3]; // Placeholder 5
+        // ships = new ship[3]; // Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
         initializeShips();
     }
 
-    public Player(String name, Grid ownGrid, Grid opponentGrid, Ship[] ships, Laser laser, Grenade grenade, Cannon cannon) {
+    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade,
+            Cannon cannon) {
         this.name = name;
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
@@ -77,17 +80,54 @@ public abstract class Player {
     }
 
     private void initializeShips() {
-        ships[0] = new DeathStar(1);
-        ships[1] = new Cruiser(2);
-        ships[2] = new Scout(3);
+        deathstars.add(new DeathStar(IdGenerator.get()));
+        for (int i = 0; i < 2; i++) {
+            cruisers.add(new Cruiser(IdGenerator.get()));
+        }
+        for (int i = 0; i < 3; i++) {
+            scouts.add(new Scout(IdGenerator.get()));
+        }
+        if (ownGrid.getGridSize() == 15) {
+            deathstars.add(new DeathStar(IdGenerator.get()));
+            for (int i = 0; i < 2; i++) {
+                cruisers.add(new Cruiser(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                scouts.add(new Scout(IdGenerator.get()));
+            }
+        }
+        if (ownGrid.getGridSize() == 20) {
+            for (int i = 0; i < 2; i++) {
+                deathstars.add(new DeathStar(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                cruisers.add(new Cruiser(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                scouts.add(new Scout(IdGenerator.get()));
+            }
+        }
+        ships.addAll(deathstars);
+        ships.addAll(cruisers);
+        ships.addAll(scouts);
     }
 
-    public boolean areAllShipsSunk() {
-        return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
+    public boolean areAllShipsSunk(List<Ship> ships) {
+        for (Ship ship : ships) {
+            if (!ship.isSunk()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean hasAllShipsPlaced() {
-        return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
+        for (Ship ship : ships) {
+            if (!ship.isPlaced()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Ship placeShip(Ship ship, Coordinate coordinate, Direction direction) {
@@ -118,8 +158,20 @@ public abstract class Player {
         return opponentGrid;
     }
 
-    public Ship[] getShips() {
+    public List<Ship> getShips() {
         return ships;
+    }
+
+    public List<Ship> getDeathstars() {
+        return deathstars;
+    }
+
+    public List<Ship> getCruisers() {
+        return cruisers;
+    }
+
+    public List<Ship> getScouts() {
+        return scouts;
     }
 
     public Cannon getCannon() {
@@ -215,13 +267,12 @@ public abstract class Player {
         return successfulHits > 0 && planetsHit.size() == 0;
     }
 
-
-    public JsonArray toJsonArray(Ship[] ships) {
+    public JsonArray toJsonArray(List<Ship> ships) {
         JsonArray ja = new JsonArray();
         for (Ship ship : ships)
-           ja.add(ship.toJsonObject());
-        
-           return ja;
+            ja.add(ship.toJsonObject());
+
+        return ja;
     }
 
     public JsonObject toJsonObject() {
@@ -235,10 +286,10 @@ public abstract class Player {
         return jo;
     }
 
-    public static Ship[] fromJsonArraytoShipList(JsonArray ja) {
-        Ship[] ships = new Ship[ja.size()];
+    public static List<Ship> fromJsonArraytoShipList(JsonArray ja) {
+        List<Ship> ships = new ArrayList<Ship>();
         for (int i = 0; i < ja.size(); i++) {
-            ships[i] = Ship.fromJsonObject((JsonObject) ja.get(i));
+            ships.add(Ship.fromJsonObject((JsonObject) ja.get(i)));
         }
         return ships;
     }

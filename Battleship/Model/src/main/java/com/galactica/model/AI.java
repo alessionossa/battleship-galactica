@@ -11,7 +11,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class AI extends Player {
     private Random random = new Random();
-    
+
     private HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
     private boolean followTargetMode = false;
     private int[] Moves = { 0, 0 };
@@ -28,7 +28,7 @@ public class AI extends Player {
         this.name = name;
     }
 
-    public AI(String name, Grid ownGrid, Grid opponentGrid, Ship[] ships, Laser laser, Grenade grenade,
+    public AI(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade,
             boolean followTargetMode, int[] Moves, boolean hasShot, boolean Right, boolean Left, boolean Up,
             boolean Down, Coordinate lastCoordinate, int switchDirection, HashSet<Coordinate> CoordinatesHit) {
         super(ownGrid, opponentGrid);
@@ -46,10 +46,9 @@ public class AI extends Player {
         this.Down = Down;
         this.lastCoordinate = lastCoordinate;
         this.switchDirection = switchDirection;
-        this.CoordinatesHit = CoordinatesHit;        
+        this.CoordinatesHit = CoordinatesHit;
 
     }
-
 
     public void placeShips() {
         final char[] sequence = { 'v', 'h' };
@@ -97,17 +96,21 @@ public class AI extends Player {
                 if (Right) {
                     directionToMove('h', '+'); // Updates the Moves vector
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate); // Creates the new set of coordinate
-                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible otherwise goes to the next direction
+                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if
+                                                                                                           // possible
+                                                                                                           // otherwise
+                                                                                                           // goes to
+                                                                                                           // the next
+                                                                                                           // direction
                     if (result)
-                        break;                                                                     
-                    
+                        break;
 
                 } else if (Left) {
                     directionToMove('h', '-');
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate);
                     boolean result = automaticShooting(newCoordinate, 'L', 'U', gravityMode, gravityUsed);
                     if (result)
-                        break; 
+                        break;
 
                 } else if (Up) {
                     directionToMove('v', '-');
@@ -241,7 +244,7 @@ public class AI extends Player {
 
         } else {
             if (switchDirection == 3) {
-                //hasShot = true
+                // hasShot = true
                 resetTracking();
                 return true;
             } else {
@@ -265,17 +268,17 @@ public class AI extends Player {
         int successfulHits = 0;
         List<Planet> planetsHit = new ArrayList<Planet>();
         List<Coordinate> coordinatesWithPlanets = new ArrayList<Coordinate>();
-        
+
         if (opponentGrid.getTile(coordinate).isHit())
             return false;
-        
+
         opponentGrid.setTile(coordinate, true);
         updateCoordinateHit(coordinate);
 
         Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
         Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
         Planet planet = opponentGrid.getPlanetAtCoordinate(coordinate);
-            
+
         if (asteroidAtCoordinate != null) {
             asteroidsHit++;
         } else if (planet != null) {
@@ -289,7 +292,7 @@ public class AI extends Player {
                 resetTracking();
             }
         }
-        
+
         for (Planet Singleplanet : planetsHit) {
             for (Coordinate c : Singleplanet.getPlanetCoordinates()) {
                 opponentGrid.setTile(c, true);
@@ -318,7 +321,7 @@ public class AI extends Player {
         } else if (planetsHit.size() > 1) {
             System.out.println(name + " hit " + planetsHit.size() + " planets! 🌎");
         }
-  
+
         return successfulHits > 0 && planetsHit.size() == 0;
     }
 
@@ -351,7 +354,6 @@ public class AI extends Player {
         return followTargetMode;
     }
 
-
     public JsonArray toJsonArray(HashSet<Coordinate> CoordinatesHit) {
         JsonArray ja = new JsonArray();
         for (Coordinate coordinate : CoordinatesHit) {
@@ -370,7 +372,7 @@ public class AI extends Player {
 
     public JsonObject toJsonObject() {
         JsonObject jo = super.toJsonObject();
-        
+
         jo.put("CoordinatesHit", toJsonArray(CoordinatesHit));
         jo.put("hasShot", hasShot);
         jo.put("followTargetMode", followTargetMode);
@@ -380,20 +382,19 @@ public class AI extends Player {
         jo.put("Down", Down);
         jo.put("switchDirection", switchDirection);
         jo.put("Moves", toJsonArray(Moves));
-        
+
         if (lastCoordinate != null)
             jo.put("lastCoordinate", lastCoordinate.toJsonObject());
         else
             jo.put("lastCoordinate", null);
-        
 
         return jo;
     }
 
-    public static HashSet<Coordinate>  fromJsonArrayToHashSetOfCoordinates(JsonArray ja) {
+    public static HashSet<Coordinate> fromJsonArrayToHashSetOfCoordinates(JsonArray ja) {
         HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
         for (Object object : ja) {
-            Coordinate coordinate = Coordinate.fromJsonObject((JsonObject)object);
+            Coordinate coordinate = Coordinate.fromJsonObject((JsonObject) object);
             CoordinatesHit.add(coordinate);
         }
         return CoordinatesHit;
@@ -408,12 +409,11 @@ public class AI extends Player {
         return Moves;
     }
 
-
     public static AI fromJsonObject(JsonObject jo, Grid ownGrid, Grid opponentGrid) {
         String name = (String) jo.get("name");
-        Ship[] ships = Player.fromJsonArraytoShipList((JsonArray)jo.get("ships"));
-        Laser laser = Laser.fromJsonObject((JsonObject)jo.get("laser"));
-        Grenade grenade = Grenade.fromJsonObject((JsonObject)jo.get("grenade"));
+        List<Ship> ships = Player.fromJsonArraytoShipList((JsonArray) jo.get("ships"));
+        Laser laser = Laser.fromJsonObject((JsonObject) jo.get("laser"));
+        Grenade grenade = Grenade.fromJsonObject((JsonObject) jo.get("grenade"));
 
         HashSet<Coordinate> CoordinatesHit = fromJsonArrayToHashSetOfCoordinates((JsonArray) jo.get("CoordinatesHit"));
         boolean hasShot = (boolean) jo.get("hasShot");
@@ -425,7 +425,8 @@ public class AI extends Player {
         int switchDirection = ((BigDecimal) jo.get("switchDirection")).intValue();
         int[] Moves = fromJsonArrayToIntArray((JsonArray) jo.get("Moves"));
         Coordinate lastCoordinate = (Coordinate) jo.get("lastCoordinate");
-        
-        return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left, Up, Down, lastCoordinate, switchDirection, CoordinatesHit);
+
+        return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left,
+                Up, Down, lastCoordinate, switchDirection, CoordinatesHit);
     }
 }
