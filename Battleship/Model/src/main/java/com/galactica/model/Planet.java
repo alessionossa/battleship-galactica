@@ -87,6 +87,10 @@ public class Planet {
             }
         }
     }
+    
+    public static final void setMaxPlanetLength(int maxPlanetLength) {
+        Planet.maxPlanetLength = maxPlanetLength;
+    }
 
     public static final void setMaxPlanetLength(int maxPlanetLength) {
         Planet.maxPlanetLength = maxPlanetLength;
