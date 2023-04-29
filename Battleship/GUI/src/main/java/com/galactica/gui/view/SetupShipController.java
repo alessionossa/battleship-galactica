@@ -13,12 +13,10 @@ import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
-import javafx.geometry.Pos;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.stage.Stage;
@@ -26,6 +24,8 @@ import javafx.event.*;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SetupShipController {
 
@@ -37,16 +37,18 @@ public class SetupShipController {
     private boolean asteroids;
     private boolean gravity;
 
-    ObservableList<Ship> ships;
+    ObservableList<Ship> shipsToPlace;
+
+    Set<Ship> placedShips = new HashSet<>();
 
     @FXML
     private BorderPane borderPane;
 
     @FXML
-    private GridPane grid;
+    private BattlefieldGridPane grid;
 
     @FXML
-    private StackPane gridContainer;
+    private AnchorPane gridContainer;
 
     @FXML
     private ImageView backgroundImageView;
@@ -72,7 +74,7 @@ public class SetupShipController {
 
         Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
 
-        this.ships = FXCollections.observableArrayList(ships);
+        this.shipsToPlace = FXCollections.observableArrayList(ships);
     }
 
     public void initialize() {// Set the desired grid size here
@@ -81,33 +83,33 @@ public class SetupShipController {
         backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
         backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
 
-        grid.getStyleClass().add("grid");
+//        grid.getStyleClass().add("grid");
 
-        createGrid();
+        grid.initializeGrid(gridSize);
 
-        // Bind the column and row constraints to maintain square tiles
-        NumberBinding tileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
-                borderPane.heightProperty().divide(gridSize + 2));
-        tileSize.addListener((obs, oldSize, newSize) -> {
-            for (ColumnConstraints column : grid.getColumnConstraints()) {
-                column.setPrefWidth(newSize.doubleValue());
-                column.setMaxWidth(newSize.doubleValue());
-            }
-            for (RowConstraints row : grid.getRowConstraints()) {
-                row.setPrefHeight(newSize.doubleValue());
-                row.setMaxHeight(newSize.doubleValue());
-            }
+        // Set GridPane resize properties
+
+        gridContainer.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        gridContainer.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
+        NumberBinding gridSize = Bindings.min(gridContainer.widthProperty(), gridContainer.heightProperty());
+        gridSize.addListener((observable, oldValue, newValue) -> {
+            double newDimension = newValue.doubleValue();
+            grid.setPrefSize(newDimension, newDimension);
+            System.out.println("New dimension to" + newDimension);
         });
 
         setupShipList();
 
-        setupButton();
+        setupRotateButton();
 
         startGameButton.setDisable(false);
+
+        addTileEventHandlers();
     }
 
     private void setupShipList() {
-        shipsListView.getItems().addAll(ships);
+        shipsListView.getItems().addAll(shipsToPlace);
         shipsListView.setCellFactory(listView -> new ShipListCell());
 
         shipsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ship>() {
@@ -121,7 +123,7 @@ public class SetupShipController {
         shipsListView.getSelectionModel().selectFirst();
     }
 
-    private void setupButton() {
+    private void setupRotateButton() {
         rotateButton.setOnAction(event -> {
             Direction direction = selectedShip.getDirection();
             if (direction == Direction.Horizontal) {
@@ -134,79 +136,82 @@ public class SetupShipController {
         });
     }
 
-    private void previewShipPlacement(Ship ship, int columnIndex, int rowIndex, AnchorPane cell) {
+    private void previewShipPlacement(Ship ship, StackPane cell) {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
             Image shipImage = ShipImageLoader.loadImageFromShip(ship);
             shipImageView = new ImageView(shipImage);
             shipImageView.setPreserveRatio(true);
+            shipImageView.setPickOnBounds(false);
+            shipImageView.setMouseTransparent(true);
 
-            final ImageView newShipImageView = shipImageView;
-            newShipImageView.fitWidthProperty().bind(borderPane.widthProperty().divide(gridSize + 2));
+            if (ship.getDirection() == Direction.Horizontal) {
+                shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
+                shipImageView.setRotate(90);
+            } else {
+                shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
+            }
+
             this.shipImages.put(ship, shipImageView);
-
             updatePosition(shipImageView, cell);
 
             gridContainer.getChildren().add(shipImageView);
         } else {
             updatePosition(shipImageView, cell);
         }
-
-
     }
 
-    private void updatePosition(ImageView shipImage, AnchorPane cell) {
-        Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
-//        Point2D cellCoordinates = cellBoundsInContainer.
+    private void placeShip(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
+        ImageView shipImageView = this.shipImages.get(ship);
 
-        System.out.println("Moving to" + cellBoundsInContainer);
-        shipImage.toFront();
-        shipImage.setX(cellBoundsInContainer.getMinX());
-        shipImage.setY(cellBoundsInContainer.getMinY());
+        shipImageView.setMouseTransparent(false);
+        shipImageView.setPickOnBounds(true);
+        updatePosition(shipImageView, cell);
+
+        placedShips.add(ship);
+
+        shipsToPlace.remove(ship);
+        shipsListView.refresh();
     }
 
-    private void createGrid() {
+    private void updatePosition(ImageView shipImage, StackPane cell) {
+        if (cell != null) {
+            Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
+
+            shipImage.toFront();
+            shipImage.setX(cellBoundsInContainer.getMinX());
+            shipImage.setY(cellBoundsInContainer.getMinY());
+            shipImage.setVisible(true);
+        } else {
+            shipImage.setVisible(false);
+        }
+    }
+
+    private void addTileEventHandlers() {
         int tableSize = gridSize + 1;
-        // Create the grid
-        for (int rowIndex = 0; rowIndex < tableSize; rowIndex++) {
-            ColumnConstraints column = new ColumnConstraints();
-            column.setHgrow(Priority.NEVER);
-            grid.getColumnConstraints().add(column);
+        for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
+            for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
+                int childrenIndex = rowIndex * tableSize + columnIndex;
+                System.out.println(childrenIndex);
+                StackPane tile = (StackPane) grid.getTiles()[rowIndex][columnIndex];
 
-            RowConstraints row = new RowConstraints();
-            row.setVgrow(Priority.NEVER);
-            grid.getRowConstraints().add(row);
+                final int currentRowIndex = rowIndex;
+                final int currentColumnIndex = columnIndex;
+                tile.setOnMouseEntered(event -> {
+                    // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
+                    if (this.selectedShip != null) {
+                        previewShipPlacement(this.selectedShip, tile);
+                    }
+                });
 
-            for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
-                AnchorPane tile = new AnchorPane();
-                tile.getStyleClass().add("tile");
-                grid.add(tile, rowIndex, columnIndex);
+                tile.setOnMouseExited(event -> {
+                    previewShipPlacement(this.selectedShip, null);
+                });
 
-                if (rowIndex == 0 || columnIndex == 0) {
-                    StackPane tileTextContainer = new StackPane();
-                    tile.getChildren().add(tileTextContainer);
-                    String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex)
-                            : (columnIndex == 0 && rowIndex > 0) ? String.valueOf((char) ('A' + rowIndex - 1)) : "";
-                    Label label = new Label(coordinate);
-                    tileTextContainer.setAlignment(Pos.CENTER);
-                    tileTextContainer.getChildren().add(label);
-                } else {
-                    final int currentRowIndex = rowIndex;
-                    final int currentColumnIndex = columnIndex;
-                    tile.setOnMouseEntered(event -> {
-                        tile.setStyle("-fx-background-color:#FFFF00;");
-                        System.out.printf("Mouse enetered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
-                        if (this.selectedShip != null) {
-                            previewShipPlacement(this.selectedShip, currentColumnIndex, currentRowIndex, tile);
-                        }
-
-                    });
-
-                    tile.setOnMouseExited(event -> {
-                        tile.setStyle("-fx-background-color:none;");
-                    });
-                }
+                tile.setOnMouseClicked(event -> {
+                    placeShip(this.selectedShip, currentColumnIndex, currentRowIndex, tile);
+                });
             }
         }
     }
@@ -219,7 +224,6 @@ public class SetupShipController {
         scene = new Scene(root);
         final boolean resizable = stage.isResizable();
         stage.setScene(scene);
-        // stage.show();
 
         stage.setResizable(!resizable);
         stage.setResizable(resizable);
