@@ -25,4 +25,9 @@ public class StartController {
         stage.setResizable(resizable);
     }
 
+    @FXML
+    public void uploadSavedGame(ActionEvent event) throws IOException {
+
+    }
+
 }
