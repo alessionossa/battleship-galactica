@@ -3,7 +3,6 @@ package com.galactica.gui;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
 import javafx.scene.layout.*;
-import java.util.HashMap;
 import javafx.scene.control.Label;
 import javafx.geometry.Pos;
 import javafx.scene.*;
@@ -12,6 +11,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.scene.layout.BorderPane;
 import java.io.IOException;
+import javafx.fxml.FXMLLoader;
+import javafx.event.*;
 
 import com.galactica.model.Tile;
 import com.galactica.model.Ship;
@@ -178,6 +179,27 @@ public class GameController {
                 }
             }
         }
+    }
+
+    @FXML
+    public void switchToPlaceShips(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        final boolean resizable = stage.isResizable();
+        stage.setScene(scene);
+
+        stage.setResizable(!resizable);
+        stage.setResizable(resizable);
+    }
+
+    @FXML
+    public void shoot(ActionEvent event) throws IOException {
+    }
+
+    @FXML
+    public void nextTurn(ActionEvent event) throws IOException {
     }
 
 }
