@@ -200,8 +200,7 @@ public class Planet {
 
     }
 
-    
-    // Json Object planet has different JsonArray into it
+
     public JsonArray toJsonArray(List <?> list) {
         JsonArray ja = new JsonArray();
 

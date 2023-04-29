@@ -31,8 +31,6 @@ public class Human extends Player {
 
     public static Human fromJsonObject(JsonObject jo, Grid ownGrid, Grid opponentGrid) {
         String name = (String) jo.get("name");
-        // Grid ownGrid = Grid.fromJsonObject((JsonObject)jo.get("ownGrid"));
-        // Grid opponentGrid = Grid.fromJsonObject((JsonObject)jo.get("opponentGrid"));
         Ship[] ships = Player.fromJsonArraytoShipList((JsonArray)jo.get("ships"));
         Laser laser = Laser.fromJsonObject((JsonObject)jo.get("laser"));
         Grenade grenade = Grenade.fromJsonObject((JsonObject)jo.get("grenade"));

@@ -97,10 +97,10 @@ public class AI extends Player {
                 if (Right) {
                     directionToMove('h', '+'); // Updates the Moves vector
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate); // Creates the new set of coordinate
-                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible
+                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible otherwise goes to the next direction
                     if (result)
-                        break;                                                                     // otherwise goes to the next
-                    // direction
+                        break;                                                                     
+                    
 
                 } else if (Left) {
                     directionToMove('h', '-');
@@ -411,8 +411,6 @@ public class AI extends Player {
 
     public static AI fromJsonObject(JsonObject jo, Grid ownGrid, Grid opponentGrid) {
         String name = (String) jo.get("name");
-        // Grid ownGrid = Grid.fromJsonObject((JsonObject)jo.get("ownGrid"));
-        // Grid opponentGrid = Grid.fromJsonObject((JsonObject)jo.get("opponentGrid"));
         Ship[] ships = Player.fromJsonArraytoShipList((JsonArray)jo.get("ships"));
         Laser laser = Laser.fromJsonObject((JsonObject)jo.get("laser"));
         Grenade grenade = Grenade.fromJsonObject((JsonObject)jo.get("grenade"));

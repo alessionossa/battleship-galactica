@@ -227,8 +227,6 @@ public abstract class Player {
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("name", name);
-        // jo.put("ownGrid", ownGrid.toJsonObject());
-        // jo.put("opponentGrid", opponentGrid.toJsonObject());
         jo.put("ships", toJsonArray(ships));
         jo.put("cannon", cannon.toJsonObject());
         jo.put("grenade", grenade.toJsonObject());
