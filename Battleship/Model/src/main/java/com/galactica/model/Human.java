@@ -5,11 +5,9 @@ import com.github.cliftonlabs.json_simple.JsonArray;
 
 
 public class Human extends Player {
-    public Human(Grid ownGrid, Grid opponentGrid) {
+    public Human(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
-        // System.out.println("Enter player name: ");
-        // this.name = Player.sc.nextLine();
-        this.name = "Joe"; // TODO make compatible with cucumber tests
+        this.name = name;
     }
 
     public Human(String name, Grid ownGrid, Grid opponentGrid, Ship[] ships, Laser laser, Grenade grenade) {

@@ -50,12 +50,18 @@ public class StepsDefinition {
         ownGrid = Game.setUpGrid(gridSize, single_player_mode, asteroid_mode, gravity_mode);
         opponentGrid = Game.setUpGrid(gridSize, single_player_mode, asteroid_mode, gravity_mode);
 
-        player = new Human(ownGrid, opponentGrid);
+        player = new Human("Pippo", ownGrid, opponentGrid);
         if (playerMode.equals("single")) {
             ai = new AI("AI", opponentGrid, ownGrid);
+            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, ai, ownGrid, opponentGrid);
+
         } else {
-            opponent = new Human(opponentGrid, ownGrid);
+            opponent = new Human("Paperino", opponentGrid, ownGrid);
+            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, opponent, ownGrid, opponentGrid);
+
         }
+
+        
     }
 
     @When("{string} a {string} in direction {string} on coordinate {string} {int}")
@@ -455,9 +461,12 @@ public class StepsDefinition {
 
     // PERSISTENCY LAYER 
 
-    @When("I reload the game") 
-    public void i_reload_the_game() { 
-       game = game.load(Game.getDefaultPath()); 
+    @When("I save and reload the game") 
+    public void i_save_and_reload_the_game() { 
+        game.save(Game.getDefaultPath());
+        game = game.load(Game.getDefaultPath());
+        ownGrid = game.getGrid1();
+        opponentGrid = game.getGrid2(); 
     }
 
     @Then("There is an asteroid at coordinate {string} {int} on {string} grid")

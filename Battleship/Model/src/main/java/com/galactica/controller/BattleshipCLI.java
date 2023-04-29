@@ -74,14 +74,14 @@ public class BattleshipCLI extends Game {
     
     
     
-            p1 = new Human(grid1, grid2);
+            p1 = new Human("Space Cowboy", grid1, grid2);
             placeShips(p1);
     
             if (singlePlayerMode) {
-                p2 = new AI("CPU", grid2, grid1);
+                p2 = new AI("Megatron", grid2, grid1);
                 placeShips((AI) p2);
             } else {
-                p2 = new Human(grid2, grid1);
+                p2 = new Human("Rocket Rancher",grid2, grid1);
                 placeShips((Human) p2);
             }
         } else {

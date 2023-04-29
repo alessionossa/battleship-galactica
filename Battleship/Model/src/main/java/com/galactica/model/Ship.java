@@ -60,8 +60,18 @@ public abstract class Ship {
         jo.put("length", length);
         jo.put("sunk", sunk);
         jo.put("identifier", identifier);
-        jo.put("coordinate", coordinate.toJsonObject());
-        jo.put("direction", direction.toJsonObject());
+        if (coordinate != null) {
+            jo.put("coordinate", coordinate.toJsonObject());
+        } else {
+            jo.put("coordinate", null);
+        }
+        
+        if (direction != null) {
+            jo.put("direction", direction.toJsonObject());
+        } else {
+            jo.put("direction", null);
+        }
+    
         return jo;
     }
 
@@ -69,9 +79,22 @@ public abstract class Ship {
         int length = ((BigDecimal) jo.get("length")).intValue();
         boolean sunk = (boolean) jo.get("sunk");
         int identifier = ((BigDecimal) jo.get("identifier")).intValue();
-        Coordinate coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate")); 
-        Direction direction = Direction.fromJsonObject((JsonObject) jo.get("direction"));
         
+        Coordinate coordinate;
+        Direction direction;
+
+        if (jo.get("coordinate") != null) {
+            coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate")); 
+        } else {
+            coordinate = null; 
+        }
+
+        if (jo.get("direction") != null) {
+            direction = Direction.fromJsonObject((JsonObject) jo.get("direction"));
+        } else {
+            direction = null;
+        }
+
         if (length == 5)
             return new DeathStar(length, identifier, sunk, coordinate, direction);
         else if (length == 3)
