@@ -92,10 +92,6 @@ public class Planet {
         Planet.maxPlanetLength = maxPlanetLength;
     }
 
-    public static final void setMaxPlanetLength(int maxPlanetLength) {
-        Planet.maxPlanetLength = maxPlanetLength;
-    }
-
     public Coordinate getCoordinate() {
         return planetCoordinate;
     }
