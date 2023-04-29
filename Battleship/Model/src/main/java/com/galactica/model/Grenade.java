@@ -1,14 +1,21 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 import java.util.Collections;
 
 public class Grenade extends Weapon {
 
     public Grenade() {
-        this.areaOfEffect = 2;
         this.amountOfUses = 3;
+    }
+
+    public Grenade(int amountOfUses) {
+        this.amountOfUses = amountOfUses;
     }
 
     public List<Coordinate> getScatterCoordinates(Coordinate coordinate, Grid opponentGrid) {
@@ -37,5 +44,10 @@ public class Grenade extends Weapon {
         coordinateList.add(secondCoordinatetoHit);
 
         return coordinateList;
+    }
+
+    public static Grenade fromJsonObject(JsonObject jo) {
+        int amountOfUses = ((BigDecimal) jo.get("amountOfUses")).intValue();
+        return new Grenade(amountOfUses);
     }
 }

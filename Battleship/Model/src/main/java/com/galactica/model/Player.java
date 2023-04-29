@@ -31,6 +31,16 @@ public abstract class Player {
         initializeShips();
     }
 
+    public Player(String name, Grid ownGrid, Grid opponentGrid, Ship[] ships, Laser laser, Grenade grenade, Cannon cannon) {
+        this.name = name;
+        this.ownGrid = ownGrid;
+        this.opponentGrid = opponentGrid;
+        this.ships = ships;
+        this.laser = laser;
+        this.grenade = grenade;
+        this.cannon = cannon;
+    }
+
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
 
     public List<Coordinate> shootGrenade(Coordinate coordinate, Grenade grenade) {
@@ -217,14 +227,22 @@ public abstract class Player {
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("name", name);
-        jo.put("ownGrid", ownGrid.toJsonObject());
-        jo.put("opponentGrid", opponentGrid.toJsonObject());
+        // jo.put("ownGrid", ownGrid.toJsonObject());
+        // jo.put("opponentGrid", opponentGrid.toJsonObject());
         jo.put("ships", toJsonArray(ships));
         jo.put("cannon", cannon.toJsonObject());
         jo.put("grenade", grenade.toJsonObject());
         jo.put("laser", laser.toJsonObject());
 
         return jo;
+    }
+
+    public static Ship[] fromJsonArraytoShipList(JsonArray ja) {
+        Ship[] ships = new Ship[ja.size()];
+        for (int i = 0; i < ja.size(); i++) {
+            ships[i] = Ship.fromJsonObject((JsonObject) ja.get(i));
+        }
+        return ships;
     }
 
 }

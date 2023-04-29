@@ -26,7 +26,12 @@ public enum Direction {
 
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
-        jo.put("charIdentifier", charIdentifier);
+        jo.put("charIdentifier", String.valueOf(charIdentifier));
         return jo;
+    }
+
+    public static Direction fromJsonObject(JsonObject jo) {
+        char charIdentifier = ((String) jo.get("charIdentifier")).charAt(0);
+        return Direction.get(charIdentifier); 
     }
 }

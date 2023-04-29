@@ -133,7 +133,7 @@ Feature: Playing a turn
 
   @tag14
   Scenario: AI tracks down a ship that has an asteroid nearby
-    Given I have started a new game on a size 10 grid in "single" player mode, "with" asteroid mode, "without" gravity mode
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And "I place" a "Cruiser" in direction "v" on coordinate "c" 1
     And An asteroid is placed at coordinate "b" 1
     And "The AI shoots" a cannon at coordinate "c" 1

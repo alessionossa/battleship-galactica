@@ -1,8 +1,6 @@
 package com.galactica.model;
 
-public class Cannon extends Weapon {
-    public Cannon() {
-        this.areaOfEffect = 1;
 
-    }
+public class Cannon extends Weapon {
+
 }

@@ -66,4 +66,18 @@ public class CLI {
             }
         }
     }
+
+    public boolean getNewOrLoadResponse() {
+        System.out.println("Would you like to start a new game or load a saved game? (n/l)");
+        while (true) {
+            char resp = Character.toLowerCase(this.scanner.nextLine().charAt(0));
+            if (resp == 'n')
+                return true;
+            else if (resp == 'l')
+                return false;
+            else {
+                System.out.println("Please only type 'n' or 'l'");
+            }
+        }
+    }
 }

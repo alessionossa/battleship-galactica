@@ -1,5 +1,6 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import com.github.cliftonlabs.json_simple.JsonObject;
@@ -78,11 +79,17 @@ public class Coordinate { // Send new coordinates to player
 
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
-        jo.put("x", x);
+        jo.put("x", String.valueOf(x));
         jo.put("y", y);
         jo.put("maxValue", maxValue);
         return jo;
     }
 
+    public static Coordinate fromJsonObject(JsonObject jo) {
+        char x = ((String) jo.get("x")).charAt(0);
+        int y = ((BigDecimal) jo.get("y")).intValue();
+        
+        return new Coordinate(x, y);
+    }
 
 }
