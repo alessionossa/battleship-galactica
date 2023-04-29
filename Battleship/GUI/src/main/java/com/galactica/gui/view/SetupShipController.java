@@ -152,6 +152,11 @@ public class SetupShipController {
 //            shipImageView.setPivotX(0);
 //            imageView.setPivotY(0);
 
+            this.shipImages.put(ship, shipImageView);
+            updatePosition(shipImageView, cell);
+
+            gridContainer.getChildren().add(shipImageView);
+
             if (ship.getDirection() == Direction.Horizontal) {
                 shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
                 // Create a Rotate transformation with a pivot point
@@ -164,20 +169,20 @@ public class SetupShipController {
                 Rotate rotate = new Rotate();
                 rotate.setAngle(90); // Set the rotation angle
 
-                // Bind the pivotX and pivotY properties of the Rotate object to the layoutX and layoutY properties of the ImageView
-                rotate.pivotXProperty().bind(shipImageView.layoutXProperty());
-                rotate.pivotYProperty().bind(shipImageView.layoutYProperty());
+                // Bind the pivotX and pivotY properties of the Rotate object relative to the ImageView
+                rotate.pivotXProperty().bind(shipImageView.xProperty());
+                rotate.pivotYProperty().bind(shipImageView.yProperty());
 
                 // Add the Rotate object to the ImageView's transforms
                 shipImageView.getTransforms().add(rotate);
+
+                // Create custom bindings for the translateX and translateY properties to adjust the position of the ImageView after the rotation
+                shipImageView.translateXProperty().bind(shipImageView.fitWidthProperty());
+//                shipImageView.translateYProperty().bind(shipImageView.fitWidthProperty());
+
             } else {
                 shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
             }
-
-            this.shipImages.put(ship, shipImageView);
-            updatePosition(shipImageView, cell);
-
-            gridContainer.getChildren().add(shipImageView);
         } else {
             updatePosition(shipImageView, cell);
         }
