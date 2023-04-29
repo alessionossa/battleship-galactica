@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -19,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.event.*;
 
@@ -146,9 +148,28 @@ public class SetupShipController {
             shipImageView.setPickOnBounds(false);
             shipImageView.setMouseTransparent(true);
 
+            // Set the pivot points for rotation
+//            shipImageView.setPivotX(0);
+//            imageView.setPivotY(0);
+
             if (ship.getDirection() == Direction.Horizontal) {
                 shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
-                shipImageView.setRotate(90);
+                // Create a Rotate transformation with a pivot point
+                // The pivot point should be the same as the position of the ImageView
+                // Rotate rotate = new Rotate(90, shipImageView.getX(), shipImageView.getY(), 0, new Point3D(0, 0, 1));
+//                shipImageView.setTranslateX(shipImageView.getBoundsInLocal().getWidth() / 2);
+//                shipImageView.setTranslateY(shipImageView.getBoundsInLocal().getHeight() / 2);
+//                shipImageView.setRotate(90);
+//                shipImageView.translateXProperty().bind(shipImageView.fitHeightProperty());
+                Rotate rotate = new Rotate();
+                rotate.setAngle(90); // Set the rotation angle
+
+                // Bind the pivotX and pivotY properties of the Rotate object to the layoutX and layoutY properties of the ImageView
+                rotate.pivotXProperty().bind(shipImageView.layoutXProperty());
+                rotate.pivotYProperty().bind(shipImageView.layoutYProperty());
+
+                // Add the Rotate object to the ImageView's transforms
+                shipImageView.getTransforms().add(rotate);
             } else {
                 shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
             }
@@ -171,8 +192,8 @@ public class SetupShipController {
 
         placedShips.add(ship);
 
-        shipsToPlace.remove(ship);
-        shipsListView.refresh();
+        boolean result1 = shipsListView.getItems().remove(ship);
+        boolean result2 = shipsToPlace.remove(ship);
     }
 
     private void updatePosition(ImageView shipImage, StackPane cell) {
@@ -193,7 +214,6 @@ public class SetupShipController {
         for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
             for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
                 int childrenIndex = rowIndex * tableSize + columnIndex;
-                System.out.println(childrenIndex);
                 StackPane tile = (StackPane) grid.getTiles()[rowIndex][columnIndex];
 
                 final int currentRowIndex = rowIndex;
