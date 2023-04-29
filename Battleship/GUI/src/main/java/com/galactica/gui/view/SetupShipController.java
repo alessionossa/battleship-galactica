@@ -1,4 +1,4 @@
-package com.galactica.gui;
+package com.galactica.gui.view;
 
 import com.galactica.model.Direction;
 import com.galactica.model.Ship;
@@ -10,10 +10,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
@@ -134,12 +137,36 @@ public class SetupShipController {
         });
     }
 
-    private void previewShipPlacement(Ship ship) {
+    private void previewShipPlacement(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
-//            ShipImageLoader.
+            Image shipImage = ShipImageLoader.loadImageFromShip(ship);
+            shipImageView = new ImageView(shipImage);
+            shipImageView.setPreserveRatio(true);
+
+            final ImageView newShipImageView = shipImageView;
+            newShipImageView.fitWidthProperty().bind(borderPane.widthProperty().divide(gridSize + 2));
+            this.shipImages.put(ship, shipImageView);
+
+            updatePosition(shipImageView, cell);
+
+            gridContainer.getChildren().add(shipImageView);
+        } else {
+            updatePosition(shipImageView, cell);
         }
+
+
+    }
+
+    private void updatePosition(ImageView shipImage, StackPane cell) {
+        Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
+//        Point2D cellCoordinates = cellBoundsInContainer.
+
+        System.out.println("Moving to" + cellBoundsInContainer);
+        shipImage.toFront();
+        shipImage.setX(cellBoundsInContainer.getMinX());
+        shipImage.setY(cellBoundsInContainer.getMinY());
     }
 
     private void createGrid() {
@@ -155,22 +182,28 @@ public class SetupShipController {
             grid.getRowConstraints().add(row);
 
             for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
-                StackPane tile = new StackPane();
+                AnchorPane tile = new AnchorPane();
                 tile.getStyleClass().add("tile");
                 grid.add(tile, rowIndex, columnIndex);
 
                 if (rowIndex == 0 || columnIndex == 0) {
+                    StackPane tileTextContainer = new StackPane();
+                    tile.getChildren().add(tileTextContainer);
                     String coordinate = (rowIndex == 0 && columnIndex > 0) ? String.valueOf(columnIndex)
                             : (columnIndex == 0 && rowIndex > 0) ? String.valueOf((char) ('A' + rowIndex - 1)) : "";
                     Label label = new Label(coordinate);
-                    tile.setAlignment(Pos.CENTER);
-                    tile.getChildren().add(label);
+                    tileTextContainer.setAlignment(Pos.CENTER);
+                    tileTextContainer.getChildren().add(label);
                 } else {
                     final int currentRowIndex = rowIndex;
                     final int currentColumnIndex = columnIndex;
                     tile.setOnMouseEntered(event -> {
                         tile.setStyle("-fx-background-color:#FFFF00;");
                         System.out.printf("Mouse enetered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
+                        if (this.selectedShip != null) {
+                            previewShipPlacement(this.selectedShip, currentColumnIndex, currentRowIndex, tile);
+                        }
+
                     });
 
                     tile.setOnMouseExited(event -> {
@@ -193,5 +226,15 @@ public class SetupShipController {
 
         stage.setResizable(!resizable);
         stage.setResizable(resizable);
+    }
+
+    @FXML
+    public void switchToSettingsScene(ActionEvent event) throws IOException {
+
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("settings-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

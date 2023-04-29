@@ -1,4 +1,4 @@
-package com.galactica.gui;
+package com.galactica.gui.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

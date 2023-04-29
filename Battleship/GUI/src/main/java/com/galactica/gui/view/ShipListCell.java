@@ -1,9 +1,8 @@
-package com.galactica.gui;
+package com.galactica.gui.view;
 
 import com.galactica.model.Direction;
 import com.galactica.model.Ship;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,10 +18,10 @@ class ShipListCell extends ListCell<Ship> {
             setText(null);
             setGraphic(null);
         } else {
-            Image shipImage = new Image(getClass().getResource("/assets/cruiser.png").toExternalForm());
+            Image shipImage = ShipImageLoader.loadImageFromShip(item);
             ImageView imageView = new ImageView(shipImage);
             imageView.setPreserveRatio(true);
-            imageView.setFitWidth(100);
+            imageView.setFitWidth(80);
             imageView.setFitHeight(100);
             if (item.getDirection() == null) {
                 item.setDirection(Direction.Vertical);
@@ -36,9 +35,7 @@ class ShipListCell extends ListCell<Ship> {
                 }
             }
 
-
-            Label label = new Label("Cruiser");
-            VBox vbox = new VBox(imageView, label);
+            VBox vbox = new VBox(imageView);
             vbox.setAlignment(Pos.CENTER);
 
             setText(null);
