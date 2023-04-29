@@ -109,7 +109,7 @@ public class BattleshipCLI extends Game {
                     p1.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
                 }
 
-                if (p2.areAllShipsSunk()) {
+                if (p2.areAllShipsSunk(p2.getShips())) {
                     endGame(p1);
                     return;
                 }
@@ -133,7 +133,7 @@ public class BattleshipCLI extends Game {
                     }
                 }
 
-                if (p1.areAllShipsSunk()) {
+                if (p1.areAllShipsSunk(p1.getShips())) {
                     endGame(p2);
                     return;
                 }
