@@ -1,13 +1,17 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import com.galactica.cli.AICLI;
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class AI extends Player {
     private Random random = new Random();
+    
     private HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
     private boolean followTargetMode = false;
     private int[] Moves = { 0, 0 };
@@ -23,6 +27,29 @@ public class AI extends Player {
         super(ownGrid, opponentGrid);
         this.name = name;
     }
+
+    public AI(String name, Grid ownGrid, Grid opponentGrid, Ship[] ships, Laser laser, Grenade grenade,
+            boolean followTargetMode, int[] Moves, boolean hasShot, boolean Right, boolean Left, boolean Up,
+            boolean Down, Coordinate lastCoordinate, int switchDirection, HashSet<Coordinate> CoordinatesHit) {
+        super(ownGrid, opponentGrid);
+        this.name = name;
+        this.ships = ships;
+        this.laser = laser;
+        this.grenade = grenade;
+        this.cannon = new Cannon();
+        this.followTargetMode = followTargetMode;
+        this.Moves = Moves;
+        this.hasShot = hasShot;
+        this.Right = Right;
+        this.Left = Left;
+        this.Up = Up;
+        this.Down = Down;
+        this.lastCoordinate = lastCoordinate;
+        this.switchDirection = switchDirection;
+        this.CoordinatesHit = CoordinatesHit;        
+
+    }
+
 
     public void placeShips() {
         final char[] sequence = { 'v', 'h' };
@@ -70,10 +97,10 @@ public class AI extends Player {
                 if (Right) {
                     directionToMove('h', '+'); // Updates the Moves vector
                     Coordinate newCoordinate = getNewCoordinate(lastCoordinate); // Creates the new set of coordinate
-                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible
+                    boolean result = automaticShooting(newCoordinate, 'R', 'L', gravityMode, gravityUsed); // Shoots if possible otherwise goes to the next direction
                     if (result)
-                        break;                                                                     // otherwise goes to the next
-                    // direction
+                        break;                                                                     
+                    
 
                 } else if (Left) {
                     directionToMove('h', '-');
@@ -292,7 +319,7 @@ public class AI extends Player {
             System.out.println(name + " hit " + planetsHit.size() + " planets! 🌎");
         }
   
-        return successfulHits > 0 && planetsHit.size() == 0; ////////////////////////////////////////////////////////
+        return successfulHits > 0 && planetsHit.size() == 0;
     }
 
     public char getRandomWeapon() {
@@ -322,5 +349,83 @@ public class AI extends Player {
 
     public boolean getFollowTragetMode() {
         return followTargetMode;
+    }
+
+
+    public JsonArray toJsonArray(HashSet<Coordinate> CoordinatesHit) {
+        JsonArray ja = new JsonArray();
+        for (Coordinate coordinate : CoordinatesHit) {
+            ja.add(coordinate.toJsonObject());
+        }
+        return ja;
+    }
+
+    public JsonArray toJsonArray(int[] Moves) {
+        JsonArray ja = new JsonArray();
+        for (int i : Moves) {
+            ja.add(i);
+        }
+        return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = super.toJsonObject();
+        
+        jo.put("CoordinatesHit", toJsonArray(CoordinatesHit));
+        jo.put("hasShot", hasShot);
+        jo.put("followTargetMode", followTargetMode);
+        jo.put("Right", Right);
+        jo.put("Left", Left);
+        jo.put("Up", Up);
+        jo.put("Down", Down);
+        jo.put("switchDirection", switchDirection);
+        jo.put("Moves", toJsonArray(Moves));
+        
+        if (lastCoordinate != null)
+            jo.put("lastCoordinate", lastCoordinate.toJsonObject());
+        else
+            jo.put("lastCoordinate", null);
+        
+
+        return jo;
+    }
+
+    public static HashSet<Coordinate>  fromJsonArrayToHashSetOfCoordinates(JsonArray ja) {
+        HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
+        for (Object object : ja) {
+            Coordinate coordinate = Coordinate.fromJsonObject((JsonObject)object);
+            CoordinatesHit.add(coordinate);
+        }
+        return CoordinatesHit;
+    }
+
+    public static int[] fromJsonArrayToIntArray(JsonArray ja) {
+        int[] Moves = new int[2];
+        for (int i = 0; i < ja.size(); i++) {
+            Moves[i] = ((BigDecimal) ja.get(i)).intValue();
+        }
+
+        return Moves;
+    }
+
+
+    public static AI fromJsonObject(JsonObject jo, Grid ownGrid, Grid opponentGrid) {
+        String name = (String) jo.get("name");
+        Ship[] ships = Player.fromJsonArraytoShipList((JsonArray)jo.get("ships"));
+        Laser laser = Laser.fromJsonObject((JsonObject)jo.get("laser"));
+        Grenade grenade = Grenade.fromJsonObject((JsonObject)jo.get("grenade"));
+
+        HashSet<Coordinate> CoordinatesHit = fromJsonArrayToHashSetOfCoordinates((JsonArray) jo.get("CoordinatesHit"));
+        boolean hasShot = (boolean) jo.get("hasShot");
+        boolean followTargetMode = (boolean) jo.get("followTargetMode");
+        boolean Right = (boolean) jo.get("Right");
+        boolean Left = (boolean) jo.get("Left");
+        boolean Up = (boolean) jo.get("Up");
+        boolean Down = (boolean) jo.get("Down");
+        int switchDirection = ((BigDecimal) jo.get("switchDirection")).intValue();
+        int[] Moves = fromJsonArrayToIntArray((JsonArray) jo.get("Moves"));
+        Coordinate lastCoordinate = (Coordinate) jo.get("lastCoordinate");
+        
+        return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left, Up, Down, lastCoordinate, switchDirection, CoordinatesHit);
     }
 }

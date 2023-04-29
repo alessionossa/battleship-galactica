@@ -1,28 +1,13 @@
 package com.galactica.controller;
 
-import java.util.List;
 
 import com.galactica.cli.*;
 import com.galactica.model.*;
 
-public class BattleshipCLI {
-    private int playerTurn;
-    private boolean asteroidMode;
-    private boolean singlePlayerMode;
-    private boolean gravityMode = false;
-    private int gridSize;
+public class BattleshipCLI extends Game {
 
-    private Human p1;
-    private Player p2;
+    private final CLI cli = new CLI();
 
-    private Grid grid1;
-    private Grid grid2;
-
-    private final CLI cli;
-
-    public BattleshipCLI(CLI cli) {
-        this.cli = cli;
-    }
 
     public void placeShips(AI player) {
         Grid ownGrid = player.getOwnGrid();
@@ -75,26 +60,34 @@ public class BattleshipCLI {
 
     void playGame() {
 
-        singlePlayerMode = cli.getPlayerModeResponse();
-        gridSize = cli.getGridSizeResponse();
-        if (gridSize >= 10) {
-            gravityMode = cli.getGravityModeResponse();
-        }
-        asteroidMode = cli.getAsteroidModeResponse();
-
-        grid1 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
-        grid2 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
-
-        p1 = new Human(grid1, grid2);
-        placeShips(p1);
-
-        if (singlePlayerMode) {
-            p2 = new AI("CPU", grid2, grid1);
-            placeShips((AI) p2);
+        boolean startNewGame = cli.getNewOrLoadResponse();
+        if (startNewGame) {
+            singlePlayerMode = cli.getPlayerModeResponse();
+            gridSize = cli.getGridSizeResponse();
+            if (gridSize >= 10) {
+                gravityMode = cli.getGravityModeResponse();
+            }
+            asteroidMode = cli.getAsteroidModeResponse();
+    
+            grid1 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
+            grid2 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
+    
+    
+    
+            p1 = new Human("Space Cowboy", grid1, grid2);
+            placeShips(p1);
+    
+            if (singlePlayerMode) {
+                p2 = new AI("Megatron", grid2, grid1);
+                placeShips((AI) p2);
+            } else {
+                p2 = new Human("Rocket Rancher",grid2, grid1);
+                placeShips((Human) p2);
+            }
         } else {
-            p2 = new Human(grid2, grid1);
-            placeShips((Human) p2);
+            load(getDefaultPath());
         }
+       
 
         Coordinate coordinateToShoot;
         char rowOrColumn;
@@ -106,20 +99,21 @@ public class BattleshipCLI {
 
                 Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, p1);
 
-                if (weaponsToShoot.getAreaOfEffect() != 3) {
-                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
-                    p1.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
-
-                } else {
+                if (weaponsToShoot instanceof Laser) {
                     rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p1, grid2);
                     coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p1, grid2, rowOrColumn);
                     p1.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
+
+                } else {
+                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p1, grid2);
+                    p1.shoot(coordinateToShoot, weaponsToShoot, gravityMode, false);
                 }
 
                 if (p2.areAllShipsSunk()) {
                     endGame(p1);
                     return;
                 }
+                save();
 
             } else {
 
@@ -128,14 +122,14 @@ public class BattleshipCLI {
                 } else {
                     Weapon weaponToShoot = WeaponCLI.askWeaponToShoot(this.cli, p2);
 
-                    if (weaponToShoot.getAreaOfEffect() != 3) {
-                        coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
-                        p2.shoot(coordinateToShoot, weaponToShoot, gravityMode, false);
-
-                    } else {
+                    if (weaponToShoot instanceof Laser) {
                         rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, p2, grid1);
                         coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, p2, grid1, rowOrColumn);
                         p2.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponToShoot);
+
+                    } else {
+                        coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, p2, grid1);
+                        p2.shoot(coordinateToShoot, weaponToShoot, gravityMode, false);
                     }
                 }
 
@@ -149,14 +143,10 @@ public class BattleshipCLI {
             else
                 playerTurn = 1;
         }
-    }
+      }
 
     public static void main(String[] args) {
-
-        CLI cli = new CLI();
-
-        BattleshipCLI game = new BattleshipCLI(cli);
-
+        BattleshipCLI game = new BattleshipCLI();
         game.playGame();
     }
 

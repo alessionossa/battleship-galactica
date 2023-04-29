@@ -1,6 +1,5 @@
 package com.galactica.cli;
 
-import com.galactica.model.Grid;
 import com.galactica.model.Player;
 
 import java.util.Scanner;
@@ -64,6 +63,20 @@ public class CLI {
                 return 20;
             else {
                 System.out.println("Please only type 's', 'm' or 'l'");
+            }
+        }
+    }
+
+    public boolean getNewOrLoadResponse() {
+        System.out.println("Would you like to start a new game or load a saved game? (n/l)");
+        while (true) {
+            char resp = Character.toLowerCase(this.scanner.nextLine().charAt(0));
+            if (resp == 'n')
+                return true;
+            else if (resp == 'l')
+                return false;
+            else {
+                System.out.println("Please only type 'n' or 'l'");
             }
         }
     }

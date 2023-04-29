@@ -1,8 +1,12 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Grid {
     private Tile[][] tiles;
@@ -19,6 +23,13 @@ public class Grid {
                 tiles[i][j] = new Tile();
             }
         }
+    }
+
+    public Grid(int gridSize, List<Asteroid> asteroids, List<Planet> planets, Tile[][] tiles) {
+        Grid.gridSize = gridSize;
+        this.asteroids = asteroids;
+        this.planets = planets;
+        this.tiles = tiles;
     }
 
     public int getGridSize() {
@@ -215,6 +226,79 @@ public class Grid {
                 setTile(coordinate, planet);
             }
         }
+    }
+
+    public JsonArray toJsonArrayformMatrix(Tile[][] tiles) {
+        JsonArray ja = new JsonArray();
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[i].length; j++) {
+                ja.add(tiles[i][j].toJsonObject());
+            }
+        }
+        return ja;
+    }
+
+    public JsonArray toJsonArray(List <?> list) {
+        JsonArray ja = new JsonArray();
+        for (Object object : list) {
+            if (object instanceof Planet)
+                ja.add(((Planet) object).toJsonObject());
+            else if (object instanceof Asteroid)
+                ja.add(((Asteroid) object).toJsonObject());
+        }
+        return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("tiles", toJsonArrayformMatrix(tiles));
+        jo.put("asteroids", toJsonArray(asteroids));
+        jo.put("planets", toJsonArray(planets));
+        jo.put("gridSize", gridSize);
+        
+        return jo;
+    }
+
+    public static List<Planet> fromJsonArrayToPlanetList(JsonArray ja) {
+        List<Planet> list = new ArrayList<>();
+        for (Object object : ja) {
+            Planet planet = Planet.fromJsonObject((JsonObject) object);
+            list.add(planet);
+        }
+        return list;
+    }
+
+
+    public static List<Asteroid> fromJsonArrayToAsteroidList(JsonArray ja) {
+        List<Asteroid> list = new ArrayList<>();
+        for (Object object : ja) {
+            Asteroid asteroid = Asteroid.fromJsonObject((JsonObject) object);
+            list.add(asteroid);
+        }
+          
+        return list;
+    }
+
+
+    public static Tile[][] fromJsonArrayToMatrix(JsonArray ja, int gridSize) {
+        Tile[][] tiles = new Tile[gridSize][gridSize];
+        int index = 0;
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                tiles[i][j] = Tile.fromJsonObject((JsonObject) ja.get(index));
+                index++;
+            }
+        }
+        return tiles;
+    }
+
+    public static Grid fromJsonObject(JsonObject jsonObject) {
+        int GridSize = ((BigDecimal) jsonObject.get("gridSize")).intValue();
+        List<Asteroid> asteroids = fromJsonArrayToAsteroidList((JsonArray) jsonObject.get("asteroids"));  
+        List<Planet> planets = fromJsonArrayToPlanetList((JsonArray) jsonObject.get("planets"));
+        Tile[][] tiles = fromJsonArrayToMatrix((JsonArray) jsonObject.get("tiles"), GridSize);
+    
+        return new Grid(GridSize, asteroids, planets, tiles);
     }
 
 }

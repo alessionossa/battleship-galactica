@@ -1,6 +1,5 @@
 package com.galactica.cli;
 
-import com.galactica.controller.BattleshipCLI;
 import com.galactica.model.Grid;
 import com.galactica.model.Player;
 import com.galactica.model.Coordinate;

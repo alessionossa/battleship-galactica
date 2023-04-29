@@ -1,5 +1,10 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
+import java.util.function.BiConsumer;
+
+import com.github.cliftonlabs.json_simple.JsonObject;
+
 public class CoordinateDepthPair {
     private Coordinate coordinate;
     private int depth;
@@ -31,4 +36,17 @@ public class CoordinateDepthPair {
         }
     }
 
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("coordinate", coordinate.toJsonObject());
+        jo.put("depth", depth);
+        return jo;
+    }
+
+    public static CoordinateDepthPair fromJsonObject(JsonObject jo) {
+        Coordinate coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate"));
+        int depth = ((BigDecimal) jo.get("depth")).intValue();
+        
+        return new CoordinateDepthPair(coordinate, depth);
+    }
 }
