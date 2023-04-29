@@ -57,6 +57,9 @@ public class SetupShipController {
     @FXML
     private Button rotateButton;
 
+    @FXML
+    private Button startGameButton;
+
     private Ship selectedShip;
 
     private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
@@ -100,6 +103,7 @@ public class SetupShipController {
 
         setupButton();
 
+        startGameButton.setDisable(false);
     }
 
     private void setupShipList() {
@@ -134,7 +138,7 @@ public class SetupShipController {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
-            // ImageView
+//            ShipImageLoader.
         }
     }
 
