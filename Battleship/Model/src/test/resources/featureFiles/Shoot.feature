@@ -150,7 +150,8 @@ Feature: Playing a turn
     
   @tag15
   Scenario: Laser successfully stopped by a planet 
-    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "with" gravity mode
+    Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
+    And A planet is placed on the grid
     When "I shoot" a laser at "a planet"
     Then The "planet" on my opponent's grid is hit
     And "I" can no longer shoot with a laser

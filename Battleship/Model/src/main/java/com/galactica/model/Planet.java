@@ -40,17 +40,6 @@ public class Planet {
         this.leftBelowPlanet = leftBelowPlanet;
     }
 
-    public static final void setMaxPlanetLength(int maxPlanetLength) {
-        Planet.maxPlanetLength = maxPlanetLength;
-    }
-
-    public Coordinate getCoordinate() {
-        return planetCoordinate;
-    }
-
-    public List<Coordinate> getPlanetCoordinates() {
-        return planetCoordinates;
-    }
     public Planet(int size, int gridSize) {
         this.size = size;
 
@@ -98,7 +87,18 @@ public class Planet {
             }
         }
     }
+    
+    public static final void setMaxPlanetLength(int maxPlanetLength) {
+        Planet.maxPlanetLength = maxPlanetLength;
+    }
 
+    public Coordinate getCoordinate() {
+        return planetCoordinate;
+    }
+
+    public List<Coordinate> getPlanetCoordinates() {
+        return planetCoordinates;
+    }
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
             if (planet.planetCoordinate.distance(this.planetCoordinate) <= 2 * Math.max(planet.size, this.size)) {

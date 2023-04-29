@@ -117,6 +117,12 @@ public class Game {
 
         String gameJSONtring = Jsoner.serialize(gameJSON);
         try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to delete old game file", e);
+        }
+
+        try {
             Files.write(path, gameJSONtring.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             throw new RuntimeException("Unable to save game", e);
