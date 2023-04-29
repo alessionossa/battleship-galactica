@@ -10,6 +10,8 @@ import javafx.scene.*;
 import javafx.stage.Stage;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
+import javafx.scene.layout.BorderPane;
+import java.io.IOException;
 
 import com.galactica.model.Tile;
 import com.galactica.model.Ship;
@@ -26,27 +28,27 @@ public class GameController {
     private boolean gravity;
 
     @FXML
-    private BorderPane borderPane;
+    private BorderPane root;
 
     @FXML
     private GridPane PlayerGrid;
+
     @FXML
     private GridPane OpponentGrid;
 
     @FXML
-    private StackPane PlayerGridContainer;
+    private StackPane PlayerGridContainer = (StackPane) root.lookup("#PlayereGridContainer");;
 
     @FXML
-    private StackPane OpponentGridContainer;
+    private StackPane OpponentGridContainer = (StackPane) root.lookup("#OpponentGridContainer");
 
     @FXML
     private ImageView PlayerBackgroundImageView;
+
     @FXML
     private ImageView OpponentBackgroundImageView;
 
     private Tile selectedTile;
-
-    private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
 
     public GameController(int gridSize, boolean singlePlayer, boolean asteroids, boolean gravity) {
         /*
@@ -60,7 +62,6 @@ public class GameController {
         this.singlePlayer = false;
         this.asteroids = false;
         this.gravity = false;
-
     }
 
     public void initialize() {
@@ -79,9 +80,13 @@ public class GameController {
         createPlayerGrid();
         createOpponentGrid();
 
+        // Add the grids to the StackPanes
+        PlayerGridContainer.getChildren().add(PlayerGrid);
+        OpponentGridContainer.getChildren().add(OpponentGrid);
+
         // Bind the column and row constraints to maintain square tiles
-        NumberBinding PlayerTileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
-                borderPane.heightProperty().divide(gridSize + 2));
+        NumberBinding PlayerTileSize = Bindings.min(root.widthProperty().divide(gridSize + 2),
+                root.heightProperty().divide(gridSize + 2));
         PlayerTileSize.addListener((obs, oldSize, newSize) -> {
             for (ColumnConstraints column : PlayerGrid.getColumnConstraints()) {
                 column.setPrefWidth(newSize.doubleValue());
@@ -94,8 +99,8 @@ public class GameController {
         });
 
         // Bind the column and row constraints to maintain square tiles
-        NumberBinding OpponentTileSize = Bindings.min(borderPane.widthProperty().divide(gridSize + 2),
-                borderPane.heightProperty().divide(gridSize + 2));
+        NumberBinding OpponentTileSize = Bindings.min(root.widthProperty().divide(gridSize + 2),
+                root.heightProperty().divide(gridSize + 2));
         OpponentTileSize.addListener((obs, oldSize, newSize) -> {
             for (ColumnConstraints column : OpponentGrid.getColumnConstraints()) {
                 column.setPrefWidth(newSize.doubleValue());
