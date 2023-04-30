@@ -8,6 +8,10 @@
   -fx-background-color: rgba(255, 255, 255, 0.5);
 }
 
+.untouched-tile {
+  -fx-background-color: rgba(255, 255, 255, 0.7);
+}
+
 .highlighted-tile {
   -fx-background-color: rgba(255, 119, 0, 0.5);
 }

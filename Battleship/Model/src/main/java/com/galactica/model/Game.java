@@ -138,6 +138,10 @@ public class Game {
         return (playerTurn == 1) ? p1 : p2;
     }
 
+    public Player getOpponentPlayer() {
+        return (playerTurn == 2) ? p1 : p2;
+    }
+
     public void nextPlayerTurn() {
         if (playerTurn == 1)
             playerTurn = 2;

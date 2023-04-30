@@ -18,10 +18,10 @@
       </Text>
    </top>
    <bottom>
-<!--      <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ButtonBar prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
-            <Button cancelButton="true" mnemonicParsing="false" onAction="#exitGameButtonAction" text="Exit Game" textFill="#da8d8d" ButtonBar.buttonData="LEFT" />
-            <Button fx:id="shootButton" mnemonicParsing="false" onAction="#shootButtonAction" text="Shoot" ButtonBar.buttonData="RIGHT" />
+<!--            <Button cancelButton="true" mnemonicParsing="false" onAction="#exitGameButtonAction" text="Exit Game" textFill="#da8d8d" ButtonBar.buttonData="LEFT" />-->
+            <Button fx:id="continueButton" mnemonicParsing="false" onAction="#continueButtonAction" text="Continue" ButtonBar.buttonData="RIGHT" />
         </buttons>
          <padding>
             <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
@@ -29,7 +29,7 @@
          <BorderPane.margin>
             <Insets />
          </BorderPane.margin>
-      </ButtonBar> -->
+      </ButtonBar>
    </bottom>
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="16.0" BorderPane.alignment="CENTER">
