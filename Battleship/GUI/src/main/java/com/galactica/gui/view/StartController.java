@@ -18,11 +18,7 @@ public class StartController {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("settings-view.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
-        final boolean resizable = stage.isResizable();
         stage.setScene(scene);
-
-        stage.setResizable(!resizable);
-        stage.setResizable(resizable);
     }
 
     @FXML

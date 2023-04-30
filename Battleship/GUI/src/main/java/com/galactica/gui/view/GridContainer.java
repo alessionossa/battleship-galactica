@@ -3,7 +3,6 @@ package com.galactica.gui.view;
 import com.galactica.model.Direction;
 import com.galactica.model.Ship;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
@@ -40,7 +39,6 @@ public class GridContainer extends AnchorPane {
 
         setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-//        setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
     public void initialize() {
