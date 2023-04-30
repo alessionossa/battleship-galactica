@@ -62,76 +62,76 @@ public class BattleshipCLI {
 
         boolean startNewGame = cli.getNewOrLoadResponse();
         if (startNewGame) {
-            gameModel.singlePlayerMode = cli.getPlayerModeResponse();
-            gameModel.gridSize = cli.getGridSizeResponse();
-            if (gameModel.gridSize >= 10) {
-                gameModel.gravityMode = cli.getGravityModeResponse();
+            gameModel.setSinglePlayerMode(cli.getPlayerModeResponse());
+            gameModel.setGridSize(cli.getGridSizeResponse());
+            if (gameModel.getGridSize() >= 10) {
+                gameModel.setGravityMode(cli.getGravityModeResponse());
             }
-            gameModel.asteroidMode = cli.getAsteroidModeResponse();
+            gameModel.setAsteroidMode(cli.getAsteroidModeResponse());
 
-            gameModel.grid1 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
-            gameModel.grid2 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
+            gameModel.setGrid1(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
+            gameModel.setGrid2(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
 
-            gameModel.p1 = new Human("Space Cowboy", gameModel.grid1, gameModel.grid2);
-            placeShips(gameModel.p1);
+            gameModel.setP1(new Human("Space Cowboy", gameModel.getGrid1(), gameModel.getGrid2()));
+            placeShips(gameModel.getP1());
 
-            if (gameModel.singlePlayerMode) {
-                gameModel.p2 = new AI("Megatron", gameModel.grid2, gameModel.grid1);
-                placeShips((AI) gameModel.p2);
+            if (gameModel.getSinglePlayerMode()) {
+                gameModel.setP2(new AI("Megatron", gameModel.getGrid2(), gameModel.getGrid1()));
+                placeShips((AI) gameModel.getP2());
             } else {
-                gameModel.p2 = new Human("Rocket Rancher", gameModel.grid2, gameModel.grid1);
-                placeShips((Human) gameModel.p2);
+                gameModel.setP2(new Human("Rocket Rancher", gameModel.getGrid2(), gameModel.getGrid1()));
+                placeShips((Human) gameModel.getP2());
             }
         } else {
-            gameModel.load(gameModel.getDefaultPath());
+            gameModel.load(Game.getDefaultPath());
         }
 
         Coordinate coordinateToShoot;
         char rowOrColumn;
 
-        gameModel.playerTurn = 1;
+        gameModel.setPlayerTurn(1);
         while (true) {
 
-            if (gameModel.playerTurn == 1) {
+            if (gameModel.getPlayerTurn() == 1) {
 
-                Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, gameModel.p1);
+                Weapon weaponsToShoot = WeaponCLI.askWeaponToShoot(this.cli, gameModel.getP1());
 
                 if (weaponsToShoot instanceof Laser) {
-                    rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, gameModel.p1, gameModel.grid2);
-                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, gameModel.p1, gameModel.grid2, rowOrColumn);
-                    gameModel.p1.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
+                    rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, gameModel.getP1(), gameModel.getGrid2());
+                    coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, gameModel.getP1(), gameModel.getGrid2(), rowOrColumn);
+                    gameModel.getP1().shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponsToShoot);
 
                 } else {
-                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, gameModel.p1, gameModel.grid2);
-                    gameModel.p1.shoot(coordinateToShoot, weaponsToShoot, gameModel.gravityMode, false);
+                    coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, gameModel.getP1(), gameModel.getGrid2());
+                    gameModel.getP1().shoot(coordinateToShoot, weaponsToShoot, gameModel.getGravityMode(), false);
                 }
 
-                if (gameModel.p2.areAllShipsSunk(gameModel.p2.getShips())) {
-                    endGame(gameModel.p1);
+                if (gameModel.getP2().areAllShipsSunk(gameModel.getP2().getShips())) {
+                    endGame(gameModel.getP1());
                     return;
                 }
                 gameModel.save();
 
             } else {
 
-                if (gameModel.singlePlayerMode) {
-                    gameModel.p2.shoot(null, null, gameModel.gravityMode, false);
+                if (gameModel.getSinglePlayerMode()) {
+                    gameModel.getP2().shoot(null, null, gameModel.getGravityMode(), false);
                 } else {
-                    Weapon weaponToShoot = WeaponCLI.askWeaponToShoot(this.cli, gameModel.p2);
+                    Weapon weaponToShoot = WeaponCLI.askWeaponToShoot(this.cli, gameModel.getP2());
 
                     if (weaponToShoot instanceof Laser) {
-                        rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, gameModel.p2, gameModel.grid1);
-                        coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, gameModel.p2, gameModel.grid1, rowOrColumn);
-                        gameModel.p2.shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponToShoot);
+                        rowOrColumn = CoordinateCLI.askRowOrColumnToShoot(this.cli, gameModel.getP2(), gameModel.getGrid1());
+                        coordinateToShoot = CoordinateCLI.askLaserCoordinateToShoot(this.cli, gameModel.getP2(), gameModel.getGrid1(), rowOrColumn);
+                        gameModel.getP2().shootLaser(coordinateToShoot, rowOrColumn, (Laser) weaponToShoot);
 
                     } else {
-                        coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, gameModel.p2, gameModel.grid1);
-                        gameModel.p2.shoot(coordinateToShoot, weaponToShoot, gameModel.gravityMode, false);
+                        coordinateToShoot = CoordinateCLI.askCoordinateToShoot(this.cli, gameModel.getP2(), gameModel.getGrid1());
+                        gameModel.getP2().shoot(coordinateToShoot, weaponToShoot, gameModel.getGravityMode(), false);
                     }
                 }
 
-                if (gameModel.p1.areAllShipsSunk(gameModel.p1.getShips())) {
-                    endGame(gameModel.p2);
+                if (gameModel.getP1().areAllShipsSunk(gameModel.getP1().getShips())) {
+                    endGame(gameModel.getP2());
                     return;
                 }
             }
