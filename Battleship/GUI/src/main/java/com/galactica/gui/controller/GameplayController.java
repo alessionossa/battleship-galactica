@@ -35,6 +35,9 @@ public class GameplayController {
 
     private Weapon selectedWeapon;
 
+    private final HashMap<Ship, ImageView> ownShipsImages = new HashMap<>();
+
+
     public GameplayController(Game gameModel) {
         this.gameModel = gameModel;
 
@@ -52,6 +55,36 @@ public class GameplayController {
         updateShootButton();
 
         addTileEventHandlers();
+
+        Platform.runLater(this::displayShips);
+    }
+
+    private void displayShips() {
+        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
+            ImageView shipImageView = currentPlayerGridContainer.getShipImageView(ship);
+            this.ownShipsImages.put(ship, shipImageView);
+
+            Coordinate shipOriginCoordinate = ship.getCoordinate();
+            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX());
+            int yIndex = shipOriginCoordinate.getY();
+            StackPane tile = (StackPane) currentPlayerGridContainer.getTiles()[yIndex][xIndex];
+            currentPlayerGridContainer.updateShipImagePosition(shipImageView, tile);
+            currentPlayerGridContainer.updateImageDirection(ship, shipImageView);
+            currentPlayerGridContainer.getChildren().add(shipImageView);
+        }
+
+        for (Ship ship: gameModel.getP2().getShips()) {
+            ImageView shipImageView = opponentGridContainer.getShipImageView(ship);
+            this.ownShipsImages.put(ship, shipImageView);
+
+            Coordinate shipOriginCoordinate = ship.getCoordinate();
+            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX());
+            int yIndex = shipOriginCoordinate.getY();
+            StackPane tile = (StackPane) opponentGridContainer.getTiles()[yIndex][xIndex];
+            opponentGridContainer.updateShipImagePosition(shipImageView, tile);
+            opponentGridContainer.updateImageDirection(ship, shipImageView);
+            opponentGridContainer.getChildren().add(shipImageView);
+        }
     }
 
     private void setupWeaponList() {

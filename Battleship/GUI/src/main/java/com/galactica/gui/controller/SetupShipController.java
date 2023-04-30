@@ -73,7 +73,7 @@ public class SetupShipController {
     }
 
     public void initialize() {
-        gridContainer.setGrid(gameModel.getCurrentPlayer().getOwnGrid());
+        gridContainer.setGrid(gameModel.getCurrentPlayer().getOwnGrid(), false);
 
         setupShipList();
 
