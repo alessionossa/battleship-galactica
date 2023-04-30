@@ -4,6 +4,7 @@ import com.galactica.model.Asteroid;
 import com.galactica.model.Direction;
 import com.galactica.model.Grid;
 import com.galactica.model.Ship;
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
@@ -46,24 +47,22 @@ public class GridContainer extends AnchorPane {
     }
 
     public void initialize() {
-
         backgroundImageView.fitWidthProperty().bind(gridPane.widthProperty());
         backgroundImageView.fitHeightProperty().bind(gridPane.heightProperty());
 
         gridPane.prefWidthProperty().bind(Bindings.min(this.widthProperty(), this.heightProperty()));
         gridPane.prefHeightProperty().bind(gridPane.widthProperty());
-    }
 
-//    public void setGridSize(int size) {
-//        this.gridSize = size;
-//        gridPane.initializeGrid(size);
-//    }
+        Platform.runLater(this::placeAsteroids);
+    }
 
     public void setGrid(Grid grid) {
         this.grid = grid;
         this.gridSize = grid.getGridSize(); // TODO: Remove this
-        gridPane.initializeGrid(gridSize);
+        gridPane.initializeGrid(grid.getGridSize());
+    }
 
+    private void placeAsteroids() {
         for (Asteroid asteroid: grid.getAsteroids()) {
             Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
             ImageView asteroidImageView = new ImageView(asteroidImage);
@@ -72,8 +71,10 @@ public class GridContainer extends AnchorPane {
             asteroidImageView.setPickOnBounds(false);
             asteroidImageView.setMouseTransparent(true);
 
-            int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX());
-            StackPane tile = (StackPane) getTiles()[asteroid.getCoordinate().getY()][xCoordinate];
+            int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
+            int yCoordinate = asteroid.getCoordinate().getY() + 1;
+            System.out.println("Placing asteroid at x" + xCoordinate +  "; y" + yCoordinate);
+            StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
             Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
             asteroidImageView.setX(cellBoundsInContainer.getMinX());
             asteroidImageView.setY(cellBoundsInContainer.getMinY());
@@ -103,9 +104,11 @@ public class GridContainer extends AnchorPane {
         if (ship.getDirection() == Direction.Horizontal) {
             shipImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
 
+            shipImageView.getTransforms().clear();
+
             // Create a Rotate object
             Rotate rotate = new Rotate();
-            rotate.setAngle(90); // Set the rotation angle
+            rotate.setAngle(-90); // Set the rotation angle
 
             // Bind the pivotX and pivotY properties of the Rotate object relative to the ImageView
             rotate.pivotXProperty().bind(shipImageView.xProperty());
@@ -116,7 +119,9 @@ public class GridContainer extends AnchorPane {
 
             // Create custom bindings for the translateX and translateY properties to adjust the position of the ImageView after the rotation
             shipImageView.translateXProperty().bind(shipImageView.fitWidthProperty());
+//            shipImageView.translateXProperty().bind(Bindings.negate(shipImageView.fitHeightProperty()));
         } else {
+            shipImageView.getTransforms().clear();
             shipImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
         }
     }

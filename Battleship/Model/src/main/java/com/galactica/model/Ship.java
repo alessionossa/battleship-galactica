@@ -14,7 +14,7 @@ public abstract class Ship {
     protected int identifier;
 
     protected Coordinate coordinate;
-    protected Direction direction;
+    protected Direction direction = Direction.Vertical;
 
     public int getLength() {
         return length;

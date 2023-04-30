@@ -2,6 +2,7 @@ package com.galactica.gui.controller;
 
 import com.galactica.gui.view.GridContainer;
 import com.galactica.gui.view.ShipListCell;
+import com.galactica.model.Coordinate;
 import com.galactica.model.Direction;
 import com.galactica.model.Game;
 import com.galactica.model.Ship;
@@ -126,7 +127,7 @@ public class SetupShipController {
         }
     }
 
-    private void previewShipPlacement(Ship ship, StackPane cell) {
+    private void previewShipPlacement(Ship ship, StackPane cell, int columnIndex, int rowIndex) {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
@@ -145,7 +146,12 @@ public class SetupShipController {
             gridContainer.updateShipImagePosition(shipImageView, cell);
         }
 
-        if (true) { // TODO: if position is not valid
+        char charIndex = (char) ('a' + (columnIndex - 1));
+        Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
+        boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
+        if (isValidShipPosition) {
+            shipImageView.setEffect(null);
+        } else {
             ColorAdjust colorAdjust = new ColorAdjust();
             colorAdjust.setSaturation(-0.9);
             shipImageView.setEffect(colorAdjust);
@@ -155,18 +161,24 @@ public class SetupShipController {
     private void placeShip(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
         ImageView shipImageView = this.shipImages.get(ship);
 
-        shipImageView.setOpacity(1.0);
-        shipImageView.setEffect(null);
-        shipImageView.setMouseTransparent(false);
-        shipImageView.setPickOnBounds(true);
-        gridContainer.updateShipImagePosition(shipImageView, cell);
+        char charIndex = (char) ('a' + (columnIndex - 1));
+        Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
+        boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
 
-        placedShips.add(ship);
-        shipsToPlace.remove(ship);
+        if (isValidShipPosition) {
+            shipImageView.setOpacity(1.0);
+            shipImageView.setEffect(null);
+            shipImageView.setMouseTransparent(false);
+            shipImageView.setPickOnBounds(true);
+            gridContainer.updateShipImagePosition(shipImageView, cell);
 
-        shipImageView.setOnMouseClicked(event -> {
-            handleShipSelection(ship);
-        });
+            placedShips.add(ship);
+            shipsToPlace.remove(ship);
+
+            shipImageView.setOnMouseClicked(event -> {
+                handleShipSelection(ship);
+            });
+        }
     }
 
     private void handleShipSelection(Ship ship) {
@@ -214,13 +226,13 @@ public class SetupShipController {
                 tile.setOnMouseEntered(event -> {
                     // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
                     if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
-                        previewShipPlacement(this.selectedShip, tile);
+                        previewShipPlacement(this.selectedShip, tile, currentColumnIndex, currentRowIndex);
                     }
                 });
 
                 tile.setOnMouseExited(event -> {
                     if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
-                        previewShipPlacement(this.selectedShip, null);
+                        previewShipPlacement(this.selectedShip, null, currentColumnIndex, currentRowIndex);
                     }
                 });
 
