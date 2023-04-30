@@ -1,6 +1,8 @@
 package com.galactica.gui.view;
 
+import com.galactica.model.Asteroid;
 import com.galactica.model.Direction;
+import com.galactica.model.Grid;
 import com.galactica.model.Ship;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -20,8 +22,10 @@ public class GridContainer extends AnchorPane {
 
     private int gridSize;
 
+    private Grid grid;
+
     @FXML
-    private BattlefieldGridPane grid;
+    private BattlefieldGridPane gridPane;
 
     @FXML
     private ImageView backgroundImageView;
@@ -43,21 +47,46 @@ public class GridContainer extends AnchorPane {
 
     public void initialize() {
 
-        backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
-        backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
+        backgroundImageView.fitWidthProperty().bind(gridPane.widthProperty());
+        backgroundImageView.fitHeightProperty().bind(gridPane.heightProperty());
 
-        grid.prefWidthProperty().bind(Bindings.min(this.widthProperty(), this.heightProperty()));
-        grid.prefHeightProperty().bind(grid.widthProperty());
+        gridPane.prefWidthProperty().bind(Bindings.min(this.widthProperty(), this.heightProperty()));
+        gridPane.prefHeightProperty().bind(gridPane.widthProperty());
     }
 
-    public void setGridSize(int size) {
-        this.gridSize = size;
-        grid.initializeGrid(size);
+//    public void setGridSize(int size) {
+//        this.gridSize = size;
+//        gridPane.initializeGrid(size);
+//    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+        this.gridSize = grid.getGridSize(); // TODO: Remove this
+        gridPane.initializeGrid(gridSize);
+
+        for (Asteroid asteroid: grid.getAsteroids()) {
+            Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
+            ImageView asteroidImageView = new ImageView(asteroidImage);
+            asteroidImageView.setPreserveRatio(true);
+
+            asteroidImageView.setPickOnBounds(false);
+            asteroidImageView.setMouseTransparent(true);
+
+            int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX());
+            StackPane tile = (StackPane) getTiles()[asteroid.getCoordinate().getY()][xCoordinate];
+            Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
+            asteroidImageView.setX(cellBoundsInContainer.getMinX());
+            asteroidImageView.setY(cellBoundsInContainer.getMinY());
+
+            this.getChildren().add(asteroidImageView);
+
+            asteroidImageView.toFront();
+        }
     }
 
     public void updateShipImagePosition(ImageView shipImage, StackPane cell) {
         if (cell != null) {
-            Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
+            Bounds cellBoundsInContainer = gridPane.localToParent(cell.getBoundsInParent());
 
             shipImage.toFront();
             shipImage.setX(cellBoundsInContainer.getMinX());
@@ -100,6 +129,6 @@ public class GridContainer extends AnchorPane {
     }
 
     public Node[][] getTiles() {
-        return grid.getTiles();
+        return gridPane.getTiles();
     }
 }

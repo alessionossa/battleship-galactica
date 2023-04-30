@@ -165,4 +165,8 @@ public class Game {
     public int getGridSize() {
         return gridSize;
     }
+
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
 }

@@ -121,7 +121,7 @@ public class Grid {
 
     }
 
-    private int convertXToMatrixIndex(char x) {
+    public int convertXToMatrixIndex(char x) {
         return x - 'a';
     }
 

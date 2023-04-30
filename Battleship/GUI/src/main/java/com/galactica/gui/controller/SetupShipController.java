@@ -69,7 +69,7 @@ public class SetupShipController {
     public void initialize() {
         // TODO: Set up the player mode, asteroids and gravity if needed here
 
-        gridContainer.setGridSize(gameModel.getGridSize());
+        gridContainer.setGrid(gameModel.getGrid1());
 
         setupShipList();
 
@@ -130,7 +130,7 @@ public class SetupShipController {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
-            shipImageView =gridContainer.getShipImageView(ship);
+            shipImageView = gridContainer.getShipImageView(ship);
 
             shipImageView.setOpacity(0.5);
             shipImageView.setPickOnBounds(false);

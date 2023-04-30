@@ -16,7 +16,7 @@
                 <Image url="@assets/background.jpg" />
             </image>
         </ImageView>
-        <BattlefieldGridPane fx:id="grid" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
+        <BattlefieldGridPane fx:id="gridPane" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
             <StackPane.margin>
                 <Insets />
             </StackPane.margin>

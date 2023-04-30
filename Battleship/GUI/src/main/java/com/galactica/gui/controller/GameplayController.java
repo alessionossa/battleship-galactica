@@ -67,7 +67,7 @@ public class GameplayController {
     public void initialize() {
         // TODO: Set up the player mode, asteroids and gravity if needed here
 
-        gridContainer.setGridSize(gridSize);
+//        gridContainer.setGrid();
 
         setupShipList();
 
