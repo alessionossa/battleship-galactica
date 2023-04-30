@@ -130,6 +130,17 @@ public class Game {
         return grid2;
     }
 
+    public Player getCurrentPlayer() {
+        return (playerTurn == 1) ? p1 : p2;
+    }
+
+    public void nextPlayerTurn() {
+        if (playerTurn == 1)
+            playerTurn = 2;
+        else
+            playerTurn = 1;
+    }
+
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("playerTurn", playerTurn);

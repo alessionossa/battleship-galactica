@@ -49,10 +49,7 @@ public abstract class Ship {
     }
 
     public boolean isPlaced() {
-        if (coordinate != null)
-            return true;
-        else
-            return false;
+        return coordinate != null;
     }
 
     public JsonObject toJsonObject() {

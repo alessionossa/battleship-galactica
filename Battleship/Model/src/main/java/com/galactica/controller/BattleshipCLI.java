@@ -135,10 +135,8 @@ public class BattleshipCLI {
                     return;
                 }
             }
-            if (gameModel.getPlayerTurn() == 1)
-                gameModel.setPlayerTurn(2);
-            else
-                gameModel.setPlayerTurn(1);
+
+            gameModel.nextPlayerTurn();
         }
     }
 
