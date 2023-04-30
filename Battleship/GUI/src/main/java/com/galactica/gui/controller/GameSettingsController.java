@@ -128,6 +128,7 @@ public class GameSettingsController {
 
     @FXML
     public void switchToSceneStartGame(ActionEvent event) throws IOException {
+        setupGameModel();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
 
         // PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS

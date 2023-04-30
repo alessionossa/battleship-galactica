@@ -78,6 +78,8 @@ public class GridContainer extends AnchorPane {
             asteroidImageView.setX(cellBoundsInContainer.getMinX());
             asteroidImageView.setY(cellBoundsInContainer.getMinY());
 
+            asteroidImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
+
             this.getChildren().add(asteroidImageView);
 
             asteroidImageView.toFront();
