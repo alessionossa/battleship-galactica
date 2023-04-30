@@ -21,7 +21,7 @@ public class GridCLI {
                 System.out.print(i + " | ");
             }
             for (int j = 0; j < grid.getTiles()[i].length; j++) {
-                String displayValue = TileCLI.displayValue(grid.getTiles()[i][j],showShip);
+                String displayValue = TileCLI.displayValue(grid.getTiles()[i][j], showShip);
                 System.out.print(displayValue + " ");
             }
             System.out.println();

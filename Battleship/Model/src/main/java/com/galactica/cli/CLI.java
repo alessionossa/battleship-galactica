@@ -1,7 +1,6 @@
 package com.galactica.cli;
 
 import com.galactica.model.Player;
-
 import java.util.Scanner;
 
 public class CLI {

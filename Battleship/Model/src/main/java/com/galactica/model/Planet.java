@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
@@ -23,10 +22,11 @@ public class Planet {
     private static int maxPlanetLength;
 
     public Planet(Coordinate planetCoordinate, List<Coordinate> planetCoordinates, int size, int maxPlanetLength,
-        List<CoordinateDepthPair> abovePlanet, List<CoordinateDepthPair> belowPlanet, List<CoordinateDepthPair> rightOfPlanet,
-        List<CoordinateDepthPair> leftOfPlanet, List<CoordinateDepthPair> rightAbovePlanet,
-        List<CoordinateDepthPair> leftAbovePlanet, List<CoordinateDepthPair> rightBelowPlanet,
-        List<CoordinateDepthPair> leftBelowPlanet) {
+            List<CoordinateDepthPair> abovePlanet, List<CoordinateDepthPair> belowPlanet,
+            List<CoordinateDepthPair> rightOfPlanet,
+            List<CoordinateDepthPair> leftOfPlanet, List<CoordinateDepthPair> rightAbovePlanet,
+            List<CoordinateDepthPair> leftAbovePlanet, List<CoordinateDepthPair> rightBelowPlanet,
+            List<CoordinateDepthPair> leftBelowPlanet) {
         this.planetCoordinate = planetCoordinate;
         this.size = size;
         Planet.maxPlanetLength = maxPlanetLength;
@@ -99,6 +99,7 @@ public class Planet {
     public List<Coordinate> getPlanetCoordinates() {
         return planetCoordinates;
     }
+    
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
             if (planet.planetCoordinate.distance(this.planetCoordinate) <= 2 * Math.max(planet.size, this.size)) {
@@ -200,8 +201,7 @@ public class Planet {
 
     }
 
-
-    public JsonArray toJsonArray(List <?> list) {
+    public JsonArray toJsonArray(List<?> list) {
         JsonArray ja = new JsonArray();
 
         for (Object object : list) {
@@ -212,7 +212,6 @@ public class Planet {
         }
         return ja;
     }
-
 
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
@@ -228,7 +227,7 @@ public class Planet {
         jo.put("leftBelowPlanet", toJsonArray(leftBelowPlanet));
         jo.put("size", size);
         jo.put("maxPlanetLength", maxPlanetLength);
-        
+
         return jo;
     }
 
@@ -241,7 +240,6 @@ public class Planet {
 
         return planetCoordinates;
     }
-
 
     public static List<CoordinateDepthPair> fromJsonArrayToCoordinateDepthPairList(JsonArray ja) {
         List<CoordinateDepthPair> list = new ArrayList<CoordinateDepthPair>();
@@ -256,18 +254,26 @@ public class Planet {
     public static Planet fromJsonObject(JsonObject jo) {
         int size = ((BigDecimal) jo.get("size")).intValue();
         int maxPlanetLength = ((BigDecimal) jo.get("maxPlanetLength")).intValue();
-        List<Coordinate> planetCoordinates = fromJsonArrayToCoordinateList((JsonArray) jo.get("planetCoordinates")); 
+        List<Coordinate> planetCoordinates = fromJsonArrayToCoordinateList((JsonArray) jo.get("planetCoordinates"));
         Coordinate planetCoordinate = Coordinate.fromJsonObject((JsonObject) jo.get("planetCoordinate"));
-        List<CoordinateDepthPair> abovePlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("abovePlanet"));
-        List<CoordinateDepthPair> belowPlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("belowPlanet"));
-        List<CoordinateDepthPair> leftOfPlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("leftOfPlanet"));
-        List<CoordinateDepthPair> rightOfPlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("rightOfPlanet"));
-        List<CoordinateDepthPair> rightAbovePlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("rightAbovePlanet"));
-        List<CoordinateDepthPair> rightBelowPlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("rightBelowPlanet"));
-        List<CoordinateDepthPair> leftAbovePlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("leftAbovePlanet"));
-        List<CoordinateDepthPair> leftBelowPlanet = fromJsonArrayToCoordinateDepthPairList((JsonArray) jo.get("leftBelowPlanet"));
+        List<CoordinateDepthPair> abovePlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("abovePlanet"));
+        List<CoordinateDepthPair> belowPlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("belowPlanet"));
+        List<CoordinateDepthPair> leftOfPlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("leftOfPlanet"));
+        List<CoordinateDepthPair> rightOfPlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("rightOfPlanet"));
+        List<CoordinateDepthPair> rightAbovePlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("rightAbovePlanet"));
+        List<CoordinateDepthPair> rightBelowPlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("rightBelowPlanet"));
+        List<CoordinateDepthPair> leftAbovePlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("leftAbovePlanet"));
+        List<CoordinateDepthPair> leftBelowPlanet = fromJsonArrayToCoordinateDepthPairList(
+                (JsonArray) jo.get("leftBelowPlanet"));
 
-        return new Planet(planetCoordinate, planetCoordinates, size, maxPlanetLength, abovePlanet, belowPlanet, leftOfPlanet, rightOfPlanet, rightAbovePlanet, rightBelowPlanet, leftAbovePlanet, leftBelowPlanet);
-    } 
-
+        return new Planet(planetCoordinate, planetCoordinates, size, maxPlanetLength, abovePlanet, belowPlanet,
+                leftOfPlanet, rightOfPlanet, rightAbovePlanet, rightBelowPlanet, leftAbovePlanet, leftBelowPlanet);
+    }
 }

@@ -28,13 +28,10 @@ public class CoordinateCLI {
 
         return coordinate;
     }
+
     public static char askRowOrColumnToShoot(CLI cli, Player player, Grid opponentsGrid) {
-        Coordinate coordinate;
-        boolean isValidCoordinate;
         char line;
-        boolean validLetter= false;
-        boolean isrowDirectionValid = false;
-        boolean iscolumnDirectionValid = false;
+        boolean validLetter = false;
         System.out.println("\n-----------------------------\nOpponents grid:");
         GridCLI.printGrid(opponentsGrid, false);
         do {
@@ -43,12 +40,12 @@ public class CoordinateCLI {
             System.out.println("Options 'r' row or 'c' column?");
             line = Character.toLowerCase(cli.scanner.nextLine().charAt(0));
 
-            if (line == 'r' || line == 'c'){
-                validLetter = true;}
+            if (line == 'r' || line == 'c') {
+                validLetter = true;
+            }
         } while (!validLetter);
         return line;
     }
-
 
     public static Coordinate askLaserCoordinateToShoot(CLI cli, Player player, Grid opponentsGrid, char rowOrColumn) {
         Coordinate coordinate = null;
@@ -62,7 +59,8 @@ public class CoordinateCLI {
                 if (y0 >= 0 && y0 < opponentsGrid.getGridSize()) {
 
                     coordinate = new Coordinate('a', y0);
-                    isValidCoordinate = opponentsGrid.isValidCoordinate(coordinate);}
+                    isValidCoordinate = opponentsGrid.isValidCoordinate(coordinate);
+                }
             } else {
                 System.out.println("Enter X column you want to laser down:");
 
@@ -70,15 +68,16 @@ public class CoordinateCLI {
 
                 if (x0 >= 'a' && x0 < 'a' + opponentsGrid.getGridSize()) {
                     coordinate = new Coordinate(x0, 0);
-                    isValidCoordinate = opponentsGrid.isValidCoordinate(coordinate);}
+                    isValidCoordinate = opponentsGrid.isValidCoordinate(coordinate);
+                }
             }
-            
+
             if (!isValidCoordinate) {
                 System.out.println("The coordinates you entered are not valid.");
             }
-            
-            } while (!isValidCoordinate);
-        
+
+        } while (!isValidCoordinate);
+
         return coordinate;
     }
 

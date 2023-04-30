@@ -1,13 +1,11 @@
 package com.galactica.controller;
 
-
 import com.galactica.cli.*;
 import com.galactica.model.*;
 
 public class BattleshipCLI extends Game {
 
     private final CLI cli = new CLI();
-
 
     public void placeShips(AI player) {
         Grid ownGrid = player.getOwnGrid();
@@ -68,26 +66,23 @@ public class BattleshipCLI extends Game {
                 gravityMode = cli.getGravityModeResponse();
             }
             asteroidMode = cli.getAsteroidModeResponse();
-    
+
             grid1 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
             grid2 = Game.setUpGrid(gridSize, singlePlayerMode, asteroidMode, gravityMode);
-    
-    
-    
+
             p1 = new Human("Space Cowboy", grid1, grid2);
             placeShips(p1);
-    
+
             if (singlePlayerMode) {
                 p2 = new AI("Megatron", grid2, grid1);
                 placeShips((AI) p2);
             } else {
-                p2 = new Human("Rocket Rancher",grid2, grid1);
+                p2 = new Human("Rocket Rancher", grid2, grid1);
                 placeShips((Human) p2);
             }
         } else {
             load(getDefaultPath());
         }
-       
 
         Coordinate coordinateToShoot;
         char rowOrColumn;
@@ -143,7 +138,7 @@ public class BattleshipCLI extends Game {
             else
                 playerTurn = 1;
         }
-      }
+    }
 
     public static void main(String[] args) {
         BattleshipCLI game = new BattleshipCLI();

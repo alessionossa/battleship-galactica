@@ -19,6 +19,4 @@ public abstract class Weapon {
         jo.put("amountOfUses", amountOfUses);
         return jo;
     }
-
-  
 }

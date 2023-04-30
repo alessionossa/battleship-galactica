@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
@@ -238,7 +237,7 @@ public class Grid {
         return ja;
     }
 
-    public JsonArray toJsonArray(List <?> list) {
+    public JsonArray toJsonArray(List<?> list) {
         JsonArray ja = new JsonArray();
         for (Object object : list) {
             if (object instanceof Planet)
@@ -255,7 +254,7 @@ public class Grid {
         jo.put("asteroids", toJsonArray(asteroids));
         jo.put("planets", toJsonArray(planets));
         jo.put("gridSize", gridSize);
-        
+
         return jo;
     }
 
@@ -268,17 +267,15 @@ public class Grid {
         return list;
     }
 
-
     public static List<Asteroid> fromJsonArrayToAsteroidList(JsonArray ja) {
         List<Asteroid> list = new ArrayList<>();
         for (Object object : ja) {
             Asteroid asteroid = Asteroid.fromJsonObject((JsonObject) object);
             list.add(asteroid);
         }
-          
+
         return list;
     }
-
 
     public static Tile[][] fromJsonArrayToMatrix(JsonArray ja, int gridSize) {
         Tile[][] tiles = new Tile[gridSize][gridSize];
@@ -294,11 +291,10 @@ public class Grid {
 
     public static Grid fromJsonObject(JsonObject jsonObject) {
         int GridSize = ((BigDecimal) jsonObject.get("gridSize")).intValue();
-        List<Asteroid> asteroids = fromJsonArrayToAsteroidList((JsonArray) jsonObject.get("asteroids"));  
+        List<Asteroid> asteroids = fromJsonArrayToAsteroidList((JsonArray) jsonObject.get("asteroids"));
         List<Planet> planets = fromJsonArrayToPlanetList((JsonArray) jsonObject.get("planets"));
         Tile[][] tiles = fromJsonArrayToMatrix((JsonArray) jsonObject.get("tiles"), GridSize);
-    
+
         return new Grid(GridSize, asteroids, planets, tiles);
     }
-
 }

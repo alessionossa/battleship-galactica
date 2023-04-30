@@ -3,7 +3,6 @@ package com.galactica.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Laser extends Weapon {

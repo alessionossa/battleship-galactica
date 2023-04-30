@@ -2,15 +2,12 @@ package com.galactica.model;
 
 import com.galactica.model.ships.*;
 import com.galactica.cli.*;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.Assert.*;
 
 public class StepsDefinition {
@@ -55,15 +52,16 @@ public class StepsDefinition {
         player = new Human("Pippo", ownGrid, opponentGrid);
         if (playerMode.equals("single")) {
             ai = new AI("AI", opponentGrid, ownGrid);
-            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, ai, ownGrid, opponentGrid);
+            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, ai, ownGrid,
+                    opponentGrid);
 
         } else {
             opponent = new Human("Paperino", opponentGrid, ownGrid);
-            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, opponent, ownGrid, opponentGrid);
+            game = new Game(1, asteroid_mode, single_player_mode, gravity_mode, gridSize, player, opponent, ownGrid,
+                    opponentGrid);
 
         }
 
-        
     }
 
     @When("{string} a {string} in direction {string} on coordinate {string} {int}")
@@ -323,7 +321,6 @@ public class StepsDefinition {
         }
     }
 
-
     @Then("The tile {string} {int} on {string} grid is hit")
     public void the_tile_on_my_opponent_s_grid_is_hit(String x, Integer y, String whosGrid) {
         Grid gridHit;
@@ -345,7 +342,6 @@ public class StepsDefinition {
                 the_tile_on_my_opponent_s_grid_is_hit(String.valueOf((char) ('a' + i)), y, "my");
             }
     }
-
 
     @Then("The {string} on my opponent's grid is hit")
     public void the_obstacle_on_grid_is_hit(String obstacle) {
@@ -382,7 +378,7 @@ public class StepsDefinition {
 
     @And("{string} can no longer shoot with a laser")
     public void can_no_longer_shoot_with_a_laser(String whoCanNot) {
-            assertEquals(0, laser.getAmountOfUses());
+        assertEquals(0, laser.getAmountOfUses());
     }
 
     @When("The AI shoots a random weapon on a random tile")
@@ -468,15 +464,14 @@ public class StepsDefinition {
         }
     }
 
+    // PERSISTENCY LAYER
 
-    // PERSISTENCY LAYER 
-
-    @When("I save and reload the game") 
-    public void i_save_and_reload_the_game() { 
+    @When("I save and reload the game")
+    public void i_save_and_reload_the_game() {
         game.save(Game.getDefaultPath());
         game = game.load(Game.getDefaultPath());
         ownGrid = game.getGrid1();
-        opponentGrid = game.getGrid2(); 
+        opponentGrid = game.getGrid2();
     }
 
     @Then("There is an asteroid at coordinate {string} {int} on {string} grid")
