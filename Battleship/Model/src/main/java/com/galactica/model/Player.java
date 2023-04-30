@@ -81,31 +81,18 @@ public abstract class Player {
 
     private void initializeShips() {
         deathstars.add(new DeathStar(IdGenerator.get()));
+        cruisers.add(new Cruiser(IdGenerator.get()));
         for (int i = 0; i < 2; i++) {
-            cruisers.add(new Cruiser(IdGenerator.get()));
-        }
-        for (int i = 0; i < 3; i++) {
             scouts.add(new Scout(IdGenerator.get()));
         }
         if (ownGrid.getGridSize() == 15) {
-            deathstars.add(new DeathStar(IdGenerator.get()));
-            for (int i = 0; i < 2; i++) {
-                cruisers.add(new Cruiser(IdGenerator.get()));
-            }
-            for (int i = 0; i < 2; i++) {
-                scouts.add(new Scout(IdGenerator.get()));
-            }
+            cruisers.add(new Cruiser(IdGenerator.get()));
+            scouts.add(new Scout(IdGenerator.get()));
+
         }
         if (ownGrid.getGridSize() == 20) {
-            for (int i = 0; i < 2; i++) {
-                deathstars.add(new DeathStar(IdGenerator.get()));
-            }
-            for (int i = 0; i < 2; i++) {
-                cruisers.add(new Cruiser(IdGenerator.get()));
-            }
-            for (int i = 0; i < 2; i++) {
-                scouts.add(new Scout(IdGenerator.get()));
-            }
+            deathstars.add(new DeathStar(IdGenerator.get()));
+            cruisers.add(new Cruiser(IdGenerator.get()));
         }
         ships.addAll(deathstars);
         ships.addAll(cruisers);

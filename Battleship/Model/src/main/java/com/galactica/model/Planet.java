@@ -21,6 +21,10 @@ public class Planet {
     private int size;
     private static int maxPlanetLength;
 
+    public int getSize() {
+        return size;
+    }
+
     public Planet(Coordinate planetCoordinate, List<Coordinate> planetCoordinates, int size, int maxPlanetLength,
             List<CoordinateDepthPair> abovePlanet, List<CoordinateDepthPair> belowPlanet,
             List<CoordinateDepthPair> rightOfPlanet,
@@ -87,7 +91,7 @@ public class Planet {
             }
         }
     }
-    
+
     public static final void setMaxPlanetLength(int maxPlanetLength) {
         Planet.maxPlanetLength = maxPlanetLength;
     }
@@ -99,7 +103,7 @@ public class Planet {
     public List<Coordinate> getPlanetCoordinates() {
         return planetCoordinates;
     }
-    
+
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
             if (planet.planetCoordinate.distance(this.planetCoordinate) <= 2 * Math.max(planet.size, this.size)) {
