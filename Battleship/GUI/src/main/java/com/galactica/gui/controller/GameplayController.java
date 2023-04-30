@@ -84,7 +84,8 @@ public class GameplayController {
         for (Ship ship: gameModel.getOpponentPlayer().getShips()) {
             ImageView shipImageView = opponentGridContainer.showShipImageView(ship);
 
-            shipImageView.setOpacity(0.5);
+            shipImageView.setVisible(false);
+//            shipImageView.setOpacity(0.5);
             shipImageView.setMouseTransparent(true);
             shipImageView.setPickOnBounds(false);
         }
@@ -205,17 +206,22 @@ public class GameplayController {
     public void continueButtonAction(ActionEvent event) throws IOException {
         Scene currentScene = ((Node) event.getSource()).getScene();
 
-        checkWin();
-
-        if (gameModel.getSinglePlayerMode()) {
+        if (checkWin()) {
+            switchToWinView(currentScene, gameModel.getCurrentPlayer().getName() + " LASSO'D THE GALAXY AND SAVED THE CAT");
+        } else if (gameModel.getSinglePlayerMode()) {
             gameModel.nextPlayerTurn();
             gameModel.getCurrentPlayer().shoot(null, null, gameModel.getGravityMode(), false);
-            gameModel.nextPlayerTurn();
+
 
             canShoot = true;
             updateWeapons();
             updateContinueButton();
             currentPlayerGridContainer.updateShots();
+
+            if (checkWin())
+                switchToWinView(currentScene, gameModel.getCurrentPlayer().getName() + " LASSO'D THE GALAXY AND SAVED THE CAT");
+            else
+                gameModel.nextPlayerTurn();
         } else {
             gameModel.nextPlayerTurn();
             switchToNextGamePlayScene(currentScene);
@@ -243,6 +249,16 @@ public class GameplayController {
         };
         fxmlLoader.setController(new SwitchPlayerController(switchToNextGameTurnBlock));
 
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) currentScene.getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+    }
+
+    private void switchToWinView(Scene currentScene, String message) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("win-view.fxml"));
+
+        fxmlLoader.setController(new WinController(message));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) currentScene.getWindow();
         Scene scene = new Scene(root);

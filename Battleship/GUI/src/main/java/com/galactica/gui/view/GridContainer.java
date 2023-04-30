@@ -152,8 +152,8 @@ public class GridContainer extends AnchorPane {
                         if (tile.getShip().isSunk()) {
                             ImageView shipImageView = this.shipImages.get(tile.getShip());
                             shipImageView.setVisible(true);
-                            shipImageView.setOpacity(1.0);
-                            shipImageView.toFront();
+//                            shipImageView.setOpacity(1.0);
+//                            shipImageView.toFront();
                         }
                         setHoleImageViewForTile(tile, tileView);
                     }
@@ -178,6 +178,7 @@ public class GridContainer extends AnchorPane {
 
             holeImageView.setPickOnBounds(false);
             holeImageView.setMouseTransparent(true);
+            holeImageView.setOpacity(0.6);
 
             Bounds cellBoundsInContainer = gridPane.localToParent(tileView.getBoundsInParent());
             holeImageView.setX(cellBoundsInContainer.getMinX());
