@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.galactica.gui.controller.GameSettingsController">
    <top>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose the settings for your game" BorderPane.alignment="CENTER">
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Prepare for your space battle" BorderPane.alignment="CENTER">
          <font>
             <Font size="18.0" />
          </font></Text>
@@ -29,7 +29,7 @@
                <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Size of the grid">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Choose your galaxy:" wrappingWidth="141.77734375">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -37,14 +37,17 @@
                         <fx:define>
                            <ToggleGroup fx:id="gridSizeGroup" />
                         </fx:define>
-                        <RadioButton fx:id="smallSizeGridRadioButton" mnemonicParsing="false" text="Small" toggleGroup="$gridSizeGroup" />
-                        <RadioButton fx:id="mediumSizeGridRadioButton" mnemonicParsing="false" selected="true" text="Medium" toggleGroup="$gridSizeGroup" />
-                        <RadioButton fx:id="largeSizeGridRadioButton" mnemonicParsing="false" text="Large" toggleGroup="$gridSizeGroup" />
+                        <RadioButton fx:id="smallSizeGridRadioButton" mnemonicParsing="false" text="Triangulum (small)">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="gridSizeGroup" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="mediumSizeGridRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="149.0" selected="true" text="Milky Way (medium)" toggleGroup="$gridSizeGroup" />
+                        <RadioButton fx:id="largeSizeGridRadioButton" mnemonicParsing="false" text="Andromeda (large)" toggleGroup="$gridSizeGroup" />
                      </children>
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Which playing mode do you want to use?" wrappingWidth="262.591796875">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Who will you battle against?" wrappingWidth="262.591796875">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -52,8 +55,11 @@
                         <fx:define>
                            <ToggleGroup fx:id="playerModeGroup" />
                         </fx:define>
-                        <RadioButton fx:id="multiPlayerRadioButton" mnemonicParsing="false" selected="true" text="Multiplayer" toggleGroup="$playerModeGroup" />
-                        <RadioButton fx:id="singlePlayerRadioButton" mnemonicParsing="false" text="Singleplayer" toggleGroup="$playerModeGroup" />
+                        <RadioButton fx:id="multiPlayerRadioButton" mnemonicParsing="false" selected="true" text="Rocket Rancher (another player)">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="playerModeGroup" />
+                           </toggleGroup></RadioButton>
+                        <RadioButton fx:id="singlePlayerRadioButton" mnemonicParsing="false" text="Megatron (AI)" toggleGroup="$playerModeGroup" />
                      </children>
                      <HBox.margin>
                         <Insets bottom="20.0" />
@@ -66,7 +72,7 @@
             </HBox>
             <HBox alignment="CENTER" prefWidth="200.0" spacing="16.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play including asteroids?">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play with asteroids?">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -76,7 +82,7 @@
             </HBox>
             <HBox alignment="CENTER" prefWidth="900.0" spacing="16.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play in Gravity mode?">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Do you want to play in gravity mode?">
                      <font>
                         <Font size="14.0" />
                      </font>
