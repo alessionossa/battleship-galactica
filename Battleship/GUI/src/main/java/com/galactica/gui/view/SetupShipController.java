@@ -47,13 +47,7 @@ public class SetupShipController {
     private BorderPane borderPane;
 
     @FXML
-    private BattlefieldGridPane grid;
-
-    @FXML
-    private AnchorPane gridContainer;
-
-    @FXML
-    private ImageView backgroundImageView;
+    private GridContainer gridContainer;
 
     @FXML
     private ListView<Ship> shipsListView;
@@ -82,24 +76,10 @@ public class SetupShipController {
         this.shipsToPlace = FXCollections.observableArrayList(ships);
     }
 
-    public void initialize() {// Set the desired grid size here
+    public void initialize() {
         // TODO: Set up the player mode, asteroids and gravity if needed here
 
-        backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
-        backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
-
-        grid.initializeGrid(gridSize);
-
-        // Set GridPane resize properties
-        gridContainer.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-        gridContainer.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
-        NumberBinding gridSize = Bindings.min(gridContainer.widthProperty(), gridContainer.heightProperty());
-        gridSize.addListener((observable, oldValue, newValue) -> {
-            double newDimension = newValue.doubleValue();
-            grid.setPrefSize(newDimension, newDimension);
-            System.out.println("New dimension to " + newDimension);
-        });
+        gridContainer.setGridSize(gridSize);
 
         setupShipList();
 
@@ -137,7 +117,7 @@ public class SetupShipController {
 
         ImageView selectedShipImage = shipImages.get(selectedShip);
         if (selectedShipImage != null) {
-            updateImageDirection(selectedShip, selectedShipImage);
+            gridContainer.updateImageDirection(selectedShip, selectedShipImage);
         }
     }
 
@@ -160,48 +140,18 @@ public class SetupShipController {
         ImageView shipImageView = this.shipImages.get(ship);
 
         if (shipImageView == null) {
-            shipImageView = getShipImageView(ship, cell);
+            shipImageView =gridContainer.getShipImageView(ship);
 
-            updateImageDirection(ship, shipImageView);
+            shipImageView.setPickOnBounds(false);
+            shipImageView.setMouseTransparent(true);
+
+            this.shipImages.put(ship, shipImageView);
+
+            gridContainer.updateShipImagePosition(shipImageView, cell);
+            gridContainer.updateImageDirection(ship, shipImageView);
+            gridContainer.getChildren().add(shipImageView);
         } else {
-            updateShipImagePosition(shipImageView, cell);
-        }
-    }
-
-    private ImageView getShipImageView(Ship ship, StackPane cell) {
-        ImageView shipImageView;
-        Image shipImage = ShipImageLoader.loadImageFromShip(ship);
-        shipImageView = new ImageView(shipImage);
-        shipImageView.setPreserveRatio(true);
-        shipImageView.setPickOnBounds(false);
-        shipImageView.setMouseTransparent(true);
-
-        this.shipImages.put(ship, shipImageView);
-        updateShipImagePosition(shipImageView, cell);
-
-        gridContainer.getChildren().add(shipImageView);
-        return shipImageView;
-    }
-
-    private void updateImageDirection(Ship ship, ImageView shipImageView) {
-        if (ship.getDirection() == Direction.Horizontal) {
-            shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
-
-            // Create a Rotate object
-            Rotate rotate = new Rotate();
-            rotate.setAngle(90); // Set the rotation angle
-
-            // Bind the pivotX and pivotY properties of the Rotate object relative to the ImageView
-            rotate.pivotXProperty().bind(shipImageView.xProperty());
-            rotate.pivotYProperty().bind(shipImageView.yProperty());
-
-            // Add the Rotate object to the ImageView's transforms
-            shipImageView.getTransforms().add(rotate);
-
-            // Create custom bindings for the translateX and translateY properties to adjust the position of the ImageView after the rotation
-            shipImageView.translateXProperty().bind(shipImageView.fitWidthProperty());
-        } else {
-            shipImageView.fitWidthProperty().bind(gridContainer.widthProperty().divide(gridSize + 1));
+            gridContainer.updateShipImagePosition(shipImageView, cell);
         }
     }
 
@@ -210,7 +160,7 @@ public class SetupShipController {
 
         shipImageView.setMouseTransparent(false);
         shipImageView.setPickOnBounds(true);
-        updateShipImagePosition(shipImageView, cell);
+        gridContainer.updateShipImagePosition(shipImageView, cell);
 
         placedShips.add(ship);
         shipsToPlace.remove(ship);
@@ -218,19 +168,6 @@ public class SetupShipController {
         shipImageView.setOnMouseClicked(event -> {
             handleShipSelection(ship);
         });
-    }
-
-    private void updateShipImagePosition(ImageView shipImage, StackPane cell) {
-        if (cell != null) {
-            Bounds cellBoundsInContainer = grid.localToParent(cell.getBoundsInParent());
-
-            shipImage.toFront();
-            shipImage.setX(cellBoundsInContainer.getMinX());
-            shipImage.setY(cellBoundsInContainer.getMinY());
-            shipImage.setVisible(true);
-        } else {
-            shipImage.setVisible(false);
-        }
     }
 
     private void handleShipSelection(Ship ship) {
@@ -272,7 +209,7 @@ public class SetupShipController {
         int tableSize = gridSize + 1;
         for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
             for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
-                StackPane tile = (StackPane) grid.getTiles()[rowIndex][columnIndex];
+                StackPane tile = (StackPane) gridContainer.getTiles()[rowIndex][columnIndex];
 
                 final int currentRowIndex = rowIndex;
                 final int currentColumnIndex = columnIndex;

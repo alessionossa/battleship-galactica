@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import com.galactica.gui.view.BattlefieldGridPane?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root type="AnchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.galactica.gui.view.GridContainer">
+    <children>
+        <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0">
+            <image>
+                <Image url="@assets/background.jpg" />
+            </image>
+        </ImageView>
+        <BattlefieldGridPane fx:id="grid" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
+            <StackPane.margin>
+                <Insets />
+            </StackPane.margin>
+        </BattlefieldGridPane>
+    </children>
+    <BorderPane.margin>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+    </BorderPane.margin>
+</fx:root>

@@ -15,6 +15,9 @@ public class BattlefieldGridPane extends GridPane {
         this.setMinSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
+//        this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+//        this.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+
         this.getStyleClass().add("grid");
     }
 
@@ -41,10 +44,12 @@ public class BattlefieldGridPane extends GridPane {
 
             for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
                 StackPane tile = new StackPane();
-                tile.prefWidthProperty().bind(Bindings.min(this.widthProperty().divide(tableSize), this.heightProperty().divide(tableSize)));
-                tile.prefHeightProperty().bind(tile.widthProperty());
-//                GridPane.setHgrow(tile, Priority.ALWAYS);
-//                GridPane.setVgrow(tile, Priority.ALWAYS);
+//                tile.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+//                tile.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+//                tile.prefWidthProperty().bind(Bindings.min(this.widthProperty().divide(tableSize), this.heightProperty().divide(tableSize)));
+//                tile.prefHeightProperty().bind(tile.widthProperty());
+                GridPane.setHgrow(tile, Priority.ALWAYS);
+                GridPane.setVgrow(tile, Priority.ALWAYS);
                 tile.getStyleClass().add("tile");
                 this.add(tile, rowIndex, columnIndex);
 

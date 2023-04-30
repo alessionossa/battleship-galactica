@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.galactica.gui.view.BattlefieldGridPane?>
+<?import com.galactica.gui.view.GridContainer?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
@@ -32,23 +33,24 @@
       </ButtonBar>
    </bottom>
    <center>
-      <AnchorPane fx:id="gridContainer" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-         <children>
-            <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0">
-               <image>
-                  <Image url="@assets/background.jpg" />
-               </image>
-            </ImageView>
-            <com.galactica.gui.view.BattlefieldGridPane fx:id="grid" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-            </com.galactica.gui.view.BattlefieldGridPane>
-         </children>
-         <BorderPane.margin>
-            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
-         </BorderPane.margin>
-      </AnchorPane>
+      <GridContainer fx:id="gridContainer" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+<!--&lt;!&ndash;       <AnchorPane fx:id="gridContainer" maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" BorderPane.alignment="CENTER">&ndash;&gt;-->
+<!--         <children>-->
+<!--            <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0">-->
+<!--               <image>-->
+<!--                  <Image url="@assets/background.jpg" />-->
+<!--               </image>-->
+<!--            </ImageView>-->
+<!--            <BattlefieldGridPane fx:id="grid" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">-->
+<!--               <StackPane.margin>-->
+<!--                  <Insets />-->
+<!--               </StackPane.margin>-->
+<!--            </BattlefieldGridPane>-->
+<!--         </children>-->
+<!--         <BorderPane.margin>-->
+<!--            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />-->
+<!--         </BorderPane.margin>-->
+<!--      </GridContainer>-->
    </center>
    <right>
       <VBox prefWidth="200.0" BorderPane.alignment="CENTER">
