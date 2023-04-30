@@ -1,6 +1,8 @@
 package com.galactica.model;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class CoordinateDepthPair {
@@ -20,6 +22,7 @@ public class CoordinateDepthPair {
         return depth;
     }
 
+    // Override equals() method to compare CoordinateDepthPair objects
     @Override
     public boolean equals(Object o) {
 
@@ -35,6 +38,11 @@ public class CoordinateDepthPair {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(coordinate, depth);
     }
 
     public JsonObject toJsonObject() {
