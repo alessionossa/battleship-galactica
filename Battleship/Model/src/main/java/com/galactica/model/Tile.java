@@ -3,7 +3,7 @@ package com.galactica.model;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Tile {
-    
+
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit = false;
@@ -95,7 +95,7 @@ public class Tile {
         } else {
             asteroid = Asteroid.fromJsonObject((JsonObject) jo.get("asteroid"));
         }
-        
+
         Planet planet;
         if (jo.get("planet") == null) {
             planet = null;

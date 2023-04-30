@@ -19,7 +19,8 @@ public class Grenade extends Weapon {
         this.amountOfUses = amountOfUses;
     }
 
-    // Method for getting the scatter coordinates affected by the grenade on the opponent's grid
+    // Method for getting the scatter coordinates affected by the grenade on the
+    // opponent's grid
     public List<Coordinate> getScatterCoordinates(Coordinate coordinate, Grid opponentGrid) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
 
@@ -44,7 +45,8 @@ public class Grenade extends Weapon {
         Collections.shuffle(coordinateList);
         Coordinate firstCoordinatetoHit = coordinateList.get(0);
         Coordinate secondCoordinatetoHit = coordinateList.get(1);
-        // Clear the coordinate list and add the target coordinate and the two randomly picked coordinates
+        // Clear the coordinate list and add the target coordinate and the two randomly
+        // picked coordinates
         coordinateList.clear();
         coordinateList.add(coordinate);
         coordinateList.add(firstCoordinatetoHit);

@@ -48,7 +48,8 @@ public class Game {
     }
 
     // Default constructor
-    public Game() { }
+    public Game() {
+    }
 
     // Method for setting up the grid based on game settings
     public static Grid setUpGrid(int gridSize, boolean singlePlayerMode, boolean asteroidMode,
@@ -104,7 +105,7 @@ public class Game {
 
         return this;
     }
-    
+
     // Method for getting the default save path for the game
     public static Path getDefaultPath() {
         String home = System.getProperty("user.home");

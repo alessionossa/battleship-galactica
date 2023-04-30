@@ -7,7 +7,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 
 // Laser class inherits from the Weapon class
 public class Laser extends Weapon {
-    
+
     // Default constructor for the Laser class, sets the amount of uses to 1
     public Laser() {
         this.amountOfUses = 1;
@@ -18,7 +18,8 @@ public class Laser extends Weapon {
         this.amountOfUses = amountOfUses;
     }
 
-    // Method that returns a list of coordinates the laser passes through on the opponent's grid
+    // Method that returns a list of coordinates the laser passes through on the
+    // opponent's grid
     public List<Coordinate> getLaserCoordinates(Coordinate coordinate, Grid opponentGrid, char rowOrColumn) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         boolean hitPlanet = false;
@@ -36,7 +37,8 @@ public class Laser extends Weapon {
             // Add the coordinate to the list if the laser has not hit a planet yet
             if (hitPlanet == false)
                 coordinateList.add(newCoordinate);
-            // Check if there is a planet at the new coordinate, and set hitPlanet to true if there is
+            // Check if there is a planet at the new coordinate, and set hitPlanet to true
+            // if there is
             if (opponentGrid.getPlanetAtCoordinate(newCoordinate) != null) {
                 hitPlanet = true;
             }

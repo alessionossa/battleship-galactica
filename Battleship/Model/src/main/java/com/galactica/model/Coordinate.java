@@ -83,10 +83,7 @@ public class Coordinate {
     // and y fields
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).
-                append(x).
-                append(y).
-                toHashCode();
+        return new HashCodeBuilder(17, 37).append(x).append(y).toHashCode();
     }
 
     // Method for converting the Coordinate to a JsonObject

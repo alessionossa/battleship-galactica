@@ -38,7 +38,8 @@ public abstract class Player {
     }
 
     // Overloaded constructor
-    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade, Cannon cannon) {
+    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade,
+            Cannon cannon) {
         this.name = name;
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
@@ -207,22 +208,24 @@ public abstract class Player {
         int shipsSunk = 0;
         int successfulHits = 0;
         Set<Planet> planetsHit = new HashSet<Planet>();
-    
-        // If this player is an AI and in follow target mode, check if the first coordinate in the list is already hit
+
+        // If this player is an AI and in follow target mode, check if the first
+        // coordinate in the list is already hit
         if (this instanceof AI && AI.getFollowTragetMode()) {
             if (opponentGrid.getTile(coordinateList.get(0)).isHit())
                 return false;
         }
-    
+
         // Loop through each coordinate in the coordinate list
         for (Coordinate coordinate : coordinateList) {
-    
+
             // Check if there's an asteroid, ship, or planet at the current coordinate
             Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
             Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
             Planet planet = opponentGrid.getPlanetAtCoordinate(coordinate);
-    
-            // If there's an asteroid, increment asteroidsHit and update grid and AI tracking if applicable
+
+            // If there's an asteroid, increment asteroidsHit and update grid and AI
+            // tracking if applicable
             if (asteroidAtCoordinate != null) {
                 asteroidsHit++;
                 opponentGrid.setTile(coordinate, true);
@@ -234,12 +237,13 @@ public abstract class Player {
                     AI ai = (AI) this;
                     ai.updateCoordinateHit(coordinate);
                 }
-            } 
+            }
             // If there's a planet, add the planet to the set of hit planets
             else if (planet != null) {
                 planetsHit.add(planet);
-            } 
-            // If there's a ship, increment shipsHit and update grid and AI tracking if applicable, and check if the ship is sunk
+            }
+            // If there's a ship, increment shipsHit and update grid and AI tracking if
+            // applicable, and check if the ship is sunk
             else if (shipAtCoordinate != null) {
                 opponentGrid.setTile(coordinate, true);
                 shipsHit++;
@@ -260,8 +264,9 @@ public abstract class Player {
                         ai.resetTracking();
                     }
                 }
-            } 
-            // If there's nothing at the coordinate, update the grid and AI tracking if applicable
+            }
+            // If there's nothing at the coordinate, update the grid and AI tracking if
+            // applicable
             else {
                 opponentGrid.setTile(coordinate, true);
                 if (this instanceof AI) {
@@ -270,8 +275,9 @@ public abstract class Player {
                 }
             }
         }
-    
-        // Loop through the hit planets and update the grid and AI tracking if applicable
+
+        // Loop through the hit planets and update the grid and AI tracking if
+        // applicable
         for (Planet planet : planetsHit) {
             for (Coordinate coordinate : planet.getPlanetCoordinates()) {
                 opponentGrid.setTile(coordinate, true);
@@ -281,11 +287,11 @@ public abstract class Player {
                 }
             }
         }
-    
+
         // Calculate the total successful hits
         successfulHits = asteroidsHit + shipsHit;
-    
-        // Print the results    
+
+        // Print the results
         if (successfulHits + planetsHit.size() == 0) {
             System.out.println("Unlucky :( \n" + name + " didn't hit anything");
 
@@ -317,6 +323,7 @@ public abstract class Player {
 
         return ja;
     }
+
     // Convert player object to JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();

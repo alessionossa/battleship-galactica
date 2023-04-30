@@ -6,13 +6,15 @@ import com.github.cliftonlabs.json_simple.JsonArray;
 
 // Human class representing a human player, extends the Player class
 public class Human extends Player {
-    // Constructor for creating a new Human object with name, ownGrid, and opponentGrid
+    // Constructor for creating a new Human object with name, ownGrid, and
+    // opponentGrid
     public Human(String name, Grid ownGrid, Grid opponentGrid) {
         super(ownGrid, opponentGrid);
         this.name = name;
     }
 
-    // Constructor for creating a new Human object with additional parameters: ships, laser, and grenade
+    // Constructor for creating a new Human object with additional parameters:
+    // ships, laser, and grenade
     public Human(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade) {
         super(ownGrid, opponentGrid);
         this.name = name;

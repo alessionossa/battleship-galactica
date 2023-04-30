@@ -51,6 +51,7 @@ public class AI extends Player {
         this.CoordinatesHit = CoordinatesHit;
 
     }
+
     // Method to randomly place ships for the AI player
     public void placeShips() {
         final char[] sequence = { 'v', 'h' };
@@ -86,7 +87,7 @@ public class AI extends Player {
             } while (!isValidShipPosition);
         }
     }
-   
+
     // AI shooting method
     public void shoot(Coordinate c, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed) {
         Coordinate coordinate;
@@ -153,7 +154,7 @@ public class AI extends Player {
             }
         }
     }
-    
+
     // Other methods to help AI make decisions and keep track of its state
     public void updateTracking(Coordinate coordinate) {
         lastCoordinate = coordinate;
@@ -306,6 +307,7 @@ public class AI extends Player {
         }
         return ja;
     }
+
     // Create a JsonObject and initialize with the superclass's toJson method
     public JsonObject toJsonObject() {
         JsonObject jo = super.toJsonObject();
@@ -327,7 +329,8 @@ public class AI extends Player {
         jo.put("switchDirection", switchDirection);
         // Add Moves as a JsonArray to the JsonObject
         jo.put("Moves", toJsonArray(Moves));
-        // If lastCoordinate is not null, add it as a JsonObject, otherwise add a null value
+        // If lastCoordinate is not null, add it as a JsonObject, otherwise add a null
+        // value
         if (lastCoordinate != null)
             jo.put("lastCoordinate", lastCoordinate.toJsonObject());
         else
@@ -339,7 +342,8 @@ public class AI extends Player {
     public static HashSet<Coordinate> fromJsonArrayToHashSetOfCoordinates(JsonArray ja) {
         // Create a HashSet to store Coordinate objects
         HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
-        // Iterate through the JsonArray, convert each JsonObject to a Coordinate object, and add to the HashSet
+        // Iterate through the JsonArray, convert each JsonObject to a Coordinate
+        // object, and add to the HashSet
         for (Object object : ja) {
             Coordinate coordinate = Coordinate.fromJsonObject((JsonObject) object);
             CoordinatesHit.add(coordinate);
@@ -347,10 +351,12 @@ public class AI extends Player {
         // Return the HashSet of Coordinate objects
         return CoordinatesHit;
     }
+
     // Create an int array of size 2
     public static int[] fromJsonArrayToIntArray(JsonArray ja) {
         int[] Moves = new int[2];
-        // Iterate through the JsonArray, convert each value to an int, and store it in the int array
+        // Iterate through the JsonArray, convert each value to an int, and store it in
+        // the int array
         for (int i = 0; i < ja.size(); i++) {
             Moves[i] = ((BigDecimal) ja.get(i)).intValue();
         }
@@ -364,7 +370,7 @@ public class AI extends Player {
         List<Ship> ships = Player.fromJsonArraytoShipList((JsonArray) jo.get("ships"));
         Laser laser = Laser.fromJsonObject((JsonObject) jo.get("laser"));
         Grenade grenade = Grenade.fromJsonObject((JsonObject) jo.get("grenade"));
-        
+
         // Extract and convert additional fields from the JsonObject
         HashSet<Coordinate> CoordinatesHit = fromJsonArrayToHashSetOfCoordinates((JsonArray) jo.get("CoordinatesHit"));
         boolean hasShot = (boolean) jo.get("hasShot");
@@ -375,9 +381,7 @@ public class AI extends Player {
         boolean Down = (boolean) jo.get("Down");
         int switchDirection = ((BigDecimal) jo.get("switchDirection")).intValue();
         int[] Moves = fromJsonArrayToIntArray((JsonArray) jo.get("Moves"));
-        
-        
-        
+
         Coordinate lastCoordinate = (Coordinate) jo.get("lastCoordinate");
 
         return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left,

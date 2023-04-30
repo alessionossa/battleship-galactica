@@ -1,10 +1,7 @@
 package com.galactica.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
-
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 // Class representing a pair of a Coordinate and an integer depth value
@@ -12,7 +9,8 @@ public class CoordinateDepthPair {
     private Coordinate coordinate;
     private int depth;
 
-    // Constructor to initialize the CoordinateDepthPair with a Coordinate and depth value
+    // Constructor to initialize the CoordinateDepthPair with a Coordinate and depth
+    // value
     public CoordinateDepthPair(Coordinate coordinate, int depth) {
         this.coordinate = coordinate;
         this.depth = depth;
