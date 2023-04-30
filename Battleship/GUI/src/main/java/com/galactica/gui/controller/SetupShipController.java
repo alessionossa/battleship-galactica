@@ -158,7 +158,7 @@ public class SetupShipController {
         }
 
         char charIndex = (char) ('a' + (columnIndex - 1));
-        Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
+        Coordinate coordinate = new Coordinate(charIndex, rowIndex);
         boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
         if (isValidShipPosition) {
             shipImageView.setEffect(null);
@@ -173,7 +173,7 @@ public class SetupShipController {
         ImageView shipImageView = this.shipImages.get(ship);
 
         char charIndex = (char) ('a' + (columnIndex - 1));
-        Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
+        Coordinate coordinate = new Coordinate(charIndex, rowIndex);
         boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
 
         if (isValidShipPosition) {
