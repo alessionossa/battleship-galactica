@@ -29,8 +29,6 @@ public class Scout extends Ship {
         this.direction = direction;
     }
 }
-This code defines the Scout class, which is a type of ship in the game. The class extends the Ship class and has two constructors with different numbers of parameters. The first constructor sets the length of the ship to 1, which is fixed for the Scout ship type. The second constructor is more flexible, allowing you to set additional properties like sunk status, coordinate, and direction.
-
 
 
 
