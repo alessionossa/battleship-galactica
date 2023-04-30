@@ -354,7 +354,7 @@ public class AI extends Player {
         boolean Down = (boolean) jo.get("Down");
         int switchDirection = ((BigDecimal) jo.get("switchDirection")).intValue();
         int[] Moves = fromJsonArrayToIntArray((JsonArray) jo.get("Moves"));
-        Coordinate lastCoordinate = Coordinate.fromJsonObject((JsonObject) jo.get("lastCoordinate"));
+        Coordinate lastCoordinate = (Coordinate) jo.get("lastCoordinate");
 
         return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left,
                 Up, Down, lastCoordinate, switchDirection, CoordinatesHit);
