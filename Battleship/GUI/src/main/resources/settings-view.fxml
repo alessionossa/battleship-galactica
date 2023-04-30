@@ -37,7 +37,7 @@
                         <fx:define>
                            <ToggleGroup fx:id="gridSizeGroup" />
                         </fx:define>
-                        <RadioButton fx:id="smallSizeGridRadioButton" mnemonicParsing="false" text="Triangulum (small)" />
+                        <RadioButton fx:id="smallSizeGridRadioButton" mnemonicParsing="false" text="Triangulum (small)" toggleGroup="$gridSizeGroup" />
                         <RadioButton fx:id="mediumSizeGridRadioButton" mnemonicParsing="false" prefHeight="17.0" prefWidth="149.0" selected="true" text="Milky Way (medium)" toggleGroup="$gridSizeGroup" />
                         <RadioButton fx:id="largeSizeGridRadioButton" mnemonicParsing="false" text="Andromeda (large)" toggleGroup="$gridSizeGroup" />
                      </children>
@@ -52,7 +52,7 @@
                         <fx:define>
                            <ToggleGroup fx:id="playerModeGroup" />
                         </fx:define>
-                        <RadioButton fx:id="multiPlayerRadioButton" mnemonicParsing="false" selected="true" text="Rocket Rancher (another player)" />
+                        <RadioButton fx:id="multiPlayerRadioButton" mnemonicParsing="false" selected="true" text="Rocket Rancher (another player)" toggleGroup="$playerModeGroup" />
                         <RadioButton fx:id="singlePlayerRadioButton" mnemonicParsing="false" text="Megatron (AI)" toggleGroup="$playerModeGroup" />
                      </children>
                      <HBox.margin>

@@ -249,10 +249,4 @@ public class GameplayController {
         stage.setScene(scene);
     }
 
-
-//    @FXML
-//    public void exitGameButtonAction(ActionEvent event) {
-//
-//    }
-
 }
