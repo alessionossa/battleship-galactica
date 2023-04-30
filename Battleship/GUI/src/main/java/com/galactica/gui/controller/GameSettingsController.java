@@ -112,6 +112,7 @@ public class GameSettingsController {
     }
 
     private void setupGameModel() {
+        gameModel.setPlayerTurn(1);
         gameModel.setGrid1(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
         gameModel.setGrid2(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
 
@@ -148,6 +149,4 @@ public class GameSettingsController {
         stage.setScene(scene);
         stage.show();
     }
-
-    // TODO Handling button help
 }

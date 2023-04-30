@@ -1,0 +1,21 @@
+
+.tile {
+  -fx-border-color: black;
+  -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.border-tile {
+  -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.untouched-tile {
+  -fx-background-color: rgba(255, 255, 255, 0.7);
+}
+
+.highlighted-tile {
+  -fx-background-color: rgba(255, 119, 0, 0.5);
+}
+
+.bordered-view {
+  -fx-effect: dropshadow(gaussian, rgba(255,255,255,0.8), 20, 0, 0, 0);
+}

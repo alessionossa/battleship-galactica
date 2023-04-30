@@ -15,10 +15,11 @@ As a highly advanced spaceship, multiple weapons will be available for you to us
 - 3 grenades that shatter on impact and can wipe out a greater area
 - 1 laser that cuts through the galaxy in a straight line
 
+
 ## Winning the Battle
 The fight only stops when a winner emerges by having exploded all the opponent's ships. 
 
 Thank you for playing Battleship Galactica. May the force be with you!
 
-
 ![](https://github.com/alessionossa/battleship-galactica/blob/main/Gif/Cat.gif)
+

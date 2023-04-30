@@ -73,9 +73,7 @@ public class SetupShipController {
     }
 
     public void initialize() {
-        // TODO: Set up the player mode, asteroids and gravity if needed here
-
-        gridContainer.setGrid(gameModel.getGrid1());
+        gridContainer.setGrid(gameModel.getCurrentPlayer().getOwnGrid(), false);
 
         setupShipList();
 
@@ -159,7 +157,7 @@ public class SetupShipController {
 
         char charIndex = (char) ('a' + (columnIndex - 1));
         Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
-        boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
+        boolean isValidShipPosition = gameModel.getCurrentPlayer().getOwnGrid().isValidShipPosition(ship, coordinate, ship.getDirection());
         if (isValidShipPosition) {
             shipImageView.setEffect(null);
         } else {
@@ -174,7 +172,7 @@ public class SetupShipController {
 
         char charIndex = (char) ('a' + (columnIndex - 1));
         Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
-        boolean isValidShipPosition = gameModel.getGrid1().isValidShipPosition(ship, coordinate, ship.getDirection());
+        boolean isValidShipPosition = gameModel.getCurrentPlayer().getOwnGrid().isValidShipPosition(ship, coordinate, ship.getDirection());
 
         if (isValidShipPosition) {
             shipImageView.setOpacity(1.0);
@@ -271,7 +269,7 @@ public class SetupShipController {
             switchToGamePlayView(currentScene);
         } else {
             gameModel.nextPlayerTurn();
-            if (gameModel.getPlayerTurn() == 2) {
+            if (gameModel.getPlayerTurn() == 1) {
                 switchToGamePlayView(currentScene);
             } else {
                 switchToNextSetupScene(currentScene);
@@ -285,7 +283,7 @@ public class SetupShipController {
     private void switchToGamePlayView(Scene currentScene) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
 
-        fxmlLoader.setController(new GameplayController(gameModel.getGridSize()));
+        fxmlLoader.setController(new GameplayController(gameModel));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) currentScene.getWindow();
         Scene scene = new Scene(root);

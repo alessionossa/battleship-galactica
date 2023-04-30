@@ -18,8 +18,8 @@ public class Main extends Application {
         stage.setTitle("Battleship");
         stage.setScene(scene);
 
-        stage.setMinWidth(900);
-        stage.setMinHeight(750);
+        stage.setMinWidth(1000);
+        stage.setMinHeight(700);
 
         stage.show();
     }

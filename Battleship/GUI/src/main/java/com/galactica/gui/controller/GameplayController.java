@@ -1,198 +1,201 @@
 package com.galactica.gui.controller;
 
 import com.galactica.gui.view.GridContainer;
-import com.galactica.gui.view.ShipListCell;
-import com.galactica.model.Direction;
-import com.galactica.model.ships.Cruiser;
-import com.galactica.model.ships.DeathStar;
-import com.galactica.model.ships.Scout;
+import com.galactica.gui.view.WeaponListCell;
+import com.galactica.model.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.fxml.FXML;
 import javafx.scene.layout.*;
-import javafx.scene.layout.BorderPane;
+
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javafx.event.*;
-
-import com.galactica.model.Ship;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 public class GameplayController {
 
-    private int gridSize;
-
-    ObservableList<Ship> shipsToPlace;
-
-    Set<Ship> placedShips = new HashSet<>();
+    private Game gameModel;
 
     @FXML
-    private BorderPane borderPane;
+    private GridContainer currentPlayerGridContainer;
 
     @FXML
-    private GridContainer gridContainer;
+    private GridContainer opponentGridContainer;
 
     @FXML
-    private ListView<Ship> shipsListView;
+    private ListView<Weapon> weaponListView;
 
     @FXML
-    private Button rotateButton;
+    private Button continueButton;
 
-    @FXML
-    private Button removeShipButton;
+    private Weapon selectedWeapon;
 
-    @FXML
-    private Button startGameButton;
+    private boolean canShoot;
 
-    private Ship selectedShip;
+    private final HashMap<Ship, ImageView> ownShipsImages = new HashMap<>();
 
-    private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
+    public GameplayController(Game gameModel) {
+        this.gameModel = gameModel;
 
-    public GameplayController(int gridSize) {
-        this.gridSize = gridSize;
+        for (Ship ship : gameModel.getCurrentPlayer().getShips()) {
+            ship.setDirection(Direction.Vertical);
+        }
 
-        Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
-
-        this.shipsToPlace = FXCollections.observableArrayList(ships);
+        canShoot = true;
     }
 
     public void initialize() {
-        // TODO: Set up the player mode, asteroids and gravity if needed here
+        currentPlayerGridContainer.setGrid(gameModel.getCurrentPlayer().getOwnGrid(), false);
+        opponentGridContainer.setGrid(gameModel.getCurrentPlayer().getOpponentGrid(), true);
 
-//        gridContainer.setGrid();
-
-        setupShipList();
-
-        startGameButton.setDisable(false);
+        setupWeaponList();
 
         addTileEventHandlers();
+
+        continueButton.setDisable(true);
+
+        Platform.runLater(this::displayShips);
+        Platform.runLater(this.currentPlayerGridContainer::updateShots);
+        Platform.runLater(this.opponentGridContainer::updateShots);
     }
 
-    private void setupShipList() {
-        shipsListView.setItems(shipsToPlace);
-        shipsListView.setCellFactory(listView -> new ShipListCell());
+    private void displayShips() {
+        System.out.println("Player turn " + gameModel.getPlayerTurn());
+        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
+            currentPlayerGridContainer.showShipImageView(ship);
+        }
 
-        shipsListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Ship>() {
-            @Override
-            public void changed(ObservableValue<? extends Ship> observableValue, Ship oldValue, Ship newValue) {
-                if (newValue != null) {
-                    handleShipSelection(newValue);
-                }
-            }
-        });
+        for (Ship ship: gameModel.getOpponentPlayer().getShips()) {
+            ImageView shipImageView = opponentGridContainer.showShipImageView(ship);
 
-        shipsListView.getSelectionModel().selectFirst();
-    }
-
-    private void previewShipPlacement(Ship ship, StackPane cell) {
-        ImageView shipImageView = this.shipImages.get(ship);
-
-        if (shipImageView == null) {
-            shipImageView =gridContainer.getShipImageView(ship);
-
-            shipImageView.setOpacity(0.5);
-            shipImageView.setPickOnBounds(false);
+            shipImageView.setVisible(false);
+//            shipImageView.setOpacity(0.5);
             shipImageView.setMouseTransparent(true);
+            shipImageView.setPickOnBounds(false);
+        }
+    }
 
-            this.shipImages.put(ship, shipImageView);
+    private void setupWeaponList() {
+        weaponListView.setCellFactory(listView -> new WeaponListCell());
 
-            gridContainer.updateShipImagePosition(shipImageView, cell);
-            gridContainer.updateImageDirection(ship, shipImageView);
-            gridContainer.getChildren().add(shipImageView);
+        weaponListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Weapon>() {
+            @Override
+            public void changed(ObservableValue<? extends Weapon> observableValue, Weapon oldValue, Weapon newValue) {
+                handleWeaponSelection(newValue);
+            }
+        });
+
+        updateWeapons();
+        weaponListView.getSelectionModel().selectFirst();
+    }
+
+    private void updateContinueButton() {
+        continueButton.setDisable(canShoot);
+    }
+
+    private void previewWeaponShoot(Weapon weapon, StackPane cell) {
+        if (weapon == null) {
+            cell.getStyleClass().remove("highlighted-tile");
         } else {
-            gridContainer.updateShipImagePosition(shipImageView, cell);
-        }
-
-        if (true) { // TODO: if position is not valid
-            ColorAdjust colorAdjust = new ColorAdjust();
-            colorAdjust.setSaturation(-0.9);
-            shipImageView.setEffect(colorAdjust);
+            cell.getStyleClass().add("highlighted-tile");
         }
     }
 
-    private void placeShip(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
-        ImageView shipImageView = this.shipImages.get(ship);
+    private void shoot(Weapon weapon, int columnIndex, int rowIndex, StackPane cell) {
+        char charIndex = (char) ('a' + (columnIndex - 1));
+        Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
 
-        shipImageView.setOpacity(1.0);
-        shipImageView.setEffect(null);
-        shipImageView.setMouseTransparent(false);
-        shipImageView.setPickOnBounds(true);
-        gridContainer.updateShipImagePosition(shipImageView, cell);
+        if (weapon instanceof Laser) {
+            char direction;
+            if (columnIndex == 0)
+                direction = 'r';
+            else
+                direction = 'c';
+            gameModel.getCurrentPlayer().shootLaser(coordinate, direction, (Laser) weapon);
+        } else {
+            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(), false);
+        }
 
-        placedShips.add(ship);
-        shipsToPlace.remove(ship);
-
-        shipImageView.setOnMouseClicked(event -> {
-            handleShipSelection(ship);
-        });
+        canShoot = false;
+        updateWeapons();
+        updateContinueButton();
+        opponentGridContainer.updateShots();
+        gameModel.save();
     }
 
-    private void handleShipSelection(Ship ship) {
-        Platform.runLater(() -> {
-            ImageView previouslySelectedImageView = this.shipImages.get(this.selectedShip);
-            if (previouslySelectedImageView != null) {
-                previouslySelectedImageView.getStyleClass().remove("bordered-view");
-            }
+    private void handleWeaponSelection(Weapon weapon) {
+        this.selectedWeapon = weapon;
+        System.out.println("Selected a " + weapon);
+    }
 
-            if (this.selectedShip == ship) {
-                this.selectedShip = null;
-            } else {
-                this.selectedShip = ship;
-            }
+    private boolean checkWin() {
+        return gameModel.getOpponentPlayer().areAllShipsSunk(gameModel.getOpponentPlayer().getShips());
+    }
 
-            if (placedShips.contains(this.selectedShip)) {
-                shipsListView.getSelectionModel().clearSelection();
-                rotateButton.setDisable(true);
-                removeShipButton.setDisable(false);
+    private void updateWeapons() {
+        weaponListView.getSelectionModel().clearSelection();
 
-                ImageView shipImageView = this.shipImages.get(ship);
-                if (shipImageView != null) {
-                    shipImageView.getStyleClass().add("bordered-view");
-                }
-            } else if (shipsToPlace.contains(this.selectedShip)) {
-                rotateButton.setDisable(false);
-                removeShipButton.setDisable(true);
-                shipsListView.getSelectionModel().select(ship);
-            } else {
-                shipsListView.getSelectionModel().clearSelection();
-                rotateButton.setDisable(true);
-                removeShipButton.setDisable(true);
-            }
-        });
+        List<Weapon> weapons = gameModel.getCurrentPlayer().getWeapons().stream()
+                .filter((weapon -> weapon.getAmountOfUses() > 0))
+                .toList();
+        weaponListView.getItems().clear();
+        weaponListView.getItems().addAll(weapons);
+    }
+
+    private boolean isValidCoordinateForShooting(Weapon weapon, int columnIndex, int rowIndex) {
+        if (!canShoot) {
+            return false;
+        } else if (selectedWeapon instanceof Laser &&
+                (rowIndex == 0 || columnIndex == 0) &&
+                !(rowIndex == 0 && columnIndex == 0)
+        ) {
+            return true;
+        } else if (!(selectedWeapon instanceof Laser) && rowIndex != 0 && columnIndex != 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void addTileEventHandlers() {
-        int tableSize = gridSize + 1;
-        for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
-            for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
-                StackPane tile = (StackPane) gridContainer.getTiles()[rowIndex][columnIndex];
+        int tableSize = gameModel.getGridSize() + 1;
+        for (int rowIndex = 0; rowIndex < tableSize; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
+                StackPane tile = (StackPane) opponentGridContainer.getTiles()[rowIndex][columnIndex];
 
                 final int currentRowIndex = rowIndex;
                 final int currentColumnIndex = columnIndex;
                 tile.setOnMouseEntered(event -> {
-                    // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
-                        previewShipPlacement(this.selectedShip, tile);
+                    // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex,
+                    // currentRowIndex);
+                    if (isValidCoordinateForShooting(selectedWeapon,currentColumnIndex, currentRowIndex)) {
+                        previewWeaponShoot(this.selectedWeapon, tile);
                     }
                 });
 
                 tile.setOnMouseExited(event -> {
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
-                        previewShipPlacement(this.selectedShip, null);
-                    }
+                    previewWeaponShoot(null, tile);
                 });
 
                 tile.setOnMouseClicked(event -> {
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
-                        placeShip(this.selectedShip, currentColumnIndex, currentRowIndex, tile);
+                    if (isValidCoordinateForShooting(selectedWeapon,currentColumnIndex, currentRowIndex)) {
+                        shoot(this.selectedWeapon, currentColumnIndex, currentRowIndex, tile);
                     }
                 });
             }
@@ -200,13 +203,66 @@ public class GameplayController {
     }
 
     @FXML
-    public void shootButtonAction(ActionEvent event) {
+    public void continueButtonAction(ActionEvent event) throws IOException {
+        Scene currentScene = ((Node) event.getSource()).getScene();
 
+        if (checkWin()) {
+            switchToWinView(currentScene, gameModel.getCurrentPlayer().getName() + " LASSO'D THE GALAXY AND SAVED THE CAT");
+        } else if (gameModel.getSinglePlayerMode()) {
+            gameModel.nextPlayerTurn();
+            gameModel.getCurrentPlayer().shoot(null, null, gameModel.getGravityMode(), false);
+
+
+            canShoot = true;
+            updateWeapons();
+            updateContinueButton();
+            currentPlayerGridContainer.updateShots();
+
+            if (checkWin())
+                switchToWinView(currentScene, gameModel.getCurrentPlayer().getName() + " LASSO'D THE GALAXY AND SAVED THE CAT");
+            else
+                gameModel.nextPlayerTurn();
+        } else {
+            gameModel.nextPlayerTurn();
+            switchToNextGamePlayScene(currentScene);
+        }
     }
 
-    @FXML
-    public void exitGameButtonAction(ActionEvent event) {
+    private void switchToNextGamePlayScene(Scene currentScene) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("switch-player-view.fxml"));
 
+        Consumer<Window> switchToNextGameTurnBlock = (Window window) -> {
+            FXMLLoader fxmlLoaderNextShot = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
+
+            fxmlLoaderNextShot.setController(new GameplayController(this.gameModel));
+
+            Parent root;
+            try {
+                root = fxmlLoaderNextShot.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            Stage stage = (Stage) window;
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        };
+        fxmlLoader.setController(new SwitchPlayerController(switchToNextGameTurnBlock));
+
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) currentScene.getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+    }
+
+    private void switchToWinView(Scene currentScene, String message) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("win-view.fxml"));
+
+        fxmlLoader.setController(new WinController(message));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) currentScene.getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
     }
 
 }

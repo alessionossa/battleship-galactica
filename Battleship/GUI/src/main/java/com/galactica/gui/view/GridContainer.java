@@ -1,10 +1,6 @@
 package com.galactica.gui.view;
 
-import com.galactica.model.Asteroid;
-import com.galactica.model.Direction;
-import com.galactica.model.Grid;
-import com.galactica.model.Planet;
-import com.galactica.model.Ship;
+import com.galactica.model.*;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -19,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.transform.Rotate;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class GridContainer extends AnchorPane {
 
@@ -26,11 +23,19 @@ public class GridContainer extends AnchorPane {
 
     private Grid grid;
 
+    private boolean isOpponentGrid;
+
     @FXML
     private BattlefieldGridPane gridPane;
 
     @FXML
     private ImageView backgroundImageView;
+
+    private final HashMap<Planet, ImageView> planetImages = new HashMap<>();
+
+    private final HashMap<Tile, ImageView> holesImages = new HashMap<>();
+
+    private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
 
     public GridContainer() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("grid_container.fxml"));
@@ -58,34 +63,36 @@ public class GridContainer extends AnchorPane {
         Platform.runLater(this::placePlanets);
     }
 
-    public void setGrid(Grid grid) {
+    public void setGrid(Grid grid, boolean isOpponentGrid) {
         this.grid = grid;
         this.gridSize = grid.getGridSize(); // TODO: Remove this
+        this.isOpponentGrid = isOpponentGrid;
         gridPane.initializeGrid(grid.getGridSize());
     }
 
     private void placeAsteroids() {
-        for (Asteroid asteroid : grid.getAsteroids()) {
-            Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
-            ImageView asteroidImageView = new ImageView(asteroidImage);
-            asteroidImageView.setPreserveRatio(true);
+        if (!isOpponentGrid) {
+            for (Asteroid asteroid : grid.getAsteroids()) {
+                Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
+                ImageView asteroidImageView = new ImageView(asteroidImage);
+                asteroidImageView.setPreserveRatio(true);
 
-            asteroidImageView.setPickOnBounds(false);
-            asteroidImageView.setMouseTransparent(true);
+                asteroidImageView.setPickOnBounds(false);
+                asteroidImageView.setMouseTransparent(true);
 
-            int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
-            int yCoordinate = asteroid.getCoordinate().getY() + 1;
-            System.out.println("Placing asteroid at x" + xCoordinate + "; y" + yCoordinate);
-            StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
-            Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
-            asteroidImageView.setX(cellBoundsInContainer.getMinX());
-            asteroidImageView.setY(cellBoundsInContainer.getMinY());
+                int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
+                int yCoordinate = asteroid.getCoordinate().getY() + 1;
+                StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
+                Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
+                asteroidImageView.setX(cellBoundsInContainer.getMinX());
+                asteroidImageView.setY(cellBoundsInContainer.getMinY());
 
-            asteroidImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
+                asteroidImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
 
-            this.getChildren().add(asteroidImageView);
+                this.getChildren().add(asteroidImageView);
 
-            asteroidImageView.toFront();
+                asteroidImageView.toFront();
+            }
         }
     }
 
@@ -112,21 +119,96 @@ public class GridContainer extends AnchorPane {
             planetImageView.setX(cellBoundsInContainer.getMinX());
             planetImageView.setY(cellBoundsInContainer.getMinY());
 
-            if (planet.getSize() == 2) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 2));
-            } else if (planet.getSize() == 3) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 3));
-            } else if (planet.getSize() == 4) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 4.2));
+            planetImageView.fitWidthProperty()
+                    .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), planet.getSize() + 0.2));
+
+            if (isOpponentGrid) {
+                planetImageView.setVisible(false);
             }
+
+            planetImages.put(planet, planetImageView);
 
             this.getChildren().add(planetImageView);
 
             planetImageView.toFront();
         }
+    }
+
+    public void updateShots() {
+        // int tableSize = grid.getGridSize() + 1;
+        for (int rowIndex = 0; rowIndex < grid.getGridSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < grid.getGridSize(); columnIndex++) {
+                StackPane tileView = (StackPane) getTiles()[rowIndex + 1][columnIndex + 1];
+
+                Tile tile = grid.getTiles()[rowIndex][columnIndex];
+                if (tile.isHit()) {
+                    System.out.println("Hitted" + columnIndex + ", "+ rowIndex);
+                    tileView.getStyleClass().remove("untouched-tile");
+                    if (tile.getPlanet() != null) {
+                        planetImages.get(tile.getPlanet()).setVisible(true);
+                    } else if (tile.getAsteroid() != null) {
+                        setHoleImageViewForTile(tile, tileView);
+                    } else if (tile.getShip() != null){
+                        if (tile.getShip().isSunk()) {
+                            ImageView shipImageView = this.shipImages.get(tile.getShip());
+                            shipImageView.setVisible(true);
+//                            shipImageView.setOpacity(1.0);
+//                            shipImageView.toFront();
+                        }
+                        setHoleImageViewForTile(tile, tileView);
+                    }
+                } else {
+                    if (!tileView.getStyleClass().contains("untouched-tile")) {
+                        tileView.getStyleClass().add("untouched-tile");
+                    }
+                }
+            }
+        }
+    }
+
+    private void setHoleImageViewForTile(Tile tile, StackPane tileView) {
+        ImageView holeImageView = holesImages.get(tile);
+
+        if (holeImageView == null) {
+            Image holeImage = new Image(getClass().getResource("/assets/hole.png").toExternalForm());
+
+            holeImageView = new ImageView(holeImage);
+            holeImageView.setPreserveRatio(true);
+            this.holesImages.put(tile, holeImageView);
+
+            holeImageView.setPickOnBounds(false);
+            holeImageView.setMouseTransparent(true);
+            holeImageView.setOpacity(0.6);
+
+            Bounds cellBoundsInContainer = gridPane.localToParent(tileView.getBoundsInParent());
+            holeImageView.setX(cellBoundsInContainer.getMinX());
+            holeImageView.setY(cellBoundsInContainer.getMinY());
+
+            holeImageView.fitWidthProperty()
+                    .bind(this.widthProperty().divide(gridSize + 1));
+            this.getChildren().add(holeImageView);
+            holeImageView.toFront();
+        }
+    }
+
+    public ImageView showShipImageView(Ship ship) {
+        ImageView shipImageView = shipImages.get(ship);
+
+        if (shipImageView == null) {
+            shipImageView = getShipImageView(ship);
+            this.shipImages.put(ship, shipImageView);
+
+            Coordinate shipOriginCoordinate = ship.getCoordinate();
+            int xIndex = grid.convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
+            int yIndex = shipOriginCoordinate.getY() + 1;
+            System.out.println("Ship at coordinate " + xIndex + "," + yIndex);
+            StackPane tile = (StackPane) getTiles()[yIndex][xIndex];
+            updateShipImagePosition(shipImageView, tile);
+            updateImageDirection(ship, shipImageView);
+            getChildren().add(shipImageView);
+        }
+
+        return shipImageView;
     }
 
     public void updateShipImagePosition(ImageView shipImage, StackPane cell) {

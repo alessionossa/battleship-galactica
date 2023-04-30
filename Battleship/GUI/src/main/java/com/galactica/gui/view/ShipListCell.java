@@ -28,7 +28,7 @@ public class ShipListCell extends ListCell<Ship> {
             }
             switch (item.getDirection()) {
                 case Horizontal -> {
-                    imageView.setRotate(90);
+                    imageView.setRotate(-90);
                 }
                 case Vertical -> {
                     imageView.setRotate(0);
