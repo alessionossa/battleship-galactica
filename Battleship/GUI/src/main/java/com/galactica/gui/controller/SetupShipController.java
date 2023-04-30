@@ -65,6 +65,9 @@ public class SetupShipController {
 
         Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
 
+        for (Ship ship: ships) {
+            ship.setDirection(Direction.Vertical);
+        }
         this.shipsToPlace = FXCollections.observableArrayList(ships);
     }
 
@@ -291,7 +294,7 @@ public class SetupShipController {
         if (gameModel.getSinglePlayerMode()) {
             switchToGamePlayView(currentScene);
         } else {
-
+            switchToNextSetupScene(currentScene);
         }
     }
 
