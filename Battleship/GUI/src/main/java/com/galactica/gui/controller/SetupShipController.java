@@ -269,7 +269,7 @@ public class SetupShipController {
             switchToGamePlayView(currentScene);
         } else {
             gameModel.nextPlayerTurn();
-            if (gameModel.getPlayerTurn() == 2) {
+            if (gameModel.getPlayerTurn() == 1) {
                 switchToGamePlayView(currentScene);
             } else {
                 switchToNextSetupScene(currentScene);

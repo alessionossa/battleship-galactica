@@ -1,6 +1,3 @@
-grid {
-  -fx-background-color: rgba(255, 255, 255, 0.3);
-}
 
 .tile {
   -fx-border-color: black;
@@ -9,6 +6,10 @@ grid {
 
 .border-tile {
   -fx-background-color: rgba(255, 255, 255, 0.5);
+}
+
+.highlighted-tile {
+  -fx-background-color: rgba(255, 119, 0, 0.5);
 }
 
 .bordered-view {

@@ -60,13 +60,15 @@ public class GameplayController {
     }
 
     private void displayShips() {
+        System.out.println("Player turn " + gameModel.getPlayerTurn());
         for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
             ImageView shipImageView = currentPlayerGridContainer.getShipImageView(ship);
             this.ownShipsImages.put(ship, shipImageView);
 
             Coordinate shipOriginCoordinate = ship.getCoordinate();
-            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX());
-            int yIndex = shipOriginCoordinate.getY();
+            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
+            int yIndex = shipOriginCoordinate.getY() + 1;
+            System.out.println("Ship at coordinate " + xIndex + "," + yIndex);
             StackPane tile = (StackPane) currentPlayerGridContainer.getTiles()[yIndex][xIndex];
             currentPlayerGridContainer.updateShipImagePosition(shipImageView, tile);
             currentPlayerGridContainer.updateImageDirection(ship, shipImageView);
@@ -77,9 +79,13 @@ public class GameplayController {
             ImageView shipImageView = opponentGridContainer.getShipImageView(ship);
             this.ownShipsImages.put(ship, shipImageView);
 
+            shipImageView.setOpacity(1.0);
+            shipImageView.setMouseTransparent(false);
+            shipImageView.setPickOnBounds(true);
+
             Coordinate shipOriginCoordinate = ship.getCoordinate();
-            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX());
-            int yIndex = shipOriginCoordinate.getY();
+            int xIndex = gameModel.getCurrentPlayer().getOpponentGrid().convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
+            int yIndex = shipOriginCoordinate.getY() + 1;
             StackPane tile = (StackPane) opponentGridContainer.getTiles()[yIndex][xIndex];
             opponentGridContainer.updateShipImagePosition(shipImageView, tile);
             opponentGridContainer.updateImageDirection(ship, shipImageView);
@@ -107,24 +113,40 @@ public class GameplayController {
 //        shootButton.setDisable(this.selectedWeapon != null); // TODO
     }
 
-    private void previewWeaponShoot(Weapon weapon, StackPane cell, int columnIndex, int rowIndex) {
-
+    private void previewWeaponShoot(Weapon weapon, StackPane cell) {
+        if (weapon == null) {
+            cell.getStyleClass().remove("highlighted-tile");
+        } else {
+            cell.getStyleClass().add("highlighted-tile");
+        }
     }
 
     private void shoot(Weapon weapon, int columnIndex, int rowIndex, StackPane cell) {
-
         char charIndex = (char) ('a' + (columnIndex - 1));
         Coordinate coordinate = new Coordinate(charIndex, rowIndex - 1);
+
+        if (weapon instanceof Laser) {
+            char direction;
+            if (columnIndex == 0)
+                direction = 'r';
+            else
+                direction = 'c';
+            gameModel.getCurrentPlayer().shootLaser(coordinate, direction, (Laser) weapon);
+        } else {
+            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(),false);
+        }
+
     }
 
     private void handleWeaponSelection(Weapon weapon) {
         this.selectedWeapon = weapon;
+        System.out.println("Selected a " + weapon);
     }
 
     private void addTileEventHandlers() {
         int tableSize = gameModel.getGridSize() + 1;
-        for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
-            for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
+        for (int rowIndex = 0; rowIndex < tableSize; rowIndex++) {
+            for (int columnIndex = 0; columnIndex < tableSize; columnIndex++) {
                 StackPane tile = (StackPane) opponentGridContainer.getTiles()[rowIndex][columnIndex];
 
                 final int currentRowIndex = rowIndex;
@@ -133,19 +155,25 @@ public class GameplayController {
                     // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex,
                     // currentRowIndex);
                     if (this.selectedWeapon != null) {
-                        previewWeaponShoot(this.selectedWeapon, tile, currentColumnIndex, currentRowIndex);
+                        if (selectedWeapon instanceof Laser && (currentRowIndex == 0 || currentColumnIndex == 0)) {
+                            previewWeaponShoot(this.selectedWeapon, tile);
+                        } else if (currentRowIndex != 0 && currentColumnIndex != 0) {
+                            previewWeaponShoot(this.selectedWeapon, tile);
+                        }
                     }
                 });
 
                 tile.setOnMouseExited(event -> {
-                    if (this.selectedWeapon != null) {
-                        previewWeaponShoot(this.selectedWeapon, null, currentColumnIndex, currentRowIndex);
-                    }
+                    previewWeaponShoot(null, tile);
                 });
 
                 tile.setOnMouseClicked(event -> {
                     if (this.selectedWeapon != null) {
-                        shoot(this.selectedWeapon, currentColumnIndex, currentRowIndex, tile);
+                        if (selectedWeapon instanceof Laser && (currentRowIndex == 0 || currentColumnIndex == 0)) {
+                            shoot(this.selectedWeapon, currentColumnIndex, currentRowIndex, tile);
+                        } else if (currentRowIndex != 0 && currentColumnIndex != 0) {
+                            shoot(this.selectedWeapon, currentColumnIndex, currentRowIndex, tile);
+                        }
                     }
                 });
             }
