@@ -84,6 +84,7 @@ public class Tile {
         } else {
             asteroid = Asteroid.fromJsonObject((JsonObject) jo.get("asteroid"));
         }
+        
         Planet planet;
         if (jo.get("planet") == null) {
             planet = null;

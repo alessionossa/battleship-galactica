@@ -40,8 +40,8 @@ public abstract class Ship {
         return direction;
     }
 
-    public void setSunk(boolean sunk) {
-        this.sunk = sunk;
+    public void setSunk() {
+        this.sunk = true;
     }
 
     public boolean isSunk() {
