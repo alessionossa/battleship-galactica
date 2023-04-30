@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<fx:root type="AnchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.galactica.gui.view.GridContainer">
+<fx:root type="AnchorPane" xmlns:fx="http://javafx.com/fxml">
     <children>
         <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0">
             <image>

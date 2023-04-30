@@ -1,30 +1,33 @@
-package com.galactica.gui.view;
+package com.galactica.gui.controller;
 
+import com.galactica.gui.view.GridContainer;
+import com.galactica.gui.view.ShipListCell;
 import com.galactica.model.Direction;
-import com.galactica.model.ships.Cruiser;
-import com.galactica.model.ships.DeathStar;
-import com.galactica.model.ships.Scout;
+import com.galactica.model.Ship;
+import com.galactica.model.ships.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.image.ImageView;
-import javafx.fxml.FXML;
 import javafx.scene.layout.*;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.ImageView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.*;
+import javafx.stage.Stage;
+import javafx.event.*;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import javafx.event.*;
-
-import com.galactica.model.Ship;
-
-public class GameplayController {
+public class SetupShipController {
 
     private int gridSize;
 
@@ -54,7 +57,7 @@ public class GameplayController {
 
     private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
 
-    public GameplayController(int gridSize) {
+    public SetupShipController(int gridSize, boolean singlePlayer, boolean asteroids, boolean gravity) {
         this.gridSize = gridSize;
 
         Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
@@ -88,6 +91,38 @@ public class GameplayController {
         });
 
         shipsListView.getSelectionModel().selectFirst();
+    }
+
+    @FXML
+    private void rotateButtonAction(ActionEvent event) {
+        Direction direction = selectedShip.getDirection();
+        if (direction == Direction.Horizontal) {
+            direction = Direction.Vertical;
+        } else {
+            direction = Direction.Horizontal;
+        }
+        selectedShip.setDirection(direction);
+        shipsListView.refresh();
+
+        ImageView selectedShipImage = shipImages.get(selectedShip);
+        if (selectedShipImage != null) {
+            gridContainer.updateImageDirection(selectedShip, selectedShipImage);
+        }
+    }
+
+    @FXML
+    private void removeShipButtonAction(ActionEvent event) {
+        ImageView selectedShipImage = shipImages.get(selectedShip);
+
+        if (selectedShipImage != null) {
+            ((AnchorPane) selectedShipImage.getParent()).getChildren().remove(selectedShipImage);
+            shipImages.remove(selectedShip);
+
+            shipsToPlace.add(selectedShip);
+            placedShips.remove(selectedShip);
+
+            handleShipSelection(null);
+        }
     }
 
     private void previewShipPlacement(Ship ship, StackPane cell) {
@@ -197,14 +232,25 @@ public class GameplayController {
         }
     }
 
-    @FXML
-    public void shootButtonAction(ActionEvent event) {
+    // Navigation
 
+    @FXML
+    public void switchToSceneGame(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
+
+        fxmlLoader.setController(new GameplayController(gridSize));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
     }
 
     @FXML
-    public void exitGameButtonAction(ActionEvent event) {
-
+    public void switchToSettingsScene(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("settings-view.fxml"));
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
-
 }

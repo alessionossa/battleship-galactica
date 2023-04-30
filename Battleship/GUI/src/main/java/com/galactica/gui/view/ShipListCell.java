@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 
-class ShipListCell extends ListCell<Ship> {
+public class ShipListCell extends ListCell<Ship> {
 
     @Override
     protected void updateItem(Ship item, boolean empty) {
