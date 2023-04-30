@@ -95,17 +95,11 @@ public class Planet {
     public Coordinate getCoordinate() {
         return planetCoordinate;
     }
-<<<<<<< HEAD
 
     public List<Coordinate> getPlanetCoordinates() {
         return planetCoordinates;
     }
-=======
->>>>>>> 8ee22d5... Other cucumebers
-
-    public List<Coordinate> getPlanetCoordinates() {
-        return planetCoordinates;
-    }
+    
     boolean isValidPlanetPosition(List<Planet> planets) {
         for (Planet planet : planets) {
             if (planet.planetCoordinate.distance(this.planetCoordinate) <= 2 * Math.max(planet.size, this.size)) {
