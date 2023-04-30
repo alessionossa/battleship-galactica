@@ -3,6 +3,8 @@ package com.galactica.model;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class CoordinateDepthPair {
@@ -40,9 +42,15 @@ public class CoordinateDepthPair {
         }
     }
 
+    // Override hashCode() method to generate unique hash code based on values of
+    // coordinate
+    // and depth fields
     @Override
     public int hashCode() {
-        return Objects.hash(coordinate, depth);
+        return new HashCodeBuilder(17, 37)
+                .append(coordinate)
+                .append(depth)
+                .toHashCode();
     }
 
     public JsonObject toJsonObject() {

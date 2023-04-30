@@ -1,8 +1,6 @@
 package com.galactica.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
