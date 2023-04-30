@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 public abstract class Player {
+    // Class members
     protected String name;
     protected List<Ship> deathstars = new ArrayList<Ship>();
     protected List<Ship> cruisers = new ArrayList<Ship>();
@@ -20,12 +21,15 @@ public abstract class Player {
     protected Grid ownGrid;
     protected Grid opponentGrid;
 
+    // Weapons
     protected Cannon cannon = new Cannon();
     protected Grenade grenade = new Grenade();
     protected Laser laser = new Laser();
 
+    // Scanner for user input
     protected static Scanner sc = new Scanner(System.in);
 
+    // Constructor
     public Player(Grid ownGrid, Grid opponentGrid) {
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
@@ -33,8 +37,8 @@ public abstract class Player {
         initializeShips();
     }
 
-    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade,
-            Cannon cannon) {
+    // Overloaded constructor
+    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade, Cannon cannon) {
         this.name = name;
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
@@ -44,8 +48,10 @@ public abstract class Player {
         this.cannon = cannon;
     }
 
+    // Abstract method for shooting
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
 
+    // Shoot grenade at the specified coordinate
     public List<Coordinate> shootGrenade(Coordinate coordinate, Grenade grenade) {
         List<Coordinate> coordinateList = grenade.getScatterCoordinates(coordinate, opponentGrid);
         grenade.decrementAmountOfUses();
@@ -53,12 +59,14 @@ public abstract class Player {
         return coordinateList;
     }
 
+    // Shoot laser at the specified coordinate and row or column
     public void shootLaser(Coordinate coordinate, char rowOrColumn, Laser laser) {
         List<Coordinate> coordinateList = laser.getLaserCoordinates(coordinate, opponentGrid, rowOrColumn);
         laser.decrementAmountOfUses();
         checkOutcomeOfShot(coordinateList);
     }
 
+    // Shoot cannon at the specified coordinate with gravity mode settings
     public boolean shootCannon(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
         List<Coordinate> coordinateList = new ArrayList<Coordinate>();
         coordinateList.add(coordinate);
@@ -79,6 +87,7 @@ public abstract class Player {
         return hit;
     }
 
+    // Initialize ships based on grid size
     private void initializeShips() {
         deathstars.add(new DeathStar(IdGenerator.get()));
         for (int i = 0; i < 2; i++) {
@@ -112,6 +121,7 @@ public abstract class Player {
         ships.addAll(scouts);
     }
 
+    // Check if all ships are sunk
     public boolean areAllShipsSunk(List<Ship> ships) {
         for (Ship ship : ships) {
             if (!ship.isSunk()) {
@@ -121,6 +131,7 @@ public abstract class Player {
         return true;
     }
 
+    // Check if all ships are placed
     public boolean hasAllShipsPlaced() {
         for (Ship ship : ships) {
             if (!ship.isPlaced()) {
@@ -130,6 +141,7 @@ public abstract class Player {
         return true;
     }
 
+    // Place a ship on the grid if the position is valid
     public Ship placeShip(Ship ship, Coordinate coordinate, Direction direction) {
         if (ownGrid.isValidShipPosition(ship, coordinate, direction)) {
             ship.setCoordinate(coordinate);
@@ -140,12 +152,14 @@ public abstract class Player {
         return null;
     }
 
+    // Remove a ship from the grid
     public void removeShip(Ship ship) throws UnplacedShipException {
         ownGrid.removeShip(ship);
         ship.setCoordinate(null);
         ship.setDirection(null);
     }
 
+    // Getter methods
     public String getName() {
         return name;
     }
@@ -186,24 +200,29 @@ public abstract class Player {
         return laser;
     }
 
+    // Check the outcome of a shot and display results
     public boolean checkOutcomeOfShot(List<Coordinate> coordinateList) {
         int asteroidsHit = 0;
         int shipsHit = 0;
         int shipsSunk = 0;
         int successfulHits = 0;
         Set<Planet> planetsHit = new HashSet<Planet>();
-
+    
+        // If this player is an AI and in follow target mode, check if the first coordinate in the list is already hit
         if (this instanceof AI && AI.getFollowTragetMode()) {
             if (opponentGrid.getTile(coordinateList.get(0)).isHit())
                 return false;
         }
-
+    
+        // Loop through each coordinate in the coordinate list
         for (Coordinate coordinate : coordinateList) {
-
+    
+            // Check if there's an asteroid, ship, or planet at the current coordinate
             Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
             Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
             Planet planet = opponentGrid.getPlanetAtCoordinate(coordinate);
-
+    
+            // If there's an asteroid, increment asteroidsHit and update grid and AI tracking if applicable
             if (asteroidAtCoordinate != null) {
                 asteroidsHit++;
                 opponentGrid.setTile(coordinate, true);
@@ -215,9 +234,13 @@ public abstract class Player {
                     AI ai = (AI) this;
                     ai.updateCoordinateHit(coordinate);
                 }
-            } else if (planet != null) {
+            } 
+            // If there's a planet, add the planet to the set of hit planets
+            else if (planet != null) {
                 planetsHit.add(planet);
-            } else if (shipAtCoordinate != null) {
+            } 
+            // If there's a ship, increment shipsHit and update grid and AI tracking if applicable, and check if the ship is sunk
+            else if (shipAtCoordinate != null) {
                 opponentGrid.setTile(coordinate, true);
                 shipsHit++;
                 if (this instanceof AI && !AI.getFollowTragetMode()) {
@@ -237,7 +260,9 @@ public abstract class Player {
                         ai.resetTracking();
                     }
                 }
-            } else {
+            } 
+            // If there's nothing at the coordinate, update the grid and AI tracking if applicable
+            else {
                 opponentGrid.setTile(coordinate, true);
                 if (this instanceof AI) {
                     AI ai = (AI) this;
@@ -245,7 +270,8 @@ public abstract class Player {
                 }
             }
         }
-
+    
+        // Loop through the hit planets and update the grid and AI tracking if applicable
         for (Planet planet : planetsHit) {
             for (Coordinate coordinate : planet.getPlanetCoordinates()) {
                 opponentGrid.setTile(coordinate, true);
@@ -255,9 +281,11 @@ public abstract class Player {
                 }
             }
         }
-
+    
+        // Calculate the total successful hits
         successfulHits = asteroidsHit + shipsHit;
-
+    
+        // Print the results    
         if (successfulHits + planetsHit.size() == 0) {
             System.out.println("Unlucky :( \n" + name + " didn't hit anything");
 
@@ -277,10 +305,11 @@ public abstract class Player {
         } else if (planetsHit.size() > 1) {
             System.out.println(name + " hit " + planetsHit.size() + " planets! 🌎");
         }
-
+        // Return boolean
         return successfulHits > 0 && planetsHit.size() == 0;
     }
 
+    // Convert a list of ships to a JsonArray
     public JsonArray toJsonArray(List<Ship> ships) {
         JsonArray ja = new JsonArray();
         for (Ship ship : ships)
@@ -288,7 +317,7 @@ public abstract class Player {
 
         return ja;
     }
-
+    // Convert player object to JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("name", name);
