@@ -3,29 +3,43 @@ package com.galactica.model;
 import com.galactica.model.ships.Cruiser;
 import com.galactica.model.ships.DeathStar;
 import com.galactica.model.ships.Scout;
-
+import com.github.cliftonlabs.json_simple.JsonArray;
+import com.github.cliftonlabs.json_simple.JsonObject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public abstract class Player {
     protected String name;
-    protected Ship[] ships;
+    protected List<Ship> deathstars = new ArrayList<Ship>();
+    protected List<Ship> cruisers = new ArrayList<Ship>();
+    protected List<Ship> scouts = new ArrayList<Ship>();
+    protected List<Ship> ships = new ArrayList<Ship>();
     protected Grid ownGrid;
     protected Grid opponentGrid;
 
     protected Cannon cannon = new Cannon();
     protected Grenade grenade = new Grenade();
     protected Laser laser = new Laser();
-    static Scanner sc = new Scanner(System.in);
+
+    protected static Scanner sc = new Scanner(System.in);
 
     public Player(Grid ownGrid, Grid opponentGrid) {
-        ships = new Ship[3]; // Placeholder 5
         this.ownGrid = ownGrid;
         this.opponentGrid = opponentGrid;
 
         initializeShips();
+    }
+
+    public Player(String name, Grid ownGrid, Grid opponentGrid, List<Ship> ships, Laser laser, Grenade grenade,
+            Cannon cannon) {
+        this.name = name;
+        this.ownGrid = ownGrid;
+        this.opponentGrid = opponentGrid;
+        this.ships = ships;
+        this.laser = laser;
+        this.grenade = grenade;
+        this.cannon = cannon;
     }
 
     public abstract void shoot(Coordinate coordinate, Weapon weaponToShoot, boolean gravityMode, boolean gravityUsed);
@@ -64,17 +78,54 @@ public abstract class Player {
     }
 
     private void initializeShips() {
-        ships[0] = new DeathStar(1);
-        ships[1] = new Cruiser(2);
-        ships[2] = new Scout(3);
+        deathstars.add(new DeathStar(IdGenerator.get()));
+        for (int i = 0; i < 2; i++) {
+            cruisers.add(new Cruiser(IdGenerator.get()));
+        }
+        for (int i = 0; i < 3; i++) {
+            scouts.add(new Scout(IdGenerator.get()));
+        }
+        if (ownGrid.getGridSize() == 15) {
+            deathstars.add(new DeathStar(IdGenerator.get()));
+            for (int i = 0; i < 2; i++) {
+                cruisers.add(new Cruiser(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                scouts.add(new Scout(IdGenerator.get()));
+            }
+        }
+        if (ownGrid.getGridSize() == 20) {
+            for (int i = 0; i < 2; i++) {
+                deathstars.add(new DeathStar(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                cruisers.add(new Cruiser(IdGenerator.get()));
+            }
+            for (int i = 0; i < 2; i++) {
+                scouts.add(new Scout(IdGenerator.get()));
+            }
+        }
+        ships.addAll(deathstars);
+        ships.addAll(cruisers);
+        ships.addAll(scouts);
     }
 
-    public boolean areAllShipsSunk() {
-        return Arrays.stream(ships).allMatch(ship -> ship.isSunk());
+    public boolean areAllShipsSunk(List<Ship> ships) {
+        for (Ship ship : ships) {
+            if (!ship.isSunk()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean hasAllShipsPlaced() {
-        return Arrays.stream(ships).allMatch(ship -> ship.isPlaced());
+        for (Ship ship : ships) {
+            if (!ship.isPlaced()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Ship placeShip(Ship ship, Coordinate coordinate, Direction direction) {
@@ -105,8 +156,20 @@ public abstract class Player {
         return opponentGrid;
     }
 
-    public Ship[] getShips() {
+    public List<Ship> getShips() {
         return ships;
+    }
+
+    public List<Ship> getDeathstars() {
+        return deathstars;
+    }
+
+    public List<Ship> getCruisers() {
+        return cruisers;
+    }
+
+    public List<Ship> getScouts() {
+        return scouts;
     }
 
     public Cannon getCannon() {
@@ -202,4 +265,30 @@ public abstract class Player {
         return successfulHits > 0 && planetsHit.size() == 0;
     }
 
+    public JsonArray toJsonArray(List<Ship> ships) {
+        JsonArray ja = new JsonArray();
+        for (Ship ship : ships)
+            ja.add(ship.toJsonObject());
+
+        return ja;
+    }
+
+    public JsonObject toJsonObject() {
+        JsonObject jo = new JsonObject();
+        jo.put("name", name);
+        jo.put("ships", toJsonArray(ships));
+        jo.put("cannon", cannon.toJsonObject());
+        jo.put("grenade", grenade.toJsonObject());
+        jo.put("laser", laser.toJsonObject());
+
+        return jo;
+    }
+
+    public static List<Ship> fromJsonArraytoShipList(JsonArray ja) {
+        List<Ship> ships = new ArrayList<Ship>();
+        for (int i = 0; i < ja.size(); i++) {
+            ships.add(Ship.fromJsonObject((JsonObject) ja.get(i)));
+        }
+        return ships;
+    }
 }

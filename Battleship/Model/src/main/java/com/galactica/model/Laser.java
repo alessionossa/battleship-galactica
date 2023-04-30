@@ -1,12 +1,17 @@
 package com.galactica.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Laser extends Weapon {
     public Laser() {
-        this.areaOfEffect = 3;
         this.amountOfUses = 1;
+    }
+
+    public Laser(int amountOfUses) {
+        this.amountOfUses = amountOfUses;
     }
 
     public List<Coordinate> getLaserCoordinates(Coordinate coordinate, Grid opponentGrid, char rowOrColumn) {
@@ -30,5 +35,10 @@ public class Laser extends Weapon {
         }
 
         return coordinateList;
+    }
+
+    public static Laser fromJsonObject(JsonObject jo) {
+        int amountOfUses = ((BigDecimal) jo.get("amountOfUses")).intValue();
+        return new Laser(amountOfUses);
     }
 }

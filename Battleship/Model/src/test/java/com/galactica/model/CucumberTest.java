@@ -10,9 +10,6 @@ import io.cucumber.junit.CucumberOptions;
 public class CucumberTest {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
-
 }
-
