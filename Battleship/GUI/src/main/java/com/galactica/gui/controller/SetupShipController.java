@@ -2,6 +2,7 @@ package com.galactica.gui.controller;
 
 import com.galactica.gui.view.GridContainer;
 import com.galactica.gui.view.ShipListCell;
+import com.galactica.model.*;
 import com.galactica.model.Coordinate;
 import com.galactica.model.Direction;
 import com.galactica.model.Game;
@@ -178,6 +179,43 @@ public class SetupShipController {
             shipImageView.setOnMouseClicked(event -> {
                 handleShipSelection(ship);
             });
+
+            String resultP1;
+            if (!ship.isPlaced()) {
+                Ship placedShip;
+                placedShip = gameModel.p1.placeShip(ship, coordinate, ship.getDirection());
+                if (placedShip == null)
+                    resultP1 = "Error: You cannot place a ship here.";
+                else
+                    resultP1 = "Placed ship successfully";
+                if (gameModel.p1.hasAllShipsPlaced())
+                    resultP1 = "All ships already placed";
+
+                System.out.println(placedShip.getCoordinate());
+            }
+
+            if (gameModel.singlePlayerMode) {
+                AI p2 = (AI) gameModel.p2;
+                p2.placeShips();
+            } else {
+                String resultP2;
+                Human p2 = (Human) gameModel.p2;
+                if (!ship.isPlaced()) {
+                    Ship placedShip;
+                    placedShip = p2.placeShip(ship, coordinate, ship.getDirection());
+                    if (placedShip == null)
+                        resultP2 = "Error: You cannot place a ship here.";
+                    else
+                        resultP2 = "Placed ship successfully";
+                    if (p2.hasAllShipsPlaced())
+                        resultP2 = "All ships already placed";
+                }
+            }
+
+            /*for (Ship sh : gameModel.p1.getShips()) {
+                System.out.println(sh.getCoordinate().getX() + " " + sh.getCoordinate().getY());
+            }*/
+
         }
     }
 
@@ -224,7 +262,8 @@ public class SetupShipController {
                 final int currentRowIndex = rowIndex;
                 final int currentColumnIndex = columnIndex;
                 tile.setOnMouseEntered(event -> {
-                    // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex, currentRowIndex);
+                    // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex,
+                    // currentRowIndex);
                     if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
                         previewShipPlacement(this.selectedShip, tile, currentColumnIndex, currentRowIndex);
                     }
