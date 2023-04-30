@@ -1,23 +1,18 @@
-// Declare the package and class
 package com.galactica.model;
 
-// Import the JsonObject class from the json-simple library
 import com.github.cliftonlabs.json_simple.JsonObject;
 
-// Declare the Tile class
 public class Tile {
     
-    // Declare private member variables
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit = false;
     private Planet planet;
 
-    // Declare a default constructor that takes no arguments
     public Tile() {
     }
 
-    // Declare a constructor that takes four parameters: a Ship object, an Asteroid object, a Planet object, and a boolean value for whether the Tile has been hit
+    // Declare a constructor
     public Tile(Ship ship, Asteroid asteroid, Planet planet, boolean hit) {
         this.ship = ship;
         this.asteroid = asteroid;
