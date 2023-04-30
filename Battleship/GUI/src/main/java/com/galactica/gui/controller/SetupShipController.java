@@ -3,6 +3,7 @@ package com.galactica.gui.controller;
 import com.galactica.gui.view.GridContainer;
 import com.galactica.gui.view.ShipListCell;
 import com.galactica.model.Direction;
+import com.galactica.model.Game;
 import com.galactica.model.Ship;
 import com.galactica.model.ships.*;
 import javafx.application.Platform;
@@ -29,7 +30,7 @@ import java.util.Set;
 
 public class SetupShipController {
 
-    private int gridSize;
+    private Game gameModel;
 
     ObservableList<Ship> shipsToPlace;
 
@@ -57,8 +58,8 @@ public class SetupShipController {
 
     private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
 
-    public SetupShipController(int gridSize, boolean singlePlayer, boolean asteroids, boolean gravity) {
-        this.gridSize = gridSize;
+    public SetupShipController(Game gameModel) {
+        this.gameModel = gameModel;
 
         Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
 
@@ -68,7 +69,7 @@ public class SetupShipController {
     public void initialize() {
         // TODO: Set up the player mode, asteroids and gravity if needed here
 
-        gridContainer.setGridSize(gridSize);
+        gridContainer.setGridSize(gameModel.getGridSize());
 
         setupShipList();
 
@@ -203,7 +204,7 @@ public class SetupShipController {
     }
 
     private void addTileEventHandlers() {
-        int tableSize = gridSize + 1;
+        int tableSize = gameModel.getGridSize() + 1;
         for (int rowIndex = 1; rowIndex < tableSize; rowIndex++) {
             for (int columnIndex = 1; columnIndex < tableSize; columnIndex++) {
                 StackPane tile = (StackPane) gridContainer.getTiles()[rowIndex][columnIndex];
@@ -238,7 +239,7 @@ public class SetupShipController {
     public void switchToSceneGame(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
 
-        fxmlLoader.setController(new GameplayController(gridSize));
+        fxmlLoader.setController(new GameplayController(gameModel.getGridSize()));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

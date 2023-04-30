@@ -145,4 +145,24 @@ public class Game {
 
         return fromJsonObject((JsonObject) gameJSON.get("game"));
     }
+
+    public void setSinglePlayerMode(boolean singlePlayerMode) {
+        this.singlePlayerMode = singlePlayerMode;
+    }
+
+    public void setAsteroidMode(boolean asteroidMode) {
+        this.asteroidMode = asteroidMode;
+    }
+
+    public void setGravityMode(boolean gravityMode) {
+        this.gravityMode = gravityMode;
+    }
+
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
 }

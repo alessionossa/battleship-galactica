@@ -2,6 +2,7 @@ package com.galactica.gui.controller;
 
 import com.galactica.model.*;
 
+/*
 public class BattleshipGUIController {
 
     private Grid ownGrid;
@@ -122,3 +123,5 @@ public class BattleshipGUIController {
 
     }
 }
+
+ */

@@ -1,5 +1,6 @@
 package com.galactica.gui.controller;
 
+import com.galactica.model.*;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.*;
@@ -35,10 +36,11 @@ public class GameSettingsController {
     @FXML
     Button startGameButton;
 
-    private int gridSize;
-    private boolean singlePlayer;
-    private boolean gravity;
-    private boolean asteroids;
+    private final Game gameModel;
+
+    public GameSettingsController() {
+        gameModel = new Game();
+    }
 
     public void initialize() {
         // Gride size selection
@@ -63,13 +65,13 @@ public class GameSettingsController {
     private void handleGridSizeRadioButtonSelection(RadioButton selectedRadioButton) {
         // Your code to handle the selected RadioButton based on its ID or any other property
         if (selectedRadioButton == smallSizeGridRadioButton) {
-            this.gridSize = 10;
+            gameModel.setGridSize(10);
             System.out.println("Small grid selected");
         } else if (selectedRadioButton == mediumSizeGridRadioButton) {
-            this.gridSize = 15;
+            gameModel.setGridSize(15);
             System.out.println("Medium grid selected");
         } else if (selectedRadioButton == largeSizeGridRadioButton) {
-            this.gridSize = 20;
+            gameModel.setGridSize(20);
             System.out.println("Large grid selected");
         }
     }
@@ -77,10 +79,10 @@ public class GameSettingsController {
     private void handlePlayerModeRadioButtonSelection(RadioButton selectedRadioButton) {
         // Your code to handle the selected RadioButton based on its ID or any other property
         if (selectedRadioButton == singlePlayerRadioButton) {
-            this.singlePlayer = true;
+            gameModel.setSinglePlayerMode(true);
             System.out.println("Singleplayer selected");
         } else if (selectedRadioButton == multiPlayerRadioButton) {
-            this.singlePlayer = false;
+            gameModel.setSinglePlayerMode(false);
             System.out.println("Multiplayer selected");
         }
     }
@@ -89,10 +91,10 @@ public class GameSettingsController {
     private void onCheckBoxAsteroidsSelected(ActionEvent event) {
         CheckBox checkBox = (CheckBox) event.getSource();
         if (checkBox.isSelected()) {
-            this.asteroids = true;
+            gameModel.setAsteroidMode(true);
             System.out.println("Asteroids selected");
         } else {
-            this.asteroids = false;
+            gameModel.setAsteroidMode(false);
             System.out.println("Asteroids not selected");
         }
     }
@@ -101,11 +103,24 @@ public class GameSettingsController {
     private void onCheckBoxGravitySelected(ActionEvent event) {
         CheckBox checkBox = (CheckBox) event.getSource();
         if (checkBox.isSelected()) {
-            this.gravity = true;
+            gameModel.setGravityMode(true);
             System.out.println("Gravity selected");
         } else {
-            this.gravity = false;
+            gameModel.setGravityMode(false);
             System.out.println("Gravity not selected");
+        }
+    }
+
+    private void setupGameModel() {
+        gameModel.grid1 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
+        gameModel.grid2 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
+
+        gameModel.p1 = new Human("Space Cowboy", gameModel.grid1, gameModel.grid2);
+
+        if (gameModel.singlePlayerMode) {
+            gameModel.p2 = new AI("Megatron", gameModel.grid2, gameModel.grid1);
+        } else {
+            gameModel.p2 = new Human("Rocket Rancher", gameModel.grid2, gameModel.grid1);
         }
     }
 
@@ -113,14 +128,10 @@ public class GameSettingsController {
 
     @FXML
     public void switchToSceneStartGame(ActionEvent event) throws IOException {
-        System.out.println("Size: " + this.gridSize + ", PlayerMode: " + this.singlePlayer + ", gravity: "
-                + this.gravity + ", asteroids: " + this.asteroids);
-        
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
 
         // PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS
-        fxmlLoader
-                .setController(new SetupShipController(this.gridSize, this.singlePlayer, this.asteroids, this.gravity));
+        fxmlLoader.setController(new SetupShipController(this.gameModel));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
