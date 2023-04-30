@@ -24,6 +24,7 @@ public class StepsDefinition {
     Game game = new Game();
     Asteroid asteroid;
     Laser laser = new Laser();
+    Grenade grenade = new Grenade();
     String message;
     List<Coordinate> grenadeScatterCoordinates;
     String tileAsteroid;
@@ -195,10 +196,13 @@ public class StepsDefinition {
         }
     }
 
-    @When("I shot a grenade at coordinate {string} {int}")
-    public void i_shoot_a_grenade_at_coordinate_on_my_opponent_s_grid(String string, Integer int1) {
-        Grenade grenade = new Grenade();
-        grenadeScatterCoordinates = player.shootGrenade(new Coordinate(string.charAt(0), int1), grenade);
+    @When("{string} a grenade at coordinate {string} {int}")
+    public void shot_a_grenade_at_coordinate(String whoShoots, String string, Integer int1) {
+        if (whoShoots.equals("I shoot")) {
+            grenadeScatterCoordinates = player.shootGrenade(new Coordinate(string.charAt(0), int1), grenade);
+        } else if (whoShoots.equals("The AI shoots")) {
+            grenadeScatterCoordinates = ai.shootGrenade(new Coordinate(string.charAt(0), int1), grenade);
+        }
     }
 
     @When("{string} a laser at row {int}")
@@ -324,10 +328,10 @@ public class StepsDefinition {
     @Then("The tile {string} {int} on {string} grid is hit")
     public void the_tile_on_my_opponent_s_grid_is_hit(String x, Integer y, String whosGrid) {
         Grid gridHit;
-        if (whosGrid.equals("my"))
-            gridHit = ownGrid;
-        else
-            gridHit = opponentGrid;
+        if (whosGrid.equals("my")){
+            gridHit = ownGrid;}
+        else{
+            gridHit = opponentGrid;}
         assertEquals(gridHit.getTile(new Coordinate(x.charAt(0), y)).isHit(), true);
     }
 

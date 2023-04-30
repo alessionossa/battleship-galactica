@@ -43,7 +43,7 @@ Feature: Playing a turn
   Scenario: Successfully shoot with a grenade
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And "My opponent places" a "Cruiser" in direction "h" on coordinate "a" 1
-    When I shot a grenade at coordinate "a" 2
+    When "I shoot" a grenade at coordinate "a" 2
     Then The tile "a" 2 on "my opponent's" grid is hit
     And 2 random adjacent tiles on "my opponent's" grid are hit
 
@@ -56,6 +56,14 @@ Feature: Playing a turn
     Then The tile "a" 9 on "my" grid is hit
 
   @tag8
+  Scenario: AI shoots with a grenade
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And "I place" a "Cruiser" in direction "h" on coordinate "a" 1
+    When "The AI shoots" a grenade at coordinate "a" 2
+    Then The tile "a" 2 on "my" grid is hit
+    And 2 random adjacent tiles on "my" grid are hit
+
+  @tag9
   Scenario: AI tracks ship if hit
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And The AI places its ships
@@ -70,7 +78,7 @@ Feature: Playing a turn
     And The tile "b" 7 on "my" grid is hit
     And The ship is sunk
 
-  @tag9
+  @tag10
   Scenario: User's shot is rebounded by planet
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "with" gravity mode
     When "I shoot" a cannon <shot> a planet
@@ -87,7 +95,7 @@ Feature: Playing a turn
       | "right below" | "left above"  |
       | "left above"  | "right below" |
 
-  @tag10
+  @tag11
   Scenario: AI's shot is rebounded by planet
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "with" gravity mode
     When "The AI shoots" a cannon <shot> a planet
@@ -104,7 +112,7 @@ Feature: Playing a turn
       | "right below" | "left above"  |
       | "left above"  | "right below" |
 
-  @tag11
+  @tag12
   Scenario: AI shoots with a laser at row
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And The AI places its ships
@@ -114,7 +122,7 @@ Feature: Playing a turn
     And The ship is sunk
     And "The AI" can no longer shoot with a laser
 
-  @tag12
+  @tag13
   Scenario: AI shoots with a laser at column
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And The AI places its ships
@@ -124,14 +132,14 @@ Feature: Playing a turn
     And The ship is sunk
     And "The AI" can no longer shoot with a laser
 
-  @tag13
+  @tag14
   Scenario: AI shoots with a random weapon on a random tile
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And The AI places its ships
     When The AI shoots a random weapon on a random tile
     Then A random tile on my grid is hit
 
-  @tag14
+  @tag15
   Scenario: AI tracks down a ship that has an asteroid nearby
     Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
     And "I place" a "Cruiser" in direction "v" on coordinate "c" 1
@@ -148,7 +156,7 @@ Feature: Playing a turn
     And The AI is not tracking down any ship
     And The ship is sunk
     
-  @tag15
+  @tag16
   Scenario: Laser successfully stopped by a planet 
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And A planet is placed on the grid
