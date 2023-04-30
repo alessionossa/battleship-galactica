@@ -48,6 +48,30 @@ public class Grid {
                 && coordinate.getY() >= 0 && coordinate.getY() < gridSize;
     }
 
+    public boolean isValidCoordinateAndNotOnPlanet(Coordinate coordinate) {
+        boolean foundAPlanet = false;
+        List<Coordinate> PlanetsCoordinates = new ArrayList<Coordinate>();
+        Coordinate AsteroidCoordinate;
+
+        if (getTile(coordinate).getPlanet() != null) {
+            PlanetsCoordinates = getTile(coordinate).getPlanet().getPlanetCoordinates();
+
+        } else if (getTile(coordinate).getAsteroid() != null) {
+            AsteroidCoordinate = getTile(coordinate).getAsteroid().getCoordinate();
+            
+            if (coordinate.equals(AsteroidCoordinate))
+                return false; 
+        }
+
+        for (Coordinate planetCoordinate : PlanetsCoordinates) {
+            if (planetCoordinate.equals(coordinate)) {
+                foundAPlanet = true;
+            }
+        }
+
+        return isValidCoordinate(coordinate) && !foundAPlanet;
+    }
+
     public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
         char x = coordinate.getX();
         int y = coordinate.getY();
@@ -192,17 +216,29 @@ public class Grid {
     }
 
     public void placeAsteroids() {
-        Random random = new Random();
-        int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
-                .toArray();
-        for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
-            Coordinate asteroidCoordinate = new Coordinate((char) ('a' + asteroidCoordinates[i]),
-                    asteroidCoordinates[i + 1]);
-            Asteroid asteroid = new Asteroid(asteroidCoordinate);
+        Coordinate coordinate;
+
+        for (int i = 0; i < (int) (gridSize * gridSize * 0.05); i++) {
+            coordinate = getNewValidCoordinate();
+            Asteroid asteroid = new Asteroid(coordinate);
             asteroids.add(asteroid);
-            setTile(asteroidCoordinate, asteroid);
+            setTile(coordinate, asteroid);
         }
     }
+
+    private Coordinate getNewValidCoordinate() {
+        Random random = new Random();
+        Coordinate coordinate;
+
+        do {
+            char x0 = (char) (random.nextInt(gridSize) + 'a');
+            int y0 = random.nextInt(gridSize);
+            coordinate = new Coordinate(x0, y0);
+        } while (!isValidCoordinateAndNotOnPlanet(coordinate));
+
+        return coordinate;
+    }
+
 
     public boolean anyShipsPlaced() {
         for (Tile[] row : tiles) {
