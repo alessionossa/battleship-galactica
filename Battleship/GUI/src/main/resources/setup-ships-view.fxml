@@ -17,7 +17,7 @@
       <ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <buttons>
             <Button mnemonicParsing="false" onAction="#switchToSettingsScene" text="Back" />
-          <Button fx:id="startGameButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#continueButtonAction" text="Continue" />
+          <Button fx:id="continueButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#continueButtonAction" text="Continue" />
         </buttons>
          <BorderPane.margin>
             <Insets />

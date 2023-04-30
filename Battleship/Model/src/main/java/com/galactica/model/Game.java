@@ -173,4 +173,15 @@ public class Game {
     public boolean getSinglePlayerMode() {
         return singlePlayerMode;
     }
+
+    public Player getCurrentPlayer() {
+        return (playerTurn == 1) ? p1 : p2;
+    }
+
+    public void nextPlayerTurn() {
+        if (playerTurn == 1)
+            playerTurn = 2;
+        else
+            playerTurn = 1;
+    }
 }

@@ -56,7 +56,7 @@ public class SetupShipController {
     private Button removeShipButton;
 
     @FXML
-    private Button startGameButton;
+    private Button continueButton;
 
     private Ship selectedShip;
 
@@ -65,12 +65,11 @@ public class SetupShipController {
     public SetupShipController(Game gameModel) {
         this.gameModel = gameModel;
 
-        Ship[] ships = new Ship[] { new Cruiser(1), new DeathStar(2), new Scout(3) };
-
-        for (Ship ship: ships) {
+        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
             ship.setDirection(Direction.Vertical);
         }
-        this.shipsToPlace = FXCollections.observableArrayList(ships);
+
+        this.shipsToPlace = FXCollections.observableArrayList(gameModel.getCurrentPlayer().getShips());
     }
 
     public void initialize() {
@@ -80,7 +79,7 @@ public class SetupShipController {
 
         setupShipList();
 
-        startGameButton.setDisable(false);
+        updateContinueButton();
 
         addTileEventHandlers();
     }
@@ -119,7 +118,7 @@ public class SetupShipController {
     }
 
     @FXML
-    private void removeShipButtonAction(ActionEvent event) {
+    private void removeShipButtonAction(ActionEvent event) throws UnplacedShipException {
         ImageView selectedShipImage = shipImages.get(selectedShip);
 
         if (selectedShipImage != null) {
@@ -127,10 +126,16 @@ public class SetupShipController {
             shipImages.remove(selectedShip);
 
             shipsToPlace.add(selectedShip);
-            placedShips.remove(selectedShip);
+            gameModel.getCurrentPlayer().removeShip(selectedShip);
+            selectedShip.setCoordinate(null);
 
             handleShipSelection(null);
+            updateContinueButton();
         }
+    }
+
+    private void updateContinueButton() {
+        continueButton.setDisable(!gameModel.getCurrentPlayer().hasAllShipsPlaced());
     }
 
     private void previewShipPlacement(Ship ship, StackPane cell, int columnIndex, int rowIndex) {
@@ -178,49 +183,15 @@ public class SetupShipController {
             shipImageView.setPickOnBounds(true);
             gridContainer.updateShipImagePosition(shipImageView, cell);
 
-            placedShips.add(ship);
             shipsToPlace.remove(ship);
 
             shipImageView.setOnMouseClicked(event -> {
                 handleShipSelection(ship);
             });
 
-            String resultP1;
-            if (!ship.isPlaced()) {
-                Ship placedShip;
-                placedShip = gameModel.p1.placeShip(ship, coordinate, ship.getDirection());
-                if (placedShip == null)
-                    resultP1 = "Error: You cannot place a ship here.";
-                else
-                    resultP1 = "Placed ship successfully";
-                if (gameModel.p1.hasAllShipsPlaced())
-                    resultP1 = "All ships already placed";
+            gameModel.getCurrentPlayer().placeShip(ship, coordinate, ship.getDirection());
 
-                System.out.println(placedShip.getCoordinate());
-            }
-
-            if (gameModel.singlePlayerMode) {
-                AI p2 = (AI) gameModel.p2;
-                p2.placeShips();
-            } else {
-                String resultP2;
-                Human p2 = (Human) gameModel.p2;
-                if (!ship.isPlaced()) {
-                    Ship placedShip;
-                    placedShip = p2.placeShip(ship, coordinate, ship.getDirection());
-                    if (placedShip == null)
-                        resultP2 = "Error: You cannot place a ship here.";
-                    else
-                        resultP2 = "Placed ship successfully";
-                    if (p2.hasAllShipsPlaced())
-                        resultP2 = "All ships already placed";
-                }
-            }
-
-            /*for (Ship sh : gameModel.p1.getShips()) {
-                System.out.println(sh.getCoordinate().getX() + " " + sh.getCoordinate().getY());
-            }*/
-
+            updateContinueButton();
         }
     }
 
@@ -237,7 +208,7 @@ public class SetupShipController {
                 this.selectedShip = ship;
             }
 
-            if (placedShips.contains(this.selectedShip)) {
+            if ((this.selectedShip != null) && this.selectedShip.isPlaced()) {
                 shipsListView.getSelectionModel().clearSelection();
                 rotateButton.setDisable(true);
                 removeShipButton.setDisable(false);
@@ -269,19 +240,19 @@ public class SetupShipController {
                 tile.setOnMouseEntered(event -> {
                     // System.out.printf("Mouse entered cell [%d, %d]%n", currentColumnIndex,
                     // currentRowIndex);
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
+                    if (this.selectedShip != null && !this.selectedShip.isPlaced()) {
                         previewShipPlacement(this.selectedShip, tile, currentColumnIndex, currentRowIndex);
                     }
                 });
 
                 tile.setOnMouseExited(event -> {
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
+                    if (this.selectedShip != null && !this.selectedShip.isPlaced()) {
                         previewShipPlacement(this.selectedShip, null, currentColumnIndex, currentRowIndex);
                     }
                 });
 
                 tile.setOnMouseClicked(event -> {
-                    if (this.selectedShip != null && !placedShips.contains(this.selectedShip)) {
+                    if (this.selectedShip != null && !this.selectedShip.isPlaced()) {
                         placeShip(this.selectedShip, currentColumnIndex, currentRowIndex, tile);
                     }
                 });
@@ -294,9 +265,18 @@ public class SetupShipController {
         Scene currentScene = ((Node) event.getSource()).getScene();
 
         if (gameModel.getSinglePlayerMode()) {
+            AI p2 = (AI) gameModel.p2;
+            p2.placeShips();
+
             switchToGamePlayView(currentScene);
         } else {
-            switchToNextSetupScene(currentScene);
+            gameModel.nextPlayerTurn();
+            if (gameModel.getPlayerTurn() == 2) {
+                switchToGamePlayView(currentScene);
+            } else {
+                switchToNextSetupScene(currentScene);
+            }
+
         }
     }
 
@@ -315,14 +295,13 @@ public class SetupShipController {
     private void switchToNextSetupScene(Scene currentScene) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("switch-player-view.fxml"));
 
-
         Consumer<Window> switchToNextSetupShipBlock = (Window window) -> {
             FXMLLoader fxmlLoaderSetupShips = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
 
             // PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS
             fxmlLoaderSetupShips.setController(new SetupShipController(this.gameModel));
 
-            Parent root = null;
+            Parent root;
             try {
                 root = fxmlLoaderSetupShips.load();
             } catch (IOException e) {
