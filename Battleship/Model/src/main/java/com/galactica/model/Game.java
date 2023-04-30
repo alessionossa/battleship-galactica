@@ -11,17 +11,17 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
 public class Game {
-    protected int playerTurn;
-    protected boolean asteroidMode;
-    protected boolean singlePlayerMode;
-    protected boolean gravityMode;
-    protected int gridSize;
+    public int playerTurn;
+    public boolean asteroidMode;
+    public boolean singlePlayerMode;
+    public boolean gravityMode;
+    public int gridSize;
 
-    protected Human p1;
-    protected Player p2;
+    public Human p1;
+    public Player p2;
 
-    protected Grid grid1;
-    protected Grid grid2;
+    public Grid grid1;
+    public Grid grid2;
 
     public Grid getGrid1() {
         return grid1;
@@ -44,8 +44,7 @@ public class Game {
         this.grid2 = grid2;
     }
 
-    public Game() {
-    }
+    public Game() { }
 
     public static Grid setUpGrid(int gridSize, boolean singlePlayerMode, boolean asteroidMode,
             boolean gravityMode) {
@@ -100,7 +99,7 @@ public class Game {
         return this;
     }
 
-    protected static Path getDefaultPath() {
+    public static Path getDefaultPath() {
         String home = System.getProperty("user.home");
         return Paths.get(home).resolve("battleship.json");
 
