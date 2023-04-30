@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 import com.github.cliftonlabs.json_simple.JsonObject;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Coordinate { // Send new coordinates to player
     private char x;
@@ -74,7 +75,10 @@ public class Coordinate { // Send new coordinates to player
     // and y fields
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return new HashCodeBuilder(17, 37).
+                append(x).
+                append(y).
+                toHashCode();
     }
 
     public JsonObject toJsonObject() {
