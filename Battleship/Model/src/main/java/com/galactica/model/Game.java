@@ -23,14 +23,6 @@ public class Game {
     private Grid grid1;
     private Grid grid2;
 
-    private Grid getGrid1() {
-        return grid1;
-    }
-
-    public Grid getGrid2() {
-        return grid2;
-    }
-
     public Game(int playerTurn, boolean asteroidMode, boolean singlePlayerMode, boolean gravityMode,
             int gridSize, Human p1, Player p2, Grid grid1, Grid grid2) {
         this.playerTurn = playerTurn;
@@ -44,7 +36,8 @@ public class Game {
         this.grid2 = grid2;
     }
 
-    public Game() { }
+    public Game() {
+    }
 
     public static Grid setUpGrid(int gridSize, boolean singlePlayerMode, boolean asteroidMode,
             boolean gravityMode) {
@@ -123,6 +116,18 @@ public class Game {
 
     public void setGrid1(Grid grid1) {
         this.grid1 = grid1;
+    }
+
+    public void setGrid2(Grid grid2) {
+        this.grid2 = grid2;
+    }
+
+    public Grid getGrid1() {
+        return grid1;
+    }
+
+    public Grid getGrid2() {
+        return grid2;
     }
 
     public JsonObject toJsonObject() {
