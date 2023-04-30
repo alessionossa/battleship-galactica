@@ -26,9 +26,6 @@ public class Planet {
         return size;
     }
 
-    public int getSize() {
-        return size;
-    }
 
     public Planet(Coordinate planetCoordinate, List<Coordinate> planetCoordinates, int size, int maxPlanetLength,
             List<CoordinateDepthPair> abovePlanet, List<CoordinateDepthPair> belowPlanet,

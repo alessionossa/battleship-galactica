@@ -25,15 +25,6 @@ public class Game {
     private Grid grid1;
     private Grid grid2;
 
-    // Getters for grid1 and grid2
-    public Grid getGrid1() {
-        return grid1;
-    }
-
-    public Grid getGrid2() {
-        return grid2;
-    }
-
 
     // Constructor for initializing the game state
     public Game(int playerTurn, boolean asteroidMode, boolean singlePlayerMode, boolean gravityMode,
