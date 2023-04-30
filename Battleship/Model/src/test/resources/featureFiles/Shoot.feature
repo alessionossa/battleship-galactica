@@ -43,7 +43,7 @@ Feature: Playing a turn
   Scenario: Successfully shoot with a grenade
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And "My opponent places" a "Cruiser" in direction "h" on coordinate "a" 1
-    When I shot a grenade at coordinate "a" 2
+    When "I shoot" a grenade at coordinate "a" 2
     Then The tile "a" 2 on "my opponent's" grid is hit
     And 2 random adjacent tiles on "my opponent's" grid are hit
 
@@ -69,6 +69,14 @@ Feature: Playing a turn
     And The tile "b" 6 on "my" grid is hit
     And The tile "b" 7 on "my" grid is hit
     And The ship is sunk
+
+  @tag16
+  Scenario: AI shoots with a grenade
+    Given I have started a new game on a size 10 grid in "single" player mode, "without" asteroid mode, "without" gravity mode
+    And "I place" a "Cruiser" in direction "h" on coordinate "a" 1
+    When "The AI shoots" a grenade at coordinate "a" 2
+    Then The tile "a" 2 on "my" grid is hit
+    And 2 random adjacent tiles on "my" grid are hit
 
   @tag9
   Scenario: User's shot is rebounded by planet
@@ -147,9 +155,9 @@ Feature: Playing a turn
     And The tile "b" 1 on "my" grid is hit
     And The AI is not tracking down any ship
     And The ship is sunk
-    
+
   @tag15
-  Scenario: Laser successfully stopped by a planet 
+  Scenario: Laser successfully stopped by a planet
     Given I have started a new game on a size 10 grid in "multi" player mode, "without" asteroid mode, "without" gravity mode
     And A planet is placed on the grid
     When "I shoot" a laser at "a planet"
@@ -157,6 +165,3 @@ Feature: Playing a turn
     And "I" can no longer shoot with a laser
     And The entire planet on "my opponent's" grid is revealed
     And The laser was stopped by "a planet"
-
-
-

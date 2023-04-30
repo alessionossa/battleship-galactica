@@ -42,12 +42,36 @@ public class Grid {
     public List<Asteroid> getAsteroids() {
         return asteroids;
     }
-
+    // Method to check if a given coordinate is valid
     public boolean isValidCoordinate(Coordinate coordinate) {
         return coordinate.getX() >= 'a' && coordinate.getX() < 'a' + gridSize
                 && coordinate.getY() >= 0 && coordinate.getY() < gridSize;
     }
+    // Method to check if a given coordinate is valid and not on a planet
+    public boolean isValidCoordinateAndNotOnPlanet(Coordinate coordinate) {
+        boolean foundAPlanet = false;
+        List<Coordinate> PlanetsCoordinates = new ArrayList<Coordinate>();
+        Coordinate AsteroidCoordinate;
 
+        if (getTile(coordinate).getPlanet() != null) {
+            PlanetsCoordinates = getTile(coordinate).getPlanet().getPlanetCoordinates();
+
+        } else if (getTile(coordinate).getAsteroid() != null) {
+            AsteroidCoordinate = getTile(coordinate).getAsteroid().getCoordinate();
+            
+            if (coordinate.equals(AsteroidCoordinate))
+                return false; 
+        }
+
+        for (Coordinate planetCoordinate : PlanetsCoordinates) {
+            if (planetCoordinate.equals(coordinate)) {
+                foundAPlanet = true;
+            }
+        }
+
+        return isValidCoordinate(coordinate) && !foundAPlanet;
+    }
+    // Method to check if a ship can be placed at a given position
     public boolean isValidShipPosition(Ship ship, Coordinate coordinate, Direction direction) {
         char x = coordinate.getX();
         int y = coordinate.getY();
@@ -76,7 +100,8 @@ public class Grid {
 
         return true;
     }
-
+    
+    // Method to place a ship on the grid
     public void placeShip(Ship ship, Coordinate originCoordinate, Direction direction) {
         Coordinate tileCoordinate;
 
@@ -97,7 +122,7 @@ public class Grid {
         }
 
     }
-
+    // Method to place a ship on the grid
     void removeShip(Ship ship) throws UnplacedShipException {
         if (ship == null)
             throw new UnplacedShipException("Ship has not been placed in the grid before");
@@ -120,51 +145,51 @@ public class Grid {
         }
 
     }
-
+    // Method to place a ship on the grid
     public int convertXToMatrixIndex(char x) {
         return x - 'a';
     }
-
+    // Method to set the ship on a tile
     void setTile(Coordinate coordinate, Ship ship) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         tiles[coordinate.getY()][xIndex].setShip(ship);
     }
-
+    // Method to set a hit on a tile
     void setTile(Coordinate coordinate, boolean hit) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         tiles[coordinate.getY()][xIndex].setHit(hit);
     }
-
+    // Method to set an asteroid on a tile
     void setTile(Coordinate coordinate, Asteroid asteroid) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
         tiles[coordinate.getY()][xIndex].setAsteroid(asteroid);
     }
-
+    // Method to set a planet on a tile
     void setTile(Coordinate coordinate, Planet planet) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
         tiles[coordinate.getY()][xIndex].setPlanet(planet);
     }
-
+    // Method to get the tile at a given coordinate
     public Tile getTile(Coordinate coordinate) {
         int xIndex = convertXToMatrixIndex(coordinate.getX());
 
         return tiles[coordinate.getY()][xIndex];
     }
-
+    // Method to get the ship at a given coordinate
     public Ship getShipAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getShip();
     }
-
+    // Method to get the asteroid at a given coordinate
     public Asteroid getAsteroidAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getAsteroid();
     }
-
+    // Method to get the planet at a given coordinate
     public Planet getPlanetAtCoordinate(Coordinate coordinate) {
         return getTile(coordinate).getPlanet();
     }
-
+    // Method to check if a ship is sunk
     public boolean checkIfShipIsSunk(Ship ship) {
         Coordinate startCoordinate = ship.getCoordinate();
 
@@ -190,20 +215,32 @@ public class Grid {
 
         return true;
     }
-
+    // Method to place asteroids on the grid
     public void placeAsteroids() {
-        Random random = new Random();
-        int[] asteroidCoordinates = random.ints((int) (Grid.gridSize * Grid.gridSize * 0.1), 0, Grid.gridSize)
-                .toArray();
-        for (int i = 0; i < (int) (Grid.gridSize * Grid.gridSize * 0.1); i += 2) {
-            Coordinate asteroidCoordinate = new Coordinate((char) ('a' + asteroidCoordinates[i]),
-                    asteroidCoordinates[i + 1]);
-            Asteroid asteroid = new Asteroid(asteroidCoordinate);
+        Coordinate coordinate;
+
+        for (int i = 0; i < (int) (gridSize * gridSize * 0.05); i++) {
+            coordinate = getNewValidCoordinate();
+            Asteroid asteroid = new Asteroid(coordinate);
             asteroids.add(asteroid);
-            setTile(asteroidCoordinate, asteroid);
+            setTile(coordinate, asteroid);
         }
     }
+    // Method to get a new valid coordinate for placing asteroids
+    private Coordinate getNewValidCoordinate() {
+        Random random = new Random();
+        Coordinate coordinate;
 
+        do {
+            char x0 = (char) (random.nextInt(gridSize) + 'a');
+            int y0 = random.nextInt(gridSize);
+            coordinate = new Coordinate(x0, y0);
+        } while (!isValidCoordinateAndNotOnPlanet(coordinate));
+
+        return coordinate;
+    }
+
+    // Method to check if any ships are placed on the grid
     public boolean anyShipsPlaced() {
         for (Tile[] row : tiles) {
             for (Tile tile : row) {
@@ -217,7 +254,7 @@ public class Grid {
     public Tile[][] getTiles() {
         return tiles;
     }
-
+    // Method to place planets on the grid
     public void placePlanets(List<Planet> planets) {
         for (Planet planet : planets) {
             this.planets.add(planet);
@@ -226,7 +263,7 @@ public class Grid {
             }
         }
     }
-
+    // Method to convert a tile matrix to a JsonArray
     public JsonArray toJsonArrayformMatrix(Tile[][] tiles) {
         JsonArray ja = new JsonArray();
         for (int i = 0; i < tiles.length; i++) {
@@ -236,7 +273,7 @@ public class Grid {
         }
         return ja;
     }
-
+    // Method to convert a List of Planets or Asteroids to a JsonArray
     public JsonArray toJsonArray(List<?> list) {
         JsonArray ja = new JsonArray();
         for (Object object : list) {
@@ -247,7 +284,7 @@ public class Grid {
         }
         return ja;
     }
-
+    // Method to convert the Grid object to a JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("tiles", toJsonArrayformMatrix(tiles));
@@ -257,7 +294,7 @@ public class Grid {
 
         return jo;
     }
-
+    // Method to convert a JsonArray to a List of Planets
     public static List<Planet> fromJsonArrayToPlanetList(JsonArray ja) {
         List<Planet> list = new ArrayList<>();
         for (Object object : ja) {
@@ -266,7 +303,7 @@ public class Grid {
         }
         return list;
     }
-
+    // Method to convert a JsonArray to a List of Asteroids
     public static List<Asteroid> fromJsonArrayToAsteroidList(JsonArray ja) {
         List<Asteroid> list = new ArrayList<>();
         for (Object object : ja) {
@@ -276,7 +313,8 @@ public class Grid {
 
         return list;
     }
-
+    
+    // Method to convert a JsonArray to a Tile matrix
     public static Tile[][] fromJsonArrayToMatrix(JsonArray ja, int gridSize) {
         Tile[][] tiles = new Tile[gridSize][gridSize];
         int index = 0;
@@ -288,7 +326,7 @@ public class Grid {
         }
         return tiles;
     }
-
+    // Method to create a Grid object from a JsonObject
     public static Grid fromJsonObject(JsonObject jsonObject) {
         int GridSize = ((BigDecimal) jsonObject.get("gridSize")).intValue();
         List<Asteroid> asteroids = fromJsonArrayToAsteroidList((JsonArray) jsonObject.get("asteroids"));

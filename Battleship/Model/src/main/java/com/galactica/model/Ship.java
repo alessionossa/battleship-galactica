@@ -9,27 +9,20 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 
 public abstract class Ship {
 
+    // Fields
     protected int length;
     protected boolean sunk;
     protected int identifier;
-
     protected Coordinate coordinate;
     protected Direction direction;
 
+    // Getter methods
     public int getLength() {
         return length;
     }
 
     public int getIdentifier() {
         return identifier;
-    }
-
-    public void setCoordinate(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
     }
 
     public Coordinate getCoordinate() {
@@ -40,18 +33,29 @@ public abstract class Ship {
         return direction;
     }
 
-    public void setSunk() {
-        this.sunk = true;
-    }
-
     public boolean isSunk() {
         return sunk;
     }
 
+    // Setter methods
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    public void setSunk() {
+        this.sunk = true;
+    }
+
+    // Check if the ship is placed
     public boolean isPlaced() {
         return coordinate != null;
     }
 
+    // Convert object to JSON object
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("length", length);
@@ -72,6 +76,7 @@ public abstract class Ship {
         return jo;
     }
 
+    // Convert JSON object to Ship object
     public static Ship fromJsonObject(JsonObject jo) {
         int length = ((BigDecimal) jo.get("length")).intValue();
         boolean sunk = (boolean) jo.get("sunk");
@@ -92,6 +97,7 @@ public abstract class Ship {
             direction = null;
         }
 
+        // Create a new instance of the correct subclass based on the length of the ship
         if (length == 5)
             return new DeathStar(length, identifier, sunk, coordinate, direction);
         else if (length == 3)

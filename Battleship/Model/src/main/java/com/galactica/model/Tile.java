@@ -3,6 +3,7 @@ package com.galactica.model;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Tile {
+
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit = false;
@@ -11,6 +12,7 @@ public class Tile {
     public Tile() {
     }
 
+    // Declare a constructor
     public Tile(Ship ship, Asteroid asteroid, Planet planet, boolean hit) {
         this.ship = ship;
         this.asteroid = asteroid;
@@ -18,38 +20,47 @@ public class Tile {
         this.hit = hit;
     }
 
+    // Declare a getter method for the ship variable
     public Ship getShip() {
         return ship;
     }
 
+    // Declare a setter method for the ship variable
     public void setShip(Ship ship) {
         this.ship = ship;
     }
 
+    // Declare a setter method for the hit variable
     public void setHit(boolean hit) {
         this.hit = hit;
     }
 
+    // Declare a getter method for the asteroid variable
     public Asteroid getAsteroid() {
         return this.asteroid;
     }
 
+    // Declare a setter method for the asteroid variable
     public void setAsteroid(Asteroid asteroid) {
         this.asteroid = asteroid;
     }
 
+    // Declare a getter method for the hit variable
     public boolean isHit() {
         return hit;
     }
 
+    // Declare a setter method for the planet variable
     public void setPlanet(Planet planet) {
         this.planet = planet;
     }
 
+    // Declare a getter method for the planet variable
     public Planet getPlanet() {
         return this.planet;
     }
 
+    // Returning JSonObjects
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         if (ship != null)
@@ -84,7 +95,7 @@ public class Tile {
         } else {
             asteroid = Asteroid.fromJsonObject((JsonObject) jo.get("asteroid"));
         }
-        
+
         Planet planet;
         if (jo.get("planet") == null) {
             planet = null;
