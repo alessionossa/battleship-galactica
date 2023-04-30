@@ -6,8 +6,10 @@ import com.galactica.model.ships.Scout;
 import com.github.cliftonlabs.json_simple.JsonArray;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public abstract class Player {
     protected String name;
@@ -189,11 +191,14 @@ public abstract class Player {
         int shipsHit = 0;
         int shipsSunk = 0;
         int successfulHits = 0;
-        List<Planet> planetsHit = new ArrayList<Planet>();
-        List<Coordinate> coordinatesWithPlanets = new ArrayList<Coordinate>();
+        Set<Planet> planetsHit = new HashSet<Planet>();
+
+        if (this instanceof AI && AI.getFollowTragetMode()) {
+            if (opponentGrid.getTile(coordinateList.get(0)).isHit())
+                return false;
+        }
 
         for (Coordinate coordinate : coordinateList) {
-            opponentGrid.setTile(coordinate, true);
 
             Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
             Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
@@ -201,43 +206,54 @@ public abstract class Player {
 
             if (asteroidAtCoordinate != null) {
                 asteroidsHit++;
-                if (this instanceof AI) {
+                opponentGrid.setTile(coordinate, true);
+                if (this instanceof AI && !AI.getFollowTragetMode()) {
                     AI ai = (AI) this;
                     ai.updateCoordinateHit(coordinate);
                     ai.updateTracking(coordinate);
+                } else if (this instanceof AI && AI.getFollowTragetMode()) {
+                    AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
                 }
             } else if (planet != null) {
                 planetsHit.add(planet);
             } else if (shipAtCoordinate != null) {
+                opponentGrid.setTile(coordinate, true);
                 shipsHit++;
-                if (this instanceof AI) {
+                if (this instanceof AI && !AI.getFollowTragetMode()) {
                     AI ai = (AI) this;
                     ai.updateCoordinateHit(coordinate);
                     ai.updateTracking(coordinate);
+                } else if (this instanceof AI && AI.getFollowTragetMode()) {
+                    AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
                 }
                 boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
                 if (isShipSunk) {
-                    shipAtCoordinate.setSunk(true);
+                    shipAtCoordinate.setSunk();
                     shipsSunk++;
+                    if (this instanceof AI && AI.getFollowTragetMode()) {
+                        AI ai = (AI) this;
+                        ai.resetTracking();
+                    }
                 }
-
-            }
-            if (this instanceof AI) {
-                AI ai = (AI) this;
-                ai.updateCoordinateHit(coordinate);
+            } else {
+                opponentGrid.setTile(coordinate, true);
+                if (this instanceof AI) {
+                    AI ai = (AI) this;
+                    ai.updateCoordinateHit(coordinate);
+                }
             }
         }
 
         for (Planet planet : planetsHit) {
             for (Coordinate coordinate : planet.getPlanetCoordinates()) {
                 opponentGrid.setTile(coordinate, true);
-                coordinatesWithPlanets.add(coordinate);
                 if (this instanceof AI) {
                     AI ai = (AI) this;
                     ai.updateCoordinateHit(coordinate);
                 }
             }
-
         }
 
         successfulHits = asteroidsHit + shipsHit;

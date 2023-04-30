@@ -1,7 +1,6 @@
 package com.galactica.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -13,7 +12,7 @@ public class AI extends Player {
     private Random random = new Random();
 
     private HashSet<Coordinate> CoordinatesHit = new HashSet<Coordinate>();
-    private boolean followTargetMode = false;
+    private static boolean followTargetMode = false;
     private int[] Moves = { 0, 0 };
     private boolean hasShot;
     private boolean Right = false;
@@ -37,7 +36,7 @@ public class AI extends Player {
         this.laser = laser;
         this.grenade = grenade;
         this.cannon = new Cannon();
-        this.followTargetMode = followTargetMode;
+        AI.followTargetMode = followTargetMode;
         this.Moves = Moves;
         this.hasShot = hasShot;
         this.Right = Right;
@@ -230,7 +229,7 @@ public class AI extends Player {
             boolean gravityUsed) {
         if (opponentGrid.isValidCoordinate(newCoordinate) && !CoordinatesHit.contains(newCoordinate)) {
             AICLI.printShootingTurn(this, newCoordinate, cannon, ' ');
-            boolean hitSomething = shootCannonAS(newCoordinate, gravityMode, gravityUsed);
+            boolean hitSomething = shootCannon(newCoordinate, gravityMode, gravityUsed);
             hasShot = true;
             if (hitSomething == false) {
                 if (switchDirection == 3) {
@@ -256,74 +255,89 @@ public class AI extends Player {
         return false;
     }
 
-    public boolean shootCannonAS(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
-        boolean hit = checkOutcomeOfShotAS(coordinate);
-        return hit;
-    }
+    // public boolean shootCannonAS(Coordinate coordinate, boolean gravityMode, boolean gravityUsed) {
+    //     List<Coordinate> coordinateList = new ArrayList<Coordinate>();
+    //     coordinateList.add(coordinate);
 
-    public boolean checkOutcomeOfShotAS(Coordinate coordinate) {
-        int asteroidsHit = 0;
-        int shipsHit = 0;
-        int shipsSunk = 0;
-        int successfulHits = 0;
-        List<Planet> planetsHit = new ArrayList<Planet>();
-        List<Coordinate> coordinatesWithPlanets = new ArrayList<Coordinate>();
+    //     boolean hit = checkOutcomeOfShot(coordinateList);
 
-        if (opponentGrid.getTile(coordinate).isHit())
-            return false;
+    //     if (!hit && gravityMode && !gravityUsed) {
+    //         List<Planet> opponentPlanets = opponentGrid.getPlanets();
+    //         for (Planet planet : opponentPlanets) {
+    //             if (!gravityUsed) {
+    //                 Coordinate rebound = planet.getPlanetRebound(coordinate);
+    //                 if (rebound != null) {
+    //                     shootCannon(rebound, true, true); /////// 
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     return hit;
+    // }
 
-        opponentGrid.setTile(coordinate, true);
-        updateCoordinateHit(coordinate);
+    // public boolean checkOutcomeOfShotAS(Coordinate coordinate) {
+    //     int asteroidsHit = 0;
+    //     int shipsHit = 0;
+    //     int shipsSunk = 0;
+    //     int successfulHits = 0;
+    //     List<Planet> planetsHit = new ArrayList<Planet>();
+    //     List<Coordinate> coordinatesWithPlanets = new ArrayList<Coordinate>();
 
-        Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
-        Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
-        Planet planet = opponentGrid.getPlanetAtCoordinate(coordinate);
+    //     if (opponentGrid.getTile(coordinate).isHit())
+    //         return false;
 
-        if (asteroidAtCoordinate != null) {
-            asteroidsHit++;
-        } else if (planet != null) {
-            planetsHit.add(planet);
-        } else if (shipAtCoordinate != null) {
-            shipsHit++;
-            boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
-            if (isShipSunk) {
-                shipAtCoordinate.setSunk(true);
-                shipsSunk++;
-                resetTracking();
-            }
-        }
+    //     opponentGrid.setTile(coordinate, true);
+    //     updateCoordinateHit(coordinate);
 
-        for (Planet Singleplanet : planetsHit) {
-            for (Coordinate c : Singleplanet.getPlanetCoordinates()) {
-                opponentGrid.setTile(c, true);
-                coordinatesWithPlanets.add(c);
-            }
-        }
+    //     Asteroid asteroidAtCoordinate = opponentGrid.getAsteroidAtCoordinate(coordinate);
+    //     Ship shipAtCoordinate = opponentGrid.getShipAtCoordinate(coordinate);
+    //     Planet planet = opponentGrid.getPlanetAtCoordinate(coordinate);
 
-        successfulHits = asteroidsHit + shipsHit;
+    //     if (asteroidAtCoordinate != null) {
+    //         asteroidsHit++;
+    //     } else if (planet != null) {
+    //         planetsHit.add(planet);
+    //     } else if (shipAtCoordinate != null) {
+    //         shipsHit++;
+    //         boolean isShipSunk = opponentGrid.checkIfShipIsSunk(shipAtCoordinate);
+    //         if (isShipSunk) {
+    //             shipAtCoordinate.setSunk(true);
+    //             shipsSunk++;
+    //             resetTracking();
+    //         }
+    //     }
 
-        if (successfulHits + planetsHit.size() == 0) {
-            System.out.println("Unlucky :( \n" + name + " didn't hit anything");
+    //     for (Planet Singleplanet : planetsHit) {
+    //         for (Coordinate c : Singleplanet.getPlanetCoordinates()) {
+    //             opponentGrid.setTile(c, true);
+    //             coordinatesWithPlanets.add(c);
+    //         }
+    //     }
 
-        } else {
-            if (successfulHits == 1) {
-                System.out.println(name + " hit something!");
-            } else if (successfulHits > 1)
-                System.out.println(name + " made " + successfulHits + " successful shots!");
-            if (shipsSunk == 1) {
-                System.out.println(name + " sunk a ship! 💥🚢");
-            } else if (shipsSunk > 1) {
-                System.out.println(name + " sunk " + shipsSunk + " ships! 💥🚢");
-            }
-        }
-        if (planetsHit.size() == 1) {
-            System.out.println(name + " hit a planet! 🌎");
-        } else if (planetsHit.size() > 1) {
-            System.out.println(name + " hit " + planetsHit.size() + " planets! 🌎");
-        }
+    //     successfulHits = asteroidsHit + shipsHit;
 
-        return successfulHits > 0 && planetsHit.size() == 0;
-    }
+    //     if (successfulHits + planetsHit.size() == 0) {
+    //         System.out.println("Unlucky :( \n" + name + " didn't hit anything");
+
+    //     } else {
+    //         if (successfulHits == 1) {
+    //             System.out.println(name + " hit something!");
+    //         } else if (successfulHits > 1)
+    //             System.out.println(name + " made " + successfulHits + " successful shots!");
+    //         if (shipsSunk == 1) {
+    //             System.out.println(name + " sunk a ship! 💥🚢");
+    //         } else if (shipsSunk > 1) {
+    //             System.out.println(name + " sunk " + shipsSunk + " ships! 💥🚢");
+    //         }
+    //     }
+    //     if (planetsHit.size() == 1) {
+    //         System.out.println(name + " hit a planet! 🌎");
+    //     } else if (planetsHit.size() > 1) {
+    //         System.out.println(name + " hit " + planetsHit.size() + " planets! 🌎");
+    //     }
+
+    //     return successfulHits > 0 && planetsHit.size() == 0;
+    // }
 
     public char getRandomWeapon() {
         int probability = random.nextInt(100);
@@ -350,7 +364,7 @@ public class AI extends Player {
         }
     }
 
-    public boolean getFollowTragetMode() {
+    public static boolean getFollowTragetMode() {
         return followTargetMode;
     }
 
@@ -424,7 +438,7 @@ public class AI extends Player {
         boolean Down = (boolean) jo.get("Down");
         int switchDirection = ((BigDecimal) jo.get("switchDirection")).intValue();
         int[] Moves = fromJsonArrayToIntArray((JsonArray) jo.get("Moves"));
-        Coordinate lastCoordinate = (Coordinate) jo.get("lastCoordinate");
+        Coordinate lastCoordinate = Coordinate.fromJsonObject((JsonObject) jo.get("lastCoordinate"));
 
         return new AI(name, ownGrid, opponentGrid, ships, laser, grenade, followTargetMode, Moves, hasShot, Right, Left,
                 Up, Down, lastCoordinate, switchDirection, CoordinatesHit);
