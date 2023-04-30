@@ -1,25 +1,27 @@
 package com.galactica.model;
 
 import java.math.BigDecimal;
-import java.util.Objects;
-
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import com.github.cliftonlabs.json_simple.JsonObject;
 
+// Class representing a pair of a Coordinate and an integer depth value
 public class CoordinateDepthPair {
     private Coordinate coordinate;
     private int depth;
 
+    // Constructor to initialize the CoordinateDepthPair with a Coordinate and depth
+    // value
     public CoordinateDepthPair(Coordinate coordinate, int depth) {
         this.coordinate = coordinate;
         this.depth = depth;
     }
 
+    // Getter for the coordinate
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
+    // Getter for the depth
     public int getDepth() {
         return depth;
     }
@@ -43,8 +45,7 @@ public class CoordinateDepthPair {
     }
 
     // Override hashCode() method to generate unique hash code based on values of
-    // coordinate
-    // and depth fields
+    // coordinate and depth fields
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
@@ -53,6 +54,7 @@ public class CoordinateDepthPair {
                 .toHashCode();
     }
 
+    // Method for converting the CoordinateDepthPair to a JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("coordinate", coordinate.toJsonObject());
@@ -60,6 +62,7 @@ public class CoordinateDepthPair {
         return jo;
     }
 
+    // Method for creating a CoordinateDepthPair object from a JsonObject
     public static CoordinateDepthPair fromJsonObject(JsonObject jo) {
         Coordinate coordinate = Coordinate.fromJsonObject((JsonObject) jo.get("coordinate"));
         int depth = ((BigDecimal) jo.get("depth")).intValue();
