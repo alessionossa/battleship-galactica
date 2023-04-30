@@ -50,11 +50,10 @@ public class GameplayController {
 
     private final HashMap<Ship, ImageView> ownShipsImages = new HashMap<>();
 
-
     public GameplayController(Game gameModel) {
         this.gameModel = gameModel;
 
-        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
+        for (Ship ship : gameModel.getCurrentPlayer().getShips()) {
             ship.setDirection(Direction.Vertical);
         }
 
@@ -129,13 +128,14 @@ public class GameplayController {
                 direction = 'c';
             gameModel.getCurrentPlayer().shootLaser(coordinate, direction, (Laser) weapon);
         } else {
-            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(),false);
+            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(), false);
         }
 
         canShoot = false;
         updateWeapons();
         updateContinueButton();
         opponentGridContainer.updateShots();
+        gameModel.save();
     }
 
     private void handleWeaponSelection(Weapon weapon) {
