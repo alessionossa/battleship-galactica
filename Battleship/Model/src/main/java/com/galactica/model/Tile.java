@@ -1,16 +1,23 @@
+// Declare the package and class
 package com.galactica.model;
 
+// Import the JsonObject class from the json-simple library
 import com.github.cliftonlabs.json_simple.JsonObject;
 
+// Declare the Tile class
 public class Tile {
+    
+    // Declare private member variables
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit = false;
     private Planet planet;
 
+    // Declare a default constructor that takes no arguments
     public Tile() {
     }
 
+    // Declare a constructor that takes four parameters: a Ship object, an Asteroid object, a Planet object, and a boolean value for whether the Tile has been hit
     public Tile(Ship ship, Asteroid asteroid, Planet planet, boolean hit) {
         this.ship = ship;
         this.asteroid = asteroid;
@@ -18,38 +25,47 @@ public class Tile {
         this.hit = hit;
     }
 
+    // Declare a getter method for the ship variable
     public Ship getShip() {
         return ship;
     }
 
+    // Declare a setter method for the ship variable
     public void setShip(Ship ship) {
         this.ship = ship;
     }
 
+    // Declare a setter method for the hit variable
     public void setHit(boolean hit) {
         this.hit = hit;
     }
 
+    // Declare a getter method for the asteroid variable
     public Asteroid getAsteroid() {
         return this.asteroid;
     }
 
+    // Declare a setter method for the asteroid variable
     public void setAsteroid(Asteroid asteroid) {
         this.asteroid = asteroid;
     }
 
+    // Declare a getter method for the hit variable
     public boolean isHit() {
         return hit;
     }
 
+    // Declare a setter method for the planet variable
     public void setPlanet(Planet planet) {
         this.planet = planet;
     }
 
+    // Declare a getter method for the planet variable
     public Planet getPlanet() {
         return this.planet;
     }
 
+    // Returning JSonObjects
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         if (ship != null)
