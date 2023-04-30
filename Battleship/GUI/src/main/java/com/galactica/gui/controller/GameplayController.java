@@ -30,18 +30,17 @@ public class GameplayController {
     @FXML
     private ListView<Weapon> weaponListView;
 
-//    @FXML
-//    private Button shootButton;
+    // @FXML
+    // private Button shootButton;
 
     private Weapon selectedWeapon;
 
     private final HashMap<Ship, ImageView> ownShipsImages = new HashMap<>();
 
-
     public GameplayController(Game gameModel) {
         this.gameModel = gameModel;
 
-        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
+        for (Ship ship : gameModel.getCurrentPlayer().getShips()) {
             ship.setDirection(Direction.Vertical);
         }
     }
@@ -61,12 +60,13 @@ public class GameplayController {
 
     private void displayShips() {
         System.out.println("Player turn " + gameModel.getPlayerTurn());
-        for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
+        for (Ship ship : gameModel.getCurrentPlayer().getShips()) {
             ImageView shipImageView = currentPlayerGridContainer.getShipImageView(ship);
             this.ownShipsImages.put(ship, shipImageView);
 
             Coordinate shipOriginCoordinate = ship.getCoordinate();
-            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
+            int xIndex = gameModel.getCurrentPlayer().getOwnGrid().convertXToMatrixIndex(shipOriginCoordinate.getX())
+                    + 1;
             int yIndex = shipOriginCoordinate.getY() + 1;
             System.out.println("Ship at coordinate " + xIndex + "," + yIndex);
             StackPane tile = (StackPane) currentPlayerGridContainer.getTiles()[yIndex][xIndex];
@@ -75,7 +75,7 @@ public class GameplayController {
             currentPlayerGridContainer.getChildren().add(shipImageView);
         }
 
-        for (Ship ship: gameModel.getP2().getShips()) {
+        for (Ship ship : gameModel.getP2().getShips()) {
             ImageView shipImageView = opponentGridContainer.getShipImageView(ship);
             this.ownShipsImages.put(ship, shipImageView);
 
@@ -84,7 +84,8 @@ public class GameplayController {
             shipImageView.setPickOnBounds(true);
 
             Coordinate shipOriginCoordinate = ship.getCoordinate();
-            int xIndex = gameModel.getCurrentPlayer().getOpponentGrid().convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
+            int xIndex = gameModel.getCurrentPlayer().getOpponentGrid()
+                    .convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;
             int yIndex = shipOriginCoordinate.getY() + 1;
             StackPane tile = (StackPane) opponentGridContainer.getTiles()[yIndex][xIndex];
             opponentGridContainer.updateShipImagePosition(shipImageView, tile);
@@ -110,7 +111,7 @@ public class GameplayController {
     }
 
     private void updateShootButton() {
-//        shootButton.setDisable(this.selectedWeapon != null); // TODO
+        // shootButton.setDisable(this.selectedWeapon != null); // TODO
     }
 
     private void previewWeaponShoot(Weapon weapon, StackPane cell) {
@@ -133,8 +134,10 @@ public class GameplayController {
                 direction = 'c';
             gameModel.getCurrentPlayer().shootLaser(coordinate, direction, (Laser) weapon);
         } else {
-            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(),false);
+            gameModel.getCurrentPlayer().shoot(coordinate, weapon, gameModel.getGravityMode(), false);
         }
+
+        gameModel.save();
 
     }
 
@@ -180,14 +183,14 @@ public class GameplayController {
         }
     }
 
-//    @FXML
-//    public void shootButtonAction(ActionEvent event) {
-//
-//    }
-//
-//    @FXML
-//    public void exitGameButtonAction(ActionEvent event) {
-//
-//    }
+    // @FXML
+    // public void shootButtonAction(ActionEvent event) {
+    //
+    // }
+    //
+    // @FXML
+    // public void exitGameButtonAction(ActionEvent event) {
+    //
+    // }
 
 }
