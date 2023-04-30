@@ -19,3 +19,6 @@ As a highly advanced spaceship, multiple weapons will be available for you to us
 The fight only stops when a winner emerges by having exploded all the opponent's ships. 
 
 Thank you for playing Battleship Galactica. May the force be with you!
+
+
+![](https://github.com/alessionossa/battleship-galactica/blob/main/Gif/Cat.gif)
