@@ -41,4 +41,9 @@ public class Laser extends Weapon {
         int amountOfUses = ((BigDecimal) jo.get("amountOfUses")).intValue();
         return new Laser(amountOfUses);
     }
+
+    @Override
+    public String toString() {
+        return "Laser";
+    }
 }

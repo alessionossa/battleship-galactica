@@ -11,10 +11,7 @@
 
 <fx:root type="AnchorPane" xmlns:fx="http://javafx.com/fxml">
     <children>
-        <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0">
-            <image>
-                <Image url="@assets/background.jpg" />
-            </image>
+        <ImageView fx:id="backgroundImageView" cache="true" fitHeight="600.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         </ImageView>
         <BattlefieldGridPane fx:id="gridPane" hgap="1" maxHeight="Infinity" maxWidth="Infinity" vgap="1" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" StackPane.alignment="CENTER">
             <StackPane.margin>

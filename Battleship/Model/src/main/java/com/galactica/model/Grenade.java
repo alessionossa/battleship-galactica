@@ -48,4 +48,9 @@ public class Grenade extends Weapon {
         int amountOfUses = ((BigDecimal) jo.get("amountOfUses")).intValue();
         return new Grenade(amountOfUses);
     }
+
+    @Override
+    public String toString() {
+        return "Grenade";
+    }
 }

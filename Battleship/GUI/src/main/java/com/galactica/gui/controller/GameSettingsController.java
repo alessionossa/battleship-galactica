@@ -148,6 +148,4 @@ public class GameSettingsController {
         stage.setScene(scene);
         stage.show();
     }
-
-    // TODO Handling button help
 }

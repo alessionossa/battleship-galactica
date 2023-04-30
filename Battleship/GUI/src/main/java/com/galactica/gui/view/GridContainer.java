@@ -26,6 +26,8 @@ public class GridContainer extends AnchorPane {
 
     private Grid grid;
 
+    private boolean isOpponentGrid;
+
     @FXML
     private BattlefieldGridPane gridPane;
 
@@ -58,74 +60,70 @@ public class GridContainer extends AnchorPane {
         Platform.runLater(this::placePlanets);
     }
 
-    public void setGrid(Grid grid) {
+    public void setGrid(Grid grid, boolean isOpponentGrid) {
         this.grid = grid;
         this.gridSize = grid.getGridSize(); // TODO: Remove this
+        this.isOpponentGrid = isOpponentGrid;
         gridPane.initializeGrid(grid.getGridSize());
     }
 
     private void placeAsteroids() {
-        for (Asteroid asteroid : grid.getAsteroids()) {
-            Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
-            ImageView asteroidImageView = new ImageView(asteroidImage);
-            asteroidImageView.setPreserveRatio(true);
+        if (!isOpponentGrid) {
+            for (Asteroid asteroid : grid.getAsteroids()) {
+                Image asteroidImage = new Image(getClass().getResource("/assets/asteroid.png").toExternalForm());
+                ImageView asteroidImageView = new ImageView(asteroidImage);
+                asteroidImageView.setPreserveRatio(true);
 
-            asteroidImageView.setPickOnBounds(false);
-            asteroidImageView.setMouseTransparent(true);
+                asteroidImageView.setPickOnBounds(false);
+                asteroidImageView.setMouseTransparent(true);
 
-            int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
-            int yCoordinate = asteroid.getCoordinate().getY() + 1;
-            System.out.println("Placing asteroid at x" + xCoordinate + "; y" + yCoordinate);
-            StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
-            Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
-            asteroidImageView.setX(cellBoundsInContainer.getMinX());
-            asteroidImageView.setY(cellBoundsInContainer.getMinY());
+                int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
+                int yCoordinate = asteroid.getCoordinate().getY() + 1;
+                StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
+                Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
+                asteroidImageView.setX(cellBoundsInContainer.getMinX());
+                asteroidImageView.setY(cellBoundsInContainer.getMinY());
 
-            asteroidImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
+                asteroidImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
 
-            this.getChildren().add(asteroidImageView);
+                this.getChildren().add(asteroidImageView);
 
-            asteroidImageView.toFront();
+                asteroidImageView.toFront();
+            }
         }
     }
 
     private void placePlanets() {
-        for (Planet planet : grid.getPlanets()) {
-            Image planetImage = new Image(getClass().getResource("/assets/Planet2x2.png").toExternalForm());
-            if (planet.getSize() == 3) {
-                planetImage = new Image(getClass().getResource("/assets/Planet3x3.png").toExternalForm());
-            } else if (planet.getSize() == 4) {
-                planetImage = new Image(getClass().getResource("/assets/Planet4x4.png").toExternalForm());
+        if (!isOpponentGrid) {
+            for (Planet planet : grid.getPlanets()) {
+                Image planetImage = new Image(getClass().getResource("/assets/Planet2x2.png").toExternalForm());
+                if (planet.getSize() == 3) {
+                    planetImage = new Image(getClass().getResource("/assets/Planet3x3.png").toExternalForm());
+                } else if (planet.getSize() == 4) {
+                    planetImage = new Image(getClass().getResource("/assets/Planet4x4.png").toExternalForm());
+                }
+
+                ImageView planetImageView = new ImageView(planetImage);
+                planetImageView.setPreserveRatio(true);
+
+                planetImageView.setPickOnBounds(false);
+                planetImageView.setMouseTransparent(true);
+
+                int xCoordinate = grid.convertXToMatrixIndex(planet.getCoordinate().getX()) + 1;
+                int yCoordinate = planet.getCoordinate().getY() + 1;
+                System.out.println("Placing planet at x" + xCoordinate + "; y" + yCoordinate);
+                StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
+                Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
+                planetImageView.setX(cellBoundsInContainer.getMinX());
+                planetImageView.setY(cellBoundsInContainer.getMinY());
+
+                planetImageView.fitWidthProperty()
+                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), planet.getSize() + 0.2));
+
+                this.getChildren().add(planetImageView);
+
+                planetImageView.toFront();
             }
-
-            ImageView planetImageView = new ImageView(planetImage);
-            planetImageView.setPreserveRatio(true);
-
-            planetImageView.setPickOnBounds(false);
-            planetImageView.setMouseTransparent(true);
-
-            int xCoordinate = grid.convertXToMatrixIndex(planet.getCoordinate().getX()) + 1;
-            int yCoordinate = planet.getCoordinate().getY() + 1;
-            System.out.println("Placing planet at x" + xCoordinate + "; y" + yCoordinate);
-            StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
-            Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
-            planetImageView.setX(cellBoundsInContainer.getMinX());
-            planetImageView.setY(cellBoundsInContainer.getMinY());
-
-            if (planet.getSize() == 2) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 2));
-            } else if (planet.getSize() == 3) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 3));
-            } else if (planet.getSize() == 4) {
-                planetImageView.fitWidthProperty()
-                        .bind(Bindings.multiply(this.widthProperty().divide(gridSize + 1), 4.2));
-            }
-
-            this.getChildren().add(planetImageView);
-
-            planetImageView.toFront();
         }
     }
 

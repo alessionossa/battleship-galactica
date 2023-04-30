@@ -173,6 +173,14 @@ public abstract class Player {
         return laser;
     }
 
+    public List<Weapon> getWeapons() {
+        List<Weapon> weapons = new ArrayList<Weapon>();
+        weapons.add(cannon);
+        weapons.add(grenade);
+        weapons.add(laser);
+        return weapons;
+    }
+
     public boolean checkOutcomeOfShot(List<Coordinate> coordinateList) {
         int asteroidsHit = 0;
         int shipsHit = 0;
