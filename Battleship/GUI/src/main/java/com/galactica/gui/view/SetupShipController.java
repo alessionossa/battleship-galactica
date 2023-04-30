@@ -15,6 +15,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
@@ -142,6 +143,7 @@ public class SetupShipController {
         if (shipImageView == null) {
             shipImageView =gridContainer.getShipImageView(ship);
 
+            shipImageView.setOpacity(0.5);
             shipImageView.setPickOnBounds(false);
             shipImageView.setMouseTransparent(true);
 
@@ -153,11 +155,19 @@ public class SetupShipController {
         } else {
             gridContainer.updateShipImagePosition(shipImageView, cell);
         }
+
+        if (true) { // TODO: if position is not valid
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setSaturation(-0.9);
+            shipImageView.setEffect(colorAdjust);
+        }
     }
 
     private void placeShip(Ship ship, int columnIndex, int rowIndex, StackPane cell) {
         ImageView shipImageView = this.shipImages.get(ship);
 
+        shipImageView.setOpacity(1.0);
+        shipImageView.setEffect(null);
         shipImageView.setMouseTransparent(false);
         shipImageView.setPickOnBounds(true);
         gridContainer.updateShipImagePosition(shipImageView, cell);
@@ -182,8 +192,7 @@ public class SetupShipController {
             } else {
                 this.selectedShip = ship;
             }
-
-
+            
             if (placedShips.contains(this.selectedShip)) {
                 shipsListView.getSelectionModel().clearSelection();
                 rotateButton.setDisable(true);

@@ -48,14 +48,6 @@ public class GridContainer extends AnchorPane {
         backgroundImageView.fitWidthProperty().bind(grid.widthProperty());
         backgroundImageView.fitHeightProperty().bind(grid.heightProperty());
 
-        System.out.println("BInding!!!!");
-//        NumberBinding gridSize = Bindings.min(this.widthProperty(), this.heightProperty());
-//        gridSize.addListener((observable, oldValue, newValue) -> {
-//            double newDimension = newValue.doubleValue();
-//            grid.setPrefSize(newDimension, newDimension);
-//            System.out.println("New dimension to " + newDimension);
-//        });
-
         grid.prefWidthProperty().bind(Bindings.min(this.widthProperty(), this.heightProperty()));
         grid.prefHeightProperty().bind(grid.widthProperty());
     }
