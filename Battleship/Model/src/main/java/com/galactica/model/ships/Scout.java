@@ -4,18 +4,35 @@ import com.galactica.model.Coordinate;
 import com.galactica.model.Direction;
 import com.galactica.model.Ship;
 
+// Declare the Scout class, which extends the Ship class
 public class Scout extends Ship {
 
+    // Define a constructor with a single parameter, identifier
     public Scout(int identifier) {
+        // Set the length of the ship to 1 (Scout has a fixed length of 1)
         this.length = 1;
+        // Assign the provided identifier to the ship
         this.identifier = identifier;
     }
 
+    // Define another constructor with five parameters: length, identifier, sunk, coordinate, and direction
     public Scout(int length, int identifier, boolean sunk, Coordinate coordinate, Direction direction) {
+        // Assign the provided length to the ship
         this.length = length;
+        // Assign the provided identifier to the ship
         this.identifier = identifier;
+        // Assign the provided sunk status to the ship
         this.sunk = sunk;
+        // Assign the provided coordinate to the ship
         this.coordinate = coordinate;
+        // Assign the provided direction to the ship
         this.direction = direction;
     }
 }
+This code defines the Scout class, which is a type of ship in the game. The class extends the Ship class and has two constructors with different numbers of parameters. The first constructor sets the length of the ship to 1, which is fixed for the Scout ship type. The second constructor is more flexible, allowing you to set additional properties like sunk status, coordinate, and direction.
+
+
+
+
+
+
