@@ -195,10 +195,13 @@ public class StepsDefinition {
         }
     }
 
-    @When("I shot a grenade at coordinate {string} {int}")
-    public void i_shoot_a_grenade_at_coordinate_on_my_opponent_s_grid(String string, Integer int1) {
-        Grenade grenade = new Grenade();
-        grenadeScatterCoordinates = player.shootGrenade(new Coordinate(string.charAt(0), int1), grenade);
+    @When("{string} a grenade at coordinate {string} {int}")
+    public void shot_a_grenade_at_coordinate(String whoShoots, String string, Integer int1) {
+        if (whoShoots.equals("I shoot")) {
+            grenadeScatterCoordinates = player.shootGrenade(new Coordinate(string.charAt(0), int1),new Grenade());
+        } else if (whoShoots.equals("The AI shoots")) {
+            grenadeScatterCoordinates = ai.shootGrenade(new Coordinate(string.charAt(0), int1), new Grenade());
+        }
     }
 
     @When("{string} a laser at row {int}")

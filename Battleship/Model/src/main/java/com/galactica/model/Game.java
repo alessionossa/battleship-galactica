@@ -12,17 +12,18 @@ import com.github.cliftonlabs.json_simple.Jsoner;
 
 // Game class representing the overall state of the game
 public class Game {
-    public int playerTurn;
-    public boolean asteroidMode;
-    public boolean singlePlayerMode;
-    public boolean gravityMode;
-    public int gridSize;
+    private int playerTurn;
+    private boolean asteroidMode;
+    private boolean singlePlayerMode;
+    private boolean gravityMode;
+    private int gridSize;
 
-    public Human p1;
-    public Player p2;
+    private Human p1;
+    private Player p2;
 
-    public Grid grid1;
-    public Grid grid2;
+
+    private Grid grid1;
+    private Grid grid2;
 
     // Getters for grid1 and grid2
     public Grid getGrid1() {
@@ -32,6 +33,7 @@ public class Game {
     public Grid getGrid2() {
         return grid2;
     }
+
 
     // Constructor for initializing the game state
     public Game(int playerTurn, boolean asteroidMode, boolean singlePlayerMode, boolean gravityMode,
@@ -46,8 +48,7 @@ public class Game {
         this.grid1 = grid1;
         this.grid2 = grid2;
     }
-
-    // Default constructor
+    
     public Game() {
     }
 
@@ -70,7 +71,90 @@ public class Game {
         return grid;
     }
 
-    // Method for converting the game state to a JsonObject
+    public void setPlayerTurn(int playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
+
+    public void setAsteroidMode(boolean asteroidMode) {
+        this.asteroidMode = asteroidMode;
+    }
+
+    public boolean getAsteroidMode() {
+        return asteroidMode;
+    }
+
+    public void setSinglePlayerMode(boolean singlePlayerMode) {
+        this.singlePlayerMode = singlePlayerMode;
+    }
+
+    public boolean getSinglePlayerMode() {
+        return singlePlayerMode;
+    }
+
+    public void setGravityMode(boolean gravityMode) {
+        this.gravityMode = gravityMode;
+    }
+
+    public boolean getGravityMode() {
+        return gravityMode;
+    }
+
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
+
+    public void setP1(Human p1) {
+        this.p1 = p1;
+    }
+
+    public Human getP1() {
+        return p1;
+    }
+
+    public void setP2(Player p2) {
+        this.p2 = p2;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public void setGrid1(Grid grid1) {
+        this.grid1 = grid1;
+    }
+
+    public void setGrid2(Grid grid2) {
+        this.grid2 = grid2;
+    }
+
+    public Grid getGrid1() {
+        return grid1;
+    }
+
+    public Grid getGrid2() {
+        return grid2;
+    }
+
+    public Player getCurrentPlayer() {
+        return (playerTurn == 1) ? p1 : p2;
+    }
+
+    public void nextPlayerTurn() {
+        if (playerTurn == 1)
+            playerTurn = 2;
+        else
+            playerTurn = 1;
+    }
+
+// Method for converting the game state to a JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("playerTurn", playerTurn);

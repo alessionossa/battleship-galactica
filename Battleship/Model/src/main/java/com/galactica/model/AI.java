@@ -65,7 +65,7 @@ public class AI extends Player {
                 boolean isValidCoordinate = false;
                 do {
                     char x0 = (char) (random.nextInt(this.getOwnGrid().getGridSize()) + 'a');
-                    int y0 = random.nextInt(11);
+                    int y0 = random.nextInt(this.getOwnGrid().getGridSize());
 
                     coordinate = new Coordinate(x0, y0);
                     isValidCoordinate = ownGrid.isValidCoordinate(coordinate);

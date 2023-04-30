@@ -52,10 +52,7 @@ public abstract class Ship {
 
     // Check if the ship is placed
     public boolean isPlaced() {
-        if (coordinate != null)
-            return true;
-        else
-            return false;
+        return coordinate != null;
     }
 
     // Convert object to JSON object
