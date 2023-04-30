@@ -130,6 +130,17 @@ public class Game {
         return grid2;
     }
 
+    public Player getCurrentPlayer() {
+        return (playerTurn == 1) ? p1 : p2;
+    }
+
+    public void nextPlayerTurn() {
+        if (playerTurn == 1)
+            playerTurn = 2;
+        else
+            playerTurn = 1;
+    }
+
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("playerTurn", playerTurn);
@@ -209,44 +220,5 @@ public class Game {
         }
 
         return fromJsonObject((JsonObject) gameJSON.get("game"));
-    }
-
-    public void setSinglePlayerMode(boolean singlePlayerMode) {
-        this.singlePlayerMode = singlePlayerMode;
-    }
-
-    public void setAsteroidMode(boolean asteroidMode) {
-        this.asteroidMode = asteroidMode;
-    }
-
-    public void setGravityMode(boolean gravityMode) {
-        this.gravityMode = gravityMode;
-    }
-
-    public void setGridSize(int gridSize) {
-        this.gridSize = gridSize;
-    }
-
-    public int getGridSize() {
-        return gridSize;
-    }
-
-    public int getPlayerTurn() {
-        return playerTurn;
-    }
-
-    public boolean getSinglePlayerMode() {
-        return singlePlayerMode;
-    }
-
-    public Player getCurrentPlayer() {
-        return (playerTurn == 1) ? p1 : p2;
-    }
-
-    public void nextPlayerTurn() {
-        if (playerTurn == 1)
-            playerTurn = 2;
-        else
-            playerTurn = 1;
     }
 }

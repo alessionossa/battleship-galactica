@@ -112,15 +112,15 @@ public class GameSettingsController {
     }
 
     private void setupGameModel() {
-        gameModel.grid1 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
-        gameModel.grid2 = Game.setUpGrid(gameModel.gridSize, gameModel.singlePlayerMode, gameModel.asteroidMode, gameModel.gravityMode);
+        gameModel.setGrid1(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
+        gameModel.setGrid2(Game.setUpGrid(gameModel.getGridSize(), gameModel.getSinglePlayerMode(), gameModel.getAsteroidMode(), gameModel.getGravityMode()));
 
-        gameModel.p1 = new Human("Space Cowboy", gameModel.grid1, gameModel.grid2);
+        gameModel.setP1(new Human("Space Cowboy", gameModel.getGrid1(), gameModel.getGrid2()));
 
-        if (gameModel.singlePlayerMode) {
-            gameModel.p2 = new AI("Megatron", gameModel.grid2, gameModel.grid1);
+        if (gameModel.getSinglePlayerMode()) {
+            gameModel.setP2(new AI("Megatron", gameModel.getGrid2(), gameModel.getGrid1()));
         } else {
-            gameModel.p2 = new Human("Rocket Rancher", gameModel.grid2, gameModel.grid1);
+            gameModel.setP2(new Human("Rocket Rancher", gameModel.getGrid2(), gameModel.getGrid1()));
         }
     }
 

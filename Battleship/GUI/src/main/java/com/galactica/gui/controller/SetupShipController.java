@@ -265,7 +265,7 @@ public class SetupShipController {
         Scene currentScene = ((Node) event.getSource()).getScene();
 
         if (gameModel.getSinglePlayerMode()) {
-            AI p2 = (AI) gameModel.p2;
+            AI p2 = (AI) gameModel.getP2();
             p2.placeShips();
 
             switchToGamePlayView(currentScene);
