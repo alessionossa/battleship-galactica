@@ -7,6 +7,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -438,6 +440,14 @@ public class StepsDefinition {
                 coordinateToShoot = ownGrid.getPlanets().get(0).getCoordinate();
             ai.shootLaser(coordinateToShoot, 'c', laser);
         }
+    }
+
+    @Given("A planet is placed on the grid")
+    public void a_planet_is_placed_on__the_grid() {
+        Planet planet = new Planet(2, ownGrid.getGridSize());
+        List<Planet> planets = new ArrayList<>();
+        planets.add(planet);
+        opponentGrid.placePlanets(planets);
     }
 
     @And("The laser was stopped by {string}")
