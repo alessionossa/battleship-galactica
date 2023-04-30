@@ -73,7 +73,6 @@ public class GridContainer extends AnchorPane {
 
             int xCoordinate = grid.convertXToMatrixIndex(asteroid.getCoordinate().getX()) + 1;
             int yCoordinate = asteroid.getCoordinate().getY() + 1;
-            System.out.println("Placing asteroid at x" + xCoordinate +  "; y" + yCoordinate);
             StackPane tile = (StackPane) getTiles()[yCoordinate][xCoordinate];
             Bounds cellBoundsInContainer = gridPane.localToParent(tile.getBoundsInParent());
             asteroidImageView.setX(cellBoundsInContainer.getMinX());
@@ -111,15 +110,14 @@ public class GridContainer extends AnchorPane {
             rotate.setAngle(-90); // Set the rotation angle
 
             // Bind the pivotX and pivotY properties of the Rotate object relative to the ImageView
-            rotate.pivotXProperty().bind(shipImageView.xProperty());
+            rotate.pivotXProperty().bind(Bindings.add(shipImageView.xProperty(), shipImageView.fitWidthProperty()));
             rotate.pivotYProperty().bind(shipImageView.yProperty());
 
             // Add the Rotate object to the ImageView's transforms
             shipImageView.getTransforms().add(rotate);
 
             // Create custom bindings for the translateX and translateY properties to adjust the position of the ImageView after the rotation
-            shipImageView.translateXProperty().bind(shipImageView.fitWidthProperty());
-//            shipImageView.translateXProperty().bind(Bindings.negate(shipImageView.fitHeightProperty()));
+            shipImageView.translateXProperty().bind(Bindings.negate(shipImageView.fitWidthProperty()));
         } else {
             shipImageView.getTransforms().clear();
             shipImageView.fitWidthProperty().bind(this.widthProperty().divide(gridSize + 1));
