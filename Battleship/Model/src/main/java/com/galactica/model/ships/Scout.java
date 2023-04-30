@@ -9,7 +9,7 @@ public class Scout extends Ship {
 
     // Define a constructor with a single parameter, identifier
     public Scout(int identifier) {
-        // Set the length of the ship to 1 (Scout has a fixed length of 1)
+        // Scout has a fixed length of 1
         this.length = 1;
         // Assign the provided identifier to the ship
         this.identifier = identifier;
