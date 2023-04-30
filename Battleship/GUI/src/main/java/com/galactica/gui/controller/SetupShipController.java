@@ -24,11 +24,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.*;
 import javafx.stage.Stage;
 import javafx.event.*;
+import javafx.stage.Window;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class SetupShipController {
 
@@ -311,10 +313,10 @@ public class SetupShipController {
     }
 
     private void switchToNextSetupScene(Scene currentScene) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("switch-player-view.fxml"));
 
 
-        Runnable switchToNextSetupShipBlock = () -> {
+        Consumer<Window> switchToNextSetupShipBlock = (Window window) -> {
             FXMLLoader fxmlLoaderSetupShips = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
 
             // PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS
@@ -327,7 +329,7 @@ public class SetupShipController {
                 throw new RuntimeException(e);
             }
 
-            Stage stage = (Stage) currentScene.getWindow();
+            Stage stage = (Stage) window;
             Scene scene = new Scene(root);
             stage.setScene(scene);
         };
