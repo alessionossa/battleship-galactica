@@ -8,8 +8,6 @@ import java.io.File;
 import javafx.fxml.FXML;
 
 public class WinController {
-    @FXML
-    private ImageView imageview;
 
     @FXML
     private Label messageLabel;
@@ -21,8 +19,6 @@ public class WinController {
     }
 
     public void initialize() {
-        Image i = new Image(new File("/assets/Cat.gif").toURI().toString());
-        imageview.setImage(i);
 
         this.messageLabel.setText(message);
     }

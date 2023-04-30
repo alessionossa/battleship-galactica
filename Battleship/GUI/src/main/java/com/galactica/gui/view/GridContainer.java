@@ -35,7 +35,7 @@ public class GridContainer extends AnchorPane {
 
     private final HashMap<Tile, ImageView> holesImages = new HashMap<>();
 
-    private final HashMap<Ship, ImageView> shipImages = new HashMap<>();
+    private final HashMap<Integer, ImageView> shipImages = new HashMap<>();
 
     public GridContainer() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("grid_container.fxml"));
@@ -150,8 +150,13 @@ public class GridContainer extends AnchorPane {
                         setHoleImageViewForTile(tile, tileView);
                     } else if (tile.getShip() != null){
                         if (tile.getShip().isSunk()) {
-                            ImageView shipImageView = this.shipImages.get(tile.getShip());
-                            shipImageView.setVisible(true);
+                            ImageView shipImageView = this.shipImages.get(tile.getShip().getIdentifier());
+                            if (shipImageView == null) {
+                                System.out.println("Missing image for " + tile.getShip() + " at " + columnIndex + ", "+ rowIndex);
+                            } else {
+                                System.out.println("Image present for " + tile.getShip() + " at " + columnIndex + ", "+ rowIndex);
+                                shipImageView.setVisible(true);
+                            }
 //                            shipImageView.setOpacity(1.0);
 //                            shipImageView.toFront();
                         }
@@ -170,6 +175,7 @@ public class GridContainer extends AnchorPane {
         ImageView holeImageView = holesImages.get(tile);
 
         if (holeImageView == null) {
+            System.out.println("Creating a new hole image");
             Image holeImage = new Image(getClass().getResource("/assets/hole.png").toExternalForm());
 
             holeImageView = new ImageView(holeImage);
@@ -196,7 +202,7 @@ public class GridContainer extends AnchorPane {
 
         if (shipImageView == null) {
             shipImageView = getShipImageView(ship);
-            this.shipImages.put(ship, shipImageView);
+            this.shipImages.put(ship.getIdentifier(), shipImageView);
 
             Coordinate shipOriginCoordinate = ship.getCoordinate();
             int xIndex = grid.convertXToMatrixIndex(shipOriginCoordinate.getX()) + 1;

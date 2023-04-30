@@ -70,13 +70,14 @@ public class GameplayController {
 
         continueButton.setDisable(true);
 
-        Platform.runLater(this::displayShips);
-        Platform.runLater(this.currentPlayerGridContainer::updateShots);
-        Platform.runLater(this.opponentGridContainer::updateShots);
+        Platform.runLater(() -> {
+            this.displayShips();
+            this.currentPlayerGridContainer.updateShots();
+            this.opponentGridContainer.updateShots();
+        });
     }
 
     private void displayShips() {
-        System.out.println("Player turn " + gameModel.getPlayerTurn());
         for (Ship ship: gameModel.getCurrentPlayer().getShips()) {
             currentPlayerGridContainer.showShipImageView(ship);
         }
@@ -149,6 +150,8 @@ public class GameplayController {
     }
 
     private void updateWeapons() {
+        weaponListView.setDisable(!canShoot);
+        
         weaponListView.getSelectionModel().clearSelection();
 
         List<Weapon> weapons = gameModel.getCurrentPlayer().getWeapons().stream()
@@ -159,7 +162,7 @@ public class GameplayController {
     }
 
     private boolean isValidCoordinateForShooting(Weapon weapon, int columnIndex, int rowIndex) {
-        if (!canShoot) {
+        if (!canShoot || selectedWeapon == null) {
             return false;
         } else if (selectedWeapon instanceof Laser &&
                 (rowIndex == 0 || columnIndex == 0) &&
