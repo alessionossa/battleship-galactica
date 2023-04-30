@@ -11,19 +11,19 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
 public class Game {
-    public int playerTurn;
-    public boolean asteroidMode;
-    public boolean singlePlayerMode;
-    public boolean gravityMode;
-    public int gridSize;
+    private int playerTurn;
+    private boolean asteroidMode;
+    private boolean singlePlayerMode;
+    private boolean gravityMode;
+    private int gridSize;
 
-    public Human p1;
-    public Player p2;
+    private Human p1;
+    private Player p2;
 
-    public Grid grid1;
-    public Grid grid2;
+    private Grid grid1;
+    private Grid grid2;
 
-    public Grid getGrid1() {
+    private Grid getGrid1() {
         return grid1;
     }
 
@@ -63,6 +63,66 @@ public class Game {
         }
 
         return grid;
+    }
+
+    public void setPlayerTurn(int playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
+    public int getPlayerTurn() {
+        return playerTurn;
+    }
+
+    public void setAsteroidMode(boolean asteroidMode) {
+        this.asteroidMode = asteroidMode;
+    }
+
+    public boolean getAsteroidMode() {
+        return asteroidMode;
+    }
+
+    public void setSinglePlayerMode(boolean singlePlayerMode) {
+        this.singlePlayerMode = singlePlayerMode;
+    }
+
+    public boolean getSinglePlayerMode() {
+        return singlePlayerMode;
+    }
+
+    public void setGravityMode(boolean gravityMode) {
+        this.gravityMode = gravityMode;
+    }
+
+    public boolean getGravityMode() {
+        return gravityMode;
+    }
+
+    public void setGridSize(int gridSize) {
+        this.gridSize = gridSize;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
+
+    public void setP1(Human p1) {
+        this.p1 = p1;
+    }
+
+    public Human getP1() {
+        return p1;
+    }
+
+    public void setP2(Player p2) {
+        this.p2 = p2;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public void setGrid1(Grid grid1) {
+        this.grid1 = grid1;
     }
 
     public JsonObject toJsonObject() {
