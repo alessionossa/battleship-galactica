@@ -127,7 +127,7 @@ public class GameSettingsController {
     // Navigation
 
     @FXML
-    public void switchToSceneStartGame(ActionEvent event) throws IOException {
+    public void switchToSetupShipsScene(ActionEvent event) throws IOException {
         setupGameModel();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
 

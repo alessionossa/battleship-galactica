@@ -169,4 +169,8 @@ public class Game {
     public int getPlayerTurn() {
         return playerTurn;
     }
+
+    public boolean getSinglePlayerMode() {
+        return singlePlayerMode;
+    }
 }

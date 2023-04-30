@@ -284,15 +284,54 @@ public class SetupShipController {
         }
     }
 
+    @FXML
+    public void continueButtonAction(ActionEvent event) throws IOException {
+        Scene currentScene = ((Node) event.getSource()).getScene();
+
+        if (gameModel.getSinglePlayerMode()) {
+            switchToGamePlayView(currentScene);
+        } else {
+
+        }
+    }
+
     // Navigation
 
-    @FXML
-    public void switchToSceneGame(ActionEvent event) throws IOException {
+    private void switchToGamePlayView(Scene currentScene) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
 
         fxmlLoader.setController(new GameplayController(gameModel.getGridSize()));
         Parent root = fxmlLoader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) currentScene.getWindow();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+    }
+
+    private void switchToNextSetupScene(Scene currentScene) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("game-view.fxml"));
+
+
+        Runnable switchToNextSetupShipBlock = () -> {
+            FXMLLoader fxmlLoaderSetupShips = new FXMLLoader(getClass().getClassLoader().getResource("setup-ships-view.fxml"));
+
+            // PASS CONFIG FOR GRID SIZE, PLAYER MODE, GRAVITY AND ASTEROIDS
+            fxmlLoaderSetupShips.setController(new SetupShipController(this.gameModel));
+
+            Parent root = null;
+            try {
+                root = fxmlLoaderSetupShips.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            Stage stage = (Stage) currentScene.getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        };
+        fxmlLoader.setController(new SwitchPlayerController(switchToNextSetupShipBlock));
+
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) currentScene.getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);
     }
