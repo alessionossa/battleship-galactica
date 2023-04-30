@@ -10,6 +10,7 @@ import java.util.List;
 import com.github.cliftonlabs.json_simple.JsonObject;
 import com.github.cliftonlabs.json_simple.Jsoner;
 
+// Game class representing the overall state of the game
 public class Game {
     public int playerTurn;
     public boolean asteroidMode;
@@ -23,6 +24,7 @@ public class Game {
     public Grid grid1;
     public Grid grid2;
 
+    // Getters for grid1 and grid2
     public Grid getGrid1() {
         return grid1;
     }
@@ -31,6 +33,7 @@ public class Game {
         return grid2;
     }
 
+    // Constructor for initializing the game state
     public Game(int playerTurn, boolean asteroidMode, boolean singlePlayerMode, boolean gravityMode,
             int gridSize, Human p1, Player p2, Grid grid1, Grid grid2) {
         this.playerTurn = playerTurn;
@@ -44,8 +47,10 @@ public class Game {
         this.grid2 = grid2;
     }
 
+    // Default constructor
     public Game() { }
 
+    // Method for setting up the grid based on game settings
     public static Grid setUpGrid(int gridSize, boolean singlePlayerMode, boolean asteroidMode,
             boolean gravityMode) {
         Coordinate.setMaxValue(gridSize);
@@ -54,7 +59,6 @@ public class Game {
 
         if (gravityMode) {
             List<Planet> planets = Planet.generatePlanets(gridSize);
-
             grid.placePlanets(planets);
         }
 
@@ -65,6 +69,7 @@ public class Game {
         return grid;
     }
 
+    // Method for converting the game state to a JsonObject
     public JsonObject toJsonObject() {
         JsonObject jo = new JsonObject();
         jo.put("playerTurn", playerTurn);
@@ -80,6 +85,7 @@ public class Game {
         return jo;
     }
 
+    // Method for creating a Game object from a JsonObject
     public Game fromJsonObject(JsonObject jo) {
         playerTurn = ((BigDecimal) jo.get("playerTurn")).intValue();
         asteroidMode = (boolean) jo.get("asteroidMode");
@@ -98,17 +104,19 @@ public class Game {
 
         return this;
     }
-
+    
+    // Method for getting the default save path for the game
     public static Path getDefaultPath() {
         String home = System.getProperty("user.home");
         return Paths.get(home).resolve("battleship.json");
-
     }
 
+    // Method for saving the game state using the default save path
     public void save() {
         save(getDefaultPath());
     }
 
+    // Method for saving the game state to a specified path
     public void save(Path path) {
         JsonObject gameJSON = new JsonObject();
         gameJSON.put("game", this.toJsonObject());
@@ -127,6 +135,7 @@ public class Game {
         }
     }
 
+    // Method for loading the game state from a specified path
     public Game load(Path path) {
         String jsonText = null;
         JsonObject gameJSON = null;
