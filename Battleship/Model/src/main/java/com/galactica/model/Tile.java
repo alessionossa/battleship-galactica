@@ -3,7 +3,7 @@ package com.galactica.model;
 import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Tile {
-
+    private final int identifier = IdGenerator.get();
     private Ship ship;
     private Asteroid asteroid;
     private boolean hit = false;
@@ -23,6 +23,10 @@ public class Tile {
     // Declare a getter method for the ship variable
     public Ship getShip() {
         return ship;
+    }
+
+    public int getIdentifier() {
+        return identifier;
     }
 
     // Declare a setter method for the ship variable

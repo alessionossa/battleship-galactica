@@ -33,7 +33,7 @@ public class GridContainer extends AnchorPane {
 
     private final HashMap<Integer, ImageView> planetImages = new HashMap<>();
 
-    private final HashMap<Tile, ImageView> holesImages = new HashMap<>();
+    private final HashMap<Integer, ImageView> holesImages = new HashMap<>();
 
     private final HashMap<Integer, ImageView> shipImages = new HashMap<>();
 
@@ -172,7 +172,7 @@ public class GridContainer extends AnchorPane {
     }
 
     private void setHoleImageViewForTile(Tile tile, StackPane tileView) {
-        ImageView holeImageView = holesImages.get(tile);
+        ImageView holeImageView = holesImages.get(tile.getIdentifier());
 
         if (holeImageView == null) {
             System.out.println("Creating a new hole image");
@@ -180,7 +180,7 @@ public class GridContainer extends AnchorPane {
 
             holeImageView = new ImageView(holeImage);
             holeImageView.setPreserveRatio(true);
-            this.holesImages.put(tile, holeImageView);
+            this.holesImages.put(tile.getIdentifier(), holeImageView);
 
             holeImageView.setPickOnBounds(false);
             holeImageView.setMouseTransparent(true);
@@ -198,7 +198,7 @@ public class GridContainer extends AnchorPane {
     }
 
     public ImageView showShipImageView(Ship ship) {
-        ImageView shipImageView = shipImages.get(ship);
+        ImageView shipImageView = shipImages.get(ship.getIdentifier());
 
         if (shipImageView == null) {
             shipImageView = getShipImageView(ship);
