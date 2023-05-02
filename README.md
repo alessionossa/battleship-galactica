@@ -5,6 +5,14 @@ Welcome to Battleship Galactica, a game where you can become a Space Cowboy and 
 ## Getting Started
 To play the game, simply run the executable JAR-file. If you are launching the application from an IDE and not from the JAR-file, run the Main class from the GUI controller package. If you are running the tests, navigate to the  **CucumberTest** file and run it.
 
+### Run the game
+To run the game you need JDK, Maven and JavaFX correctly configured on your computer. Then, open your terminal and run the following commands:
+```bash
+git clone https://github.com/alessionossa/battleship-galactica.git
+cd battleship-galactica/Battleship/GUI
+mvn clean javafx:run
+```
+
 ## Preparing for Battle
 To prepare for the looming battle, different types of ships can be selected and placed around the galaxy. You can also choose different game conditions based on how confident you feel about the fight of the century. Options include asteroids that can mislead the shooter and planets that can pull a shot into its orbit and rebound it in another direction. 
 
