@@ -90,19 +90,19 @@ public abstract class Player {
 
     // Initialize ships based on grid size
     private void initializeShips() {
-        deathstars.add(new DeathStar(IdGenerator.get()));
-        cruisers.add(new Cruiser(IdGenerator.get()));
+        deathstars.add(new DeathStar());
+        cruisers.add(new Cruiser());
         for (int i = 0; i < 2; i++) {
-            scouts.add(new Scout(IdGenerator.get()));
+            scouts.add(new Scout());
         }
         if (ownGrid.getGridSize() == 15) {
-            cruisers.add(new Cruiser(IdGenerator.get()));
-            scouts.add(new Scout(IdGenerator.get()));
+            cruisers.add(new Cruiser());
+            scouts.add(new Scout());
 
         }
         if (ownGrid.getGridSize() == 20) {
-            deathstars.add(new DeathStar(IdGenerator.get()));
-            cruisers.add(new Cruiser(IdGenerator.get()));
+            deathstars.add(new DeathStar());
+            cruisers.add(new Cruiser());
         }
         ships.addAll(deathstars);
         ships.addAll(cruisers);

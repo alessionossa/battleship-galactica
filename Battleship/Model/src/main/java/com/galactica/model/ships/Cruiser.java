@@ -4,17 +4,18 @@ package com.galactica.model.ships;
 // Import necessary classes from other packages
 import com.galactica.model.Coordinate;
 import com.galactica.model.Direction;
+import com.galactica.model.IdGenerator;
 import com.galactica.model.Ship;
 
 // Declare the Cruiser class, which extends the Ship class
 public class Cruiser extends Ship {
 
     // Define a constructor with a single parameter, identifier
-    public Cruiser(int identifier) {
+    public Cruiser() {
         // Cruiser has a fixed length of 3
         this.length = 3;
         // Assign the provided identifier to the ship
-        this.identifier = identifier;
+        this.identifier = IdGenerator.get();
     }
 
     // Define another constructor with five parameters: length, identifier, sunk, coordinate, and direction

@@ -68,11 +68,11 @@ public class StepsDefinition {
     public void place_a_ship_in_direction_on_coordinate(String whosTurn, String shipString, String dir, String x,
             int y) {
         if (shipString.equals("Cruiser"))
-            ship = new Cruiser(1);
+            ship = new Cruiser();
         else if (shipString.equals("Deathstar"))
-            ship = new DeathStar(2);
+            ship = new DeathStar();
         else if (shipString.equals("Scout"))
-            ship = new Scout(3);
+            ship = new Scout();
         Coordinate coordinate = new Coordinate(x.charAt(0), y);
         Direction direction = Direction.get(dir.charAt(0));
 
@@ -88,11 +88,11 @@ public class StepsDefinition {
     @When("I try to place a {string} on {string}")
     public void i_try_to_place_a_ship_on_an_asteroid(String shipString, String obstacle) {
         if (shipString.equals("Cruiser"))
-            ship2 = new Cruiser(1);
+            ship2 = new Cruiser();
         else if (shipString.equals("Deathstar"))
-            ship2 = new DeathStar(2);
+            ship2 = new DeathStar();
         else if (shipString.equals("Scout"))
-            ship2 = new Scout(3);
+            ship2 = new Scout();
 
         if (obstacle.equals("an asteroid")) {
             asteroidCoordinate = ownGrid.getAsteroids().get(0).getCoordinate();
