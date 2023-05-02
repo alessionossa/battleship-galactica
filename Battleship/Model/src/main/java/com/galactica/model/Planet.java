@@ -9,6 +9,7 @@ import com.github.cliftonlabs.json_simple.JsonObject;
 
 public class Planet {
     // Instance variables
+    private int identifier;
     private Coordinate planetCoordinate;
     private List<Coordinate> planetCoordinates = new ArrayList<Coordinate>();
     private List<CoordinateDepthPair> abovePlanet = new ArrayList<CoordinateDepthPair>();
@@ -44,10 +45,12 @@ public class Planet {
         this.leftAbovePlanet = leftAbovePlanet;
         this.rightBelowPlanet = rightBelowPlanet;
         this.leftBelowPlanet = leftBelowPlanet;
+        this.identifier = IdGenerator.get();
     }
 
     // Constructor with size and gridSize parameters
     public Planet(int size, int gridSize) {
+        this.identifier = IdGenerator.get();
         this.size = size;
 
         // Generate random coordinates for planet position
@@ -103,7 +106,11 @@ public class Planet {
         }
     }
 
-// Set the maximum planet length
+    public int getIdentifier() {
+        return identifier;
+    }
+
+    // Set the maximum planet length
     public static final void setMaxPlanetLength(int maxPlanetLength) {
         Planet.maxPlanetLength = maxPlanetLength;
     }
