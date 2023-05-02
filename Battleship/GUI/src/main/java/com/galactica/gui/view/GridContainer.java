@@ -31,7 +31,7 @@ public class GridContainer extends AnchorPane {
     @FXML
     private ImageView backgroundImageView;
 
-    private final HashMap<Planet, ImageView> planetImages = new HashMap<>();
+    private final HashMap<Integer, ImageView> planetImages = new HashMap<>();
 
     private final HashMap<Tile, ImageView> holesImages = new HashMap<>();
 
@@ -126,7 +126,7 @@ public class GridContainer extends AnchorPane {
                 planetImageView.setVisible(false);
             }
 
-            planetImages.put(planet, planetImageView);
+            planetImages.put(planet.getIdentifier(), planetImageView);
 
             this.getChildren().add(planetImageView);
 
@@ -145,7 +145,7 @@ public class GridContainer extends AnchorPane {
                     System.out.println("Hitted" + columnIndex + ", "+ rowIndex);
                     tileView.getStyleClass().remove("untouched-tile");
                     if (tile.getPlanet() != null) {
-                        planetImages.get(tile.getPlanet()).setVisible(true);
+                        planetImages.get(tile.getPlanet().getIdentifier()).setVisible(true);
                     } else if (tile.getAsteroid() != null) {
                         setHoleImageViewForTile(tile, tileView);
                     } else if (tile.getShip() != null){
