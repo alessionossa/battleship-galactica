@@ -137,6 +137,7 @@ public class GameplayController {
         updateWeapons();
         updateContinueButton();
         opponentGridContainer.updateShots();
+        gameModel.nextPlayerTurn();
         gameModel.save();
     }
 
@@ -212,7 +213,6 @@ public class GameplayController {
         if (checkWin()) {
             switchToWinView(currentScene, gameModel.getCurrentPlayer().getName() + " LASSO'D THE GALAXY AND SAVED THE CAT");
         } else if (gameModel.getSinglePlayerMode()) {
-            gameModel.nextPlayerTurn();
             gameModel.getCurrentPlayer().shoot(null, null, gameModel.getGravityMode(), false);
 
 
@@ -226,7 +226,6 @@ public class GameplayController {
             else
                 gameModel.nextPlayerTurn();
         } else {
-            gameModel.nextPlayerTurn();
             switchToNextGamePlayScene(currentScene);
         }
     }
